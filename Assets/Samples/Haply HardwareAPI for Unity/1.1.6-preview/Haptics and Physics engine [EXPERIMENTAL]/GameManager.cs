@@ -12,7 +12,7 @@ namespace Samples.Haply.HapticsAndPhysicsEngine
         public int physicsFrequency = 1000;
 
         public HapticThread hapticThread;
-        public SimplePhysicsHapticEffector simpleEffector;
+        //public SimplePhysicsHapticEffector simpleEffector;
         public AdvancedPhysicsHapticEffector advancedEffector;
 
         public Material enabledForceMaterial;
@@ -23,20 +23,16 @@ namespace Samples.Haply.HapticsAndPhysicsEngine
         public GameObject frequenciesPanel;
         public Text physicsFrequencyText;
         public Text hapticsFrequencyText;
-        public string chooseModeMessage = "Press 1 to Simple Mode, 2 to Advanced";
+        public string chooseModeMessage = "Press 2 to Advanced";
         public string enableForceMessage= "Move the sphere at center not touching anything and hit SPACE to enable force";
         public string collisionMessage = "Press C to enable/disable collision detection";
         
         void Start()
         {
-            if ( !simpleEffector.gameObject.activeSelf && !advancedEffector.gameObject.activeSelf )
-            {
-                helpText.text = chooseModeMessage;
-            }
-            else
-            {
+
+
                 helpText.text = enableForceMessage;
-            }
+
             frequenciesPanel.SetActive( false );
         }
 
@@ -59,24 +55,7 @@ namespace Samples.Haply.HapticsAndPhysicsEngine
                 Application.Quit();
     #endif
             }
-            else if ( Input.GetKeyDown( KeyCode.Alpha1 ) )
-            {
-                if ( !simpleEffector.gameObject.activeSelf && !advancedEffector.gameObject.activeSelf )
-                {
-                    simpleEffector.gameObject.SetActive( true );
-                    helpText.text = enableForceMessage;
-                    frequenciesPanel.SetActive( true );
-                }
-            } 
-            else if (Input.GetKeyDown( KeyCode.Alpha2 ))
-            {
-                if ( !simpleEffector.gameObject.activeSelf && !advancedEffector.gameObject.activeSelf )
-                {
-                    advancedEffector.gameObject.SetActive( true );
-                    helpText.text = enableForceMessage;
-                    frequenciesPanel.SetActive( true );
-                }
-            }
+
             else if ( Input.GetKeyDown( KeyCode.Space ) )
             {
                 ToggleForceFeedback();
@@ -135,24 +114,24 @@ namespace Samples.Haply.HapticsAndPhysicsEngine
 
         public void ToggleForceFeedback()
         {
-            if ( simpleEffector.gameObject.activeSelf )
-            {
-                simpleEffector.forceEnabled = !simpleEffector.forceEnabled;
-                simpleEffector.gameObject.GetComponent<MeshRenderer>().enabled = simpleEffector.forceEnabled;
+            // if ( simpleEffector.gameObject.activeSelf )
+            // {
+            //     simpleEffector.forceEnabled = !simpleEffector.forceEnabled;
+            //     simpleEffector.gameObject.GetComponent<MeshRenderer>().enabled = simpleEffector.forceEnabled;
                     
-                hapticThread.avatar.gameObject.GetComponent<MeshRenderer>().material =
-                    simpleEffector.forceEnabled ? enabledForceMaterial : disabledForceMaterial;
+            //     hapticThread.avatar.gameObject.GetComponent<MeshRenderer>().material =
+            //         simpleEffector.forceEnabled ? enabledForceMaterial : disabledForceMaterial;
                     
-                helpText.text = simpleEffector.forceEnabled ? "" : enableForceMessage;
-            }
-            else if ( advancedEffector.gameObject.activeSelf )
+            //     helpText.text = simpleEffector.forceEnabled ? "" : enableForceMessage;
+            // }
+            if (advancedEffector.gameObject.activeSelf)
             {
                 advancedEffector.forceEnabled = !advancedEffector.forceEnabled;
                 advancedEffector.gameObject.GetComponent<MeshRenderer>().enabled = advancedEffector.forceEnabled;
-                    
+
                 hapticThread.avatar.gameObject.GetComponent<MeshRenderer>().material =
                     advancedEffector.forceEnabled ? enabledForceMaterial : disabledForceMaterial;
-                    
+
                 helpText.text = advancedEffector.forceEnabled ? collisionMessage : enableForceMessage;
             }
         }

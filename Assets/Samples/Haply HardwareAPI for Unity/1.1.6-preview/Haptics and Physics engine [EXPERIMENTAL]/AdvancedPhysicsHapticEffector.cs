@@ -6,7 +6,7 @@ using UnityEngine;
 /// <summary>
 /// <b>EXPERIMENTAL: </b><br/>
 /// This is a more advanced example of using Unity's physics engine to implement haptics feedback in a complex scene.
-///
+/// 
 /// <para>
 /// The following two effectors are being used in the scene:
 /// </para>
