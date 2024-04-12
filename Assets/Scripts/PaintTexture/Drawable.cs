@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class Drawable : MonoBehaviour
 {
-
     public Color brushColor = Color.black;
     [Range(1f, 10f)] public int brushSize = 1;
 
@@ -13,7 +12,7 @@ public class Drawable : MonoBehaviour
     public enum BrushType{Square, Circle};
     public BrushType brushType = BrushType.Circle;
     [HideInInspector] public Vector2Int brushPosition;
-    private List<Vector2Int> brushCoords;
+    private List<Vector2Int> brushCoords = new List<Vector2Int>();
     Renderer canvasRenderer;
     Texture2D canvasTexture;
     [SerializeField] private int textureSizeX = 1024;
@@ -212,7 +211,9 @@ public class Drawable : MonoBehaviour
     //Inspector 창 변경사항이 있을 시 호출되는 내장 함수
     //BrushType만 해당 함수로 호출
     private void OnValidate(){
-        SetBrush();
+        if(Time.timeScale > 0){
+            SetBrush();
+        }
     }
 
 
