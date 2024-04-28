@@ -48,7 +48,7 @@ public class Drawable : MonoBehaviour
         canvasRenderer.material.mainTexture = canvasTexture;
 
         brushCoords = new List<Vector2Int>();
-        SetBrushSize(1);
+        SetBrushSize(0.1f);
 
         gameObject.tag = Tag;
         StartCoroutine(UpdateCanvas());

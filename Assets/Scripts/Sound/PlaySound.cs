@@ -17,6 +17,8 @@ public class PlaySound : MonoBehaviour
     private float checkInterval = 0.1f;
     
     private bool pitchOver = false;
+    private bool isMoving = false;
+    private float nowPitch;
     
     
     void Start()
@@ -36,6 +38,10 @@ public class PlaySound : MonoBehaviour
         if(Time.time - lastCheck >= checkInterval){
 
             currentPos = objTransform.position;
+
+            if(lastPos != currentPos) isMoving = false;
+            else    isMoving = true;
+
             objDistance = Vector3.Distance(lastPos, currentPos);
             
             objSpeed = Mathf.Clamp(objDistance, 0.1f, 6);
@@ -49,7 +55,7 @@ public class PlaySound : MonoBehaviour
             //0.1~3은 pitch 1로, 3~6은 pitch 2까지 도달 가능
             if(pitchOver) objSpeed += 1;
 
-            audioSource.pitch = objSpeed;
+            audioSource.pitch = objSpeed + 1;
 
             lastPos = currentPos;
             lastCheck = Time.time;
@@ -57,15 +63,22 @@ public class PlaySound : MonoBehaviour
 
     }
 
-    void OnTriggerEnter(Collider other){
+    //고무판 충돌시에만 소리가 나옴.
+    void OnTriggerStay(Collider other){
+         Debug.Log("오디오");
+
         if(other.CompareTag("DrawableCanvas")){
-            if(!isPlaying){
+
+            if(!isPlaying && !isMoving){
                 StartCoroutine(PlayAudioWithSpeed());
+                Debug.Log("오디오");
             }
         }
     }
 
     void OnTriggerExit(Collider other){
+                 Debug.Log("오디오");
+
         if(other.CompareTag("DrawableCanvas")){
             if(isPlaying){
                 StopCoroutine(PlayAudioWithSpeed());
@@ -79,11 +92,12 @@ public class PlaySound : MonoBehaviour
         if(audioSource.pitch < 0.5f){
             audioSource.pitch = 0.5f;
         }
+
         audioSource.time = clipLength / 5 * 2; // 재생 위치 설정
         audioSource.Play();
 
         // 재생 중인 소리가 끝날 때까지 대기
-        yield return new WaitForSeconds(clipLength); 
+        yield return new WaitForSeconds((clipLength-audioSource.time)* audioSource.pitch); 
 
         isPlaying = false;
     }
