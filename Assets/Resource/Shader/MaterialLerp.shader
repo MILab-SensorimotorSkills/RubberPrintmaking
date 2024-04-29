@@ -7,7 +7,7 @@ Shader "Custom/MaterialLerp"
         _B("B", Range(0,1)) = 0.5
         _Bright("밝기", Range(-1,1)) = 0
         _MainTex("Texture", 2D) = "white"{}
-        _MainTex2("SubTexture", 2D) = "white"{}
+        _("SubTexture", 2D) = "white"{}
         _GS("Lerp", Range(0,1)) = 0.5
     }
     SubShader

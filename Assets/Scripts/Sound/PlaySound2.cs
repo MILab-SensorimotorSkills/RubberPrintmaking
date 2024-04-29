@@ -12,16 +12,12 @@ public class PlaySound2 : MonoBehaviour
 
     private AudioSource audioSource;
     private bool isPlaying = false;
-    private float clipLength = 0;
     private float currentPitch = 0;
 
-    private Vector3 currentPosS;
-    private Vector3 lastPosS;
-    private float distanceS;
-
-    private Vector3 currentPosE;
-    private Vector3 lastPosE;
-    private float distanceE;
+    private Vector3 currentPos;
+    private Vector3 lastPos;
+    private float distance;
+    private float currentVolume;
 
 
     // Start is called before the first frame update
@@ -29,12 +25,16 @@ public class PlaySound2 : MonoBehaviour
     {
         audioSource = GetComponent<AudioSource>();
 
+        audioSource.clip = arrAudio[1];
+        Debug.Log(audioSource.clip.length);
+
     }
 
     void OnTriggerEnter(Collider other){
         Debug.Log("충돌 시작");
 
-        lastPosS = GetComponent<Transform>().position;
+        lastPos = GetComponent<Transform>().position;
+        audioSource.volume = 1.0f;
         audioSource.PlayOneShot(arrAudio[0], 1.0f);
 
     }
@@ -42,23 +42,33 @@ public class PlaySound2 : MonoBehaviour
 
     void OnTriggerStay(Collider other){
         Debug.Log("충돌 진행");
-        currentPosS = GetComponent<Transform>().position;
+        currentPos = GetComponent<Transform>().position;
 
         if(!isPlaying){
             isPlaying = true;
 
-            distanceS = Vector3.Distance(lastPosS, currentPosS);
-            distanceS = Mathf.InverseLerp(0.01f, 2f, distanceS);
+            distance = Vector3.Distance(lastPos, currentPos);
+            distance = Mathf.InverseLerp(0.01f, 1.0f, distance);
+            
 
-            currentPitch = Mathf.Round(distanceS * 10f)/10f;
-            audioSource.pitch = currentPitch;
+            if(distance != 0){
+                currentVolume = Mathf.Round(distance * 10f)/10f;
+                currentVolume = Mathf.Clamp(distance, 0.1f, 1.0f);
+                audioSource.volume = currentVolume;
+                Debug.Log("Volume: " + currentVolume);
 
-            Debug.Log(currentPitch);
+                distance = Mathf.Clamp(distance, 0.85f, 1.0f);
+                currentPitch = Mathf.Round(distance * 100f)/100f;
+                audioSource.pitch = currentPitch;
 
-            audioSource.clip = arrAudio[1];
-            audioSource.Play();
+                Debug.Log("Pitch: " + currentPitch);
 
-            lastPosS = currentPosS;
+                audioSource.clip = arrAudio[1];
+                audioSource.Play();
+            }else{
+                audioSource.Stop();
+            }
+            lastPos = currentPos;
 
             StartCoroutine(WaitForAudioClipEnd());
 
@@ -69,11 +79,12 @@ public class PlaySound2 : MonoBehaviour
     void OnTriggerExit(Collider other){
         Debug.Log("충돌 끝");
         
+        audioSource.volume = 1.0f;
         audioSource.PlayOneShot(arrAudio[2], 1.0f);
     }
 
     IEnumerator WaitForAudioClipEnd(){
-        yield return new WaitForSeconds(0.3f);
+        yield return new WaitForSeconds(0.15f);
         isPlaying = false;
     }
 
