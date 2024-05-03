@@ -31,7 +31,7 @@ public class PlaySound2 : MonoBehaviour
     }
 
     void OnTriggerEnter(Collider other){
-        Debug.Log("충돌 시작");
+        // Debug.Log("충돌 시작");
 
         lastPos = GetComponent<Transform>().position;
         audioSource.volume = 1.0f;
@@ -41,7 +41,7 @@ public class PlaySound2 : MonoBehaviour
 
 
     void OnTriggerStay(Collider other){
-        Debug.Log("충돌 진행");
+        // Debug.Log("충돌 진행");
         currentPos = GetComponent<Transform>().position;
 
         if(!isPlaying){
@@ -77,7 +77,7 @@ public class PlaySound2 : MonoBehaviour
     }
 
     void OnTriggerExit(Collider other){
-        Debug.Log("충돌 끝");
+        // Debug.Log("충돌 끝");
         
         audioSource.volume = 1.0f;
         audioSource.PlayOneShot(arrAudio[2], 1.0f);
