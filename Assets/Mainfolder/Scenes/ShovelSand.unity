@@ -1962,6 +1962,7 @@ GameObject:
   - component: {fileID: 1667737741}
   - component: {fileID: 1667737740}
   - component: {fileID: 1667737739}
+  - component: {fileID: 1667737743}
   m_Layer: 3
   m_Name: PlaneHiRes
   m_TagString: Ground
@@ -2011,7 +2012,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 34e5228b453c3874a96c4e896a4a6d20, type: 2}
+  - {fileID: 2100000, guid: ccca29a95b7fa2f49a1090d527fc4707, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2052,10 +2053,22 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1667737743
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1667737738}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3625fcb1906b99c4caf63aa7edb5f17a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1738487975
 GameObject:
   m_ObjectHideFlags: 0
@@ -7297,7 +7310,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0.40019062, y: -0, z: -0, w: 0.916432}
   m_LocalPosition: {x: 0.037, y: 1.433, z: -0.342}
-  m_LocalScale: {x: 100, y: 100, z: 100}
+  m_LocalScale: {x: 50, y: 50, z: 50}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 1476358064}
@@ -7327,7 +7340,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!64 &2079255966
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -7364,16 +7377,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   edgeRoot: {fileID: 1597901812}
   sandMesh: {fileID: 1475284333}
-  fallingSandPS: {fileID: 1813336282}
   groundMesh: {fileID: 1667737741}
-  groundMask:
-    serializedVersion: 2
-    m_Bits: 8
-  dotThreshold: 0.1
-  errorThreshold: 0.01
-  moveThreshold: 0.01
-  blockShovelMove: 0
-  updateGround: 1
+  updateGround: 0
 --- !u!54 &2079255968
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -7413,7 +7418,7 @@ ConfigurableJoint:
   m_Anchor: {x: 0, y: 0.082660265, z: 0}
   m_Axis: {x: 1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 0, y: 0.7134371, z: 0.8733641}
+  m_ConnectedAnchor: {x: 0, y: 4.3690567, z: -0.85647166}
   serializedVersion: 3
   m_SecondaryAxis: {x: 0, y: 1, z: 0}
   m_XMotion: 2
@@ -7678,7 +7683,7 @@ MeshCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 5
-  m_Convex: 1
+  m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -1067026263786837032, guid: a318a1b339c418b49a33c2da58e37e9d, type: 3}
 --- !u!4 &1015989978949670145
@@ -7769,7 +7774,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0.9274727, y: -0, z: -0, w: 0.37389085}
   m_LocalPosition: {x: 0, y: 0.635, z: -0.161}
-  m_LocalScale: {x: 0.01, y: 0.01, z: 0.01}
+  m_LocalScale: {x: 0.08, y: 0.08, z: 0.08}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 4433652309306427147}
@@ -13374,7 +13379,7 @@ Rigidbody:
   m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 1
+  m_CollisionDetection: 2
 --- !u!1 &5220025695062500011
 GameObject:
   m_ObjectHideFlags: 0
@@ -13869,15 +13874,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   edgeRoot: {fileID: 7672030571037530691}
   sandMesh: {fileID: 7068709793530426774}
-  fallingSandPS: {fileID: 4721950576169631622}
   groundMesh: {fileID: 1667737741}
-  groundMask:
-    serializedVersion: 2
-    m_Bits: 8
-  dotThreshold: 0.1
-  errorThreshold: 0.01
-  moveThreshold: 0.01
-  blockShovelMove: 0
   updateGround: 1
 --- !u!1 &7335364999661553958
 GameObject:
