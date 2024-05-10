@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "co.haply.hardwareapi": "file:C:/Users/user/Downloads/co.haply.hardwareapi@1.1.6-preview (1).tar.gz",
+    "co.haply.hardwareapi": "file:C:/Users/user/Downloads/co.haply.hardwareapi@1.1.6-preview/package",
     "com.meta.xr.sdk.core": "63.0.0",
     "com.meta.xr.sdk.interaction.ovr": "63.0.0",
     "com.meta.xr.simulator.samples": "62.0.0",
@@ -14,7 +14,6 @@
     "com.unity.xr.interaction.toolkit": "2.4.3",
     "com.unity.xr.management": "4.4.1",
     "com.unity.xr.oculus": "4.0.0",
-    "com.unity.xr.openxr": "1.8.2",
     "com.unity.modules.ai": "1.0.0",
     "com.unity.modules.androidjni": "1.0.0",
     "com.unity.modules.animation": "1.0.0",
