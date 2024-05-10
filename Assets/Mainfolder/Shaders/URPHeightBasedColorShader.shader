@@ -2,9 +2,10 @@ Shader "Custom/URPHeightBasedColorShaderWorld"
 {
     Properties
     {
-        _ColorAboveThreshold("Color Above Threshold", Color) = (0,0,1,1) // 파란색
-        _ColorBelowThreshold("Color Below Threshold", Color) = (1,0,0,1) // 빨간색
+        _ColorAboveThreshold("Color Above Threshold", Color) = (0.12156863, 0.1254902, 0.14509804, 1) // 연한 회색
+        _ColorBelowThreshold("Color Below Threshold", Color) = (0.24705882, 0.24705882, 0.24705882, 1) // 짙은 회색
         _HeightThreshold("Height Threshold", Float) = 0.5
+        _TransitionHeight("Transition Height", Float) = 0.1
     }
     SubShader
     {
@@ -39,12 +40,14 @@ Shader "Custom/URPHeightBasedColorShaderWorld"
             }
 
             float _HeightThreshold;
+            float _TransitionHeight;
             float4 _ColorAboveThreshold;
             float4 _ColorBelowThreshold;
 
             half4 frag(VertexOutput i) : SV_Target
             {
-                return i.worldYPosition >= _HeightThreshold ? _ColorAboveThreshold : _ColorBelowThreshold;
+                float t = saturate((i.worldYPosition - (_HeightThreshold - _TransitionHeight / 2)) / _TransitionHeight);
+                return lerp(_ColorBelowThreshold, _ColorAboveThreshold, t);
             }
             ENDHLSL
         }
