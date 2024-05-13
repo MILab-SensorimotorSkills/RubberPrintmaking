@@ -2,18 +2,22 @@ using Haply.HardwareAPI.Unity;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
 namespace Samples.Haply.HapticsAndPhysicsEngine
 {
     public class GameManager : MonoBehaviour
     {
+        
         [Range(1, 10000)]
         [Tooltip("Adjust Fixed Timestep directly from here to compare with Haptics Thread frequency")]
         public int physicsFrequency = 1000;
 
         public HapticThread hapticThread;
         //public SimplePhysicsHapticEffector simpleEffector;
-        public AdvancedPhysicsHapticEffector advancedEffector;
+        public List<AdvancedPhysicsHapticEffector> advancedEffectors;
+        private int currentEffectorIndex = 0; 
+
 
         public Material enabledForceMaterial;
         public Material disabledForceMaterial;
@@ -22,6 +26,9 @@ namespace Samples.Haply.HapticsAndPhysicsEngine
         public Text helpText;
         public GameObject frequenciesPanel;
         public Text physicsFrequencyText;
+        public Image Normal;
+        public Image Narrow;
+        public Image Triangle;
         public Text hapticsFrequencyText;
         public string chooseModeMessage = "Press 2 to Advanced";
         public string enableForceMessage= "Move the sphere at center not touching anything and hit SPACE to enable force";
@@ -29,13 +36,17 @@ namespace Samples.Haply.HapticsAndPhysicsEngine
         
         void Start()
         {
-
-
-                helpText.text = enableForceMessage;
-
-            frequenciesPanel.SetActive( false );
+            //InitializeEffectors();
+            helpText.text = enableForceMessage;
+            frequenciesPanel.SetActive(false);
         }
-
+        private void InitializeEffectors()
+        {
+            for (int i = 0; i < advancedEffectors.Count; i++)
+            {
+                advancedEffectors[i].gameObject.SetActive(i == 0);
+            }
+        }
         // Update is called once per frame
         void Update()
         {
@@ -46,6 +57,8 @@ namespace Samples.Haply.HapticsAndPhysicsEngine
             if (hapticThread.isInitialized)
                 hapticsFrequencyText.text = $"haptics : {hapticThread.actualFrequency}Hz";
             physicsFrequencyText.text = $"physics : {physicsFrequency}Hz";
+
+
 
             if ( Input.GetKeyDown( KeyCode.Escape ) )
             {
@@ -60,57 +73,125 @@ namespace Samples.Haply.HapticsAndPhysicsEngine
             {
                 ToggleForceFeedback();
             }
-            else if ( Input.GetKeyDown( KeyCode.C ) && advancedEffector.gameObject.activeSelf)
+            // else if ( Input.GetKeyDown( KeyCode.C ) && advancedEffector.gameObject.activeSelf)
+            // {
+            //     advancedEffector.collisionDetection = !advancedEffector.collisionDetection;
+            // }
+            // else if ( Input.GetKeyDown( KeyCode.UpArrow ) && frequenciesPanel.activeSelf && physicsFrequency < 10000)
+            // {
+            //     physicsFrequency += 50;
+            // }
+            // else if ( Input.GetKeyDown( KeyCode.DownArrow ) && frequenciesPanel.activeSelf && physicsFrequency > 200)
+            // {
+            //     physicsFrequency -= 100;
+            // }
+            // else if ( Input.GetKeyDown( KeyCode.DownArrow ) && frequenciesPanel.activeSelf && physicsFrequency > 0)
+            // {
+            //     physicsFrequency /= 2;
+            // }
+            // else if ( Input.GetKeyDown( KeyCode.RightArrow ) && frequenciesPanel.activeSelf && hapticThread.targetFrequency < 10000)
+            // {
+            //     hapticThread.targetFrequency += 50;
+            // }
+            // else if ( Input.GetKeyDown( KeyCode.LeftArrow ) && frequenciesPanel.activeSelf && hapticThread.targetFrequency > 200)
+            // {
+            //     hapticThread.targetFrequency -= 100;
+            // }
+            // else if ( Input.GetKeyDown( KeyCode.LeftArrow ) && frequenciesPanel.activeSelf && hapticThread.targetFrequency > 0)
+            // {
+            //     hapticThread.targetFrequency /= 2;
+            // }
+            else if (Input.GetKeyDown(KeyCode.F)) 
             {
-                advancedEffector.collisionDetection = !advancedEffector.collisionDetection;
-            }
-            else if ( Input.GetKeyDown( KeyCode.UpArrow ) && frequenciesPanel.activeSelf && physicsFrequency < 10000)
-            {
-                physicsFrequency += 50;
-            }
-            else if ( Input.GetKeyDown( KeyCode.DownArrow ) && frequenciesPanel.activeSelf && physicsFrequency > 200)
-            {
-                physicsFrequency -= 100;
-            }
-            else if ( Input.GetKeyDown( KeyCode.DownArrow ) && frequenciesPanel.activeSelf && physicsFrequency > 0)
-            {
-                physicsFrequency /= 2;
-            }
-            else if ( Input.GetKeyDown( KeyCode.RightArrow ) && frequenciesPanel.activeSelf && hapticThread.targetFrequency < 10000)
-            {
-                hapticThread.targetFrequency += 50;
-            }
-            else if ( Input.GetKeyDown( KeyCode.LeftArrow ) && frequenciesPanel.activeSelf && hapticThread.targetFrequency > 200)
-            {
-                hapticThread.targetFrequency -= 100;
-            }
-            else if ( Input.GetKeyDown( KeyCode.LeftArrow ) && frequenciesPanel.activeSelf && hapticThread.targetFrequency > 0)
-            {
-                hapticThread.targetFrequency /= 2;
+                CycleEffectors();
             }
         }
+    public void CycleEffectors()
+    {
+        if (advancedEffectors[currentEffectorIndex].touched.Count == 0 && advancedEffectors[currentEffectorIndex].forceEnabled)
+        {
+            // 현재 effector 비활성화
+            advancedEffectors[currentEffectorIndex].gameObject.SetActive(false);
+            
+            // 다음 effector로 인덱스 이동 또는 처음으로 순환
+            currentEffectorIndex = (currentEffectorIndex + 1) % advancedEffectors.Count;
+            advancedEffectors[currentEffectorIndex].gameObject.SetActive(true);
+
+            // 새로 활성화된 effector의 forceEnabled 상태를 이전 effector의 상태로 설정하여 일관성 유지
+            advancedEffectors[currentEffectorIndex].forceEnabled = advancedEffectors[(currentEffectorIndex - 1 + advancedEffectors.Count) % advancedEffectors.Count].forceEnabled;
+            MeshRenderer currentRenderer = advancedEffectors[currentEffectorIndex].gameObject.GetComponent<MeshRenderer>();
+            if (currentRenderer != null) {
+                currentRenderer.enabled = true; // 항상 새로 활성화된 effector의 렌더러를 활성화
+            }
+            // // haptic thread avatar의 재질을 현재 forceEnabled 상태에 따라 업데이트
+            // hapticThread.avatar.gameObject.GetComponent<MeshRenderer>().material = 
+            //     advancedEffectors[currentEffectorIndex].forceEnabled ? enabledForceMaterial : disabledForceMaterial;
+            UpdateImageColors();
+
+            helpText.text = advancedEffectors[currentEffectorIndex].forceEnabled ? collisionMessage : enableForceMessage;
+        }
+    }
+
         
         // Display collision infos
         // ----------------------------------
-        private void OnGUI()
-        {
-            if (advancedEffector.gameObject.activeSelf && advancedEffector.touched.Count > 0)
-            {
-                // display touched physic material infos on screen
-                var physicMaterial = advancedEffector.touched[0].GetComponent<Collider>().material;
-                var text = $"PhysicsMaterial: {physicMaterial.name.Replace( "(Instance)", "" )} \n" +
-                           $"dynamic friction: {physicMaterial.dynamicFriction}, static friction: {physicMaterial.staticFriction}\n";
-                
-                // display touched rigidbody infos on screen
-                var rb = advancedEffector.touched[0].GetComponent<Rigidbody>();
-                if ( rb )
-                {
-                    text += $"mass: {rb.mass}, drag: {rb.drag}, angular drag: {rb.angularDrag}\n";
-                }
+private void OnGUI()
+{
+    // Set the default color to green
+    Color textColor = Color.green;
 
-                GUI.Label(new Rect(20, 40, 800f, 200f), text);
-            }
+    if (advancedEffectors[currentEffectorIndex].gameObject.activeSelf &&
+        advancedEffectors[currentEffectorIndex].touched.Count > 0)
+    {
+        // If there is at least one touched object, set the color to dark gray
+        textColor = Color.gray * 0.75f; // Dark gray
+
+        // Display information for the first touched object
+        var touchedObject = advancedEffectors[currentEffectorIndex].touched[0];
+        var collider = touchedObject.GetComponent<Collider>();
+        var physicMaterial = collider.material;
+        var rb = touchedObject.GetComponent<Rigidbody>();
+
+        string text = $"PhysicsMaterial: {physicMaterial.name.Replace("(Instance)", "")}\n" +
+                      $"dynamic friction: {physicMaterial.dynamicFriction}, static friction: {physicMaterial.staticFriction}\n";
+
+        if (rb != null)
+        {
+            text += $"mass: {rb.mass}, drag: {rb.drag}, angular drag: {rb.angularDrag}\n";
         }
+
+        GUI.Label(new Rect(20, 40, 800, 200), text);
+    }
+
+    GUI.color = textColor;
+
+    GUIStyle myStyle = new GUIStyle(GUI.skin.label);
+    myStyle.fontSize = 24;  // Set the font size here
+
+    GUI.Label(new Rect(Screen.width - 220, 20, 200, 30), "Changeable", myStyle);
+
+    GUI.color = Color.white;
+}
+private void UpdateImageColors()
+{
+    Normal.color = Color.grey;
+    Narrow.color = Color.grey;
+    Triangle.color = Color.grey;
+
+    switch (currentEffectorIndex)
+    {
+        case 0:
+            Normal.color = Color.green;
+            break;
+        case 1:
+            Narrow.color = Color.green;
+            break;
+        case 2:
+            Triangle.color = Color.green;
+            break;
+    }
+}
+
 
         public void ToggleForceFeedback()
         {
@@ -124,16 +205,13 @@ namespace Samples.Haply.HapticsAndPhysicsEngine
                     
             //     helpText.text = simpleEffector.forceEnabled ? "" : enableForceMessage;
             // }
-            if (advancedEffector.gameObject.activeSelf)
-            {
-                advancedEffector.forceEnabled = !advancedEffector.forceEnabled;
-                advancedEffector.gameObject.GetComponent<MeshRenderer>().enabled = advancedEffector.forceEnabled;
-
-                hapticThread.avatar.gameObject.GetComponent<MeshRenderer>().material =
-                    advancedEffector.forceEnabled ? enabledForceMaterial : disabledForceMaterial;
-
-                helpText.text = advancedEffector.forceEnabled ? collisionMessage : enableForceMessage;
-            }
+            AdvancedPhysicsHapticEffector effector = advancedEffectors[currentEffectorIndex];
+            effector.forceEnabled = !effector.forceEnabled;
+            effector.gameObject.GetComponent<MeshRenderer>().enabled = effector.forceEnabled;
+            hapticThread.avatar.gameObject.GetComponent<MeshRenderer>().material =
+            effector.forceEnabled ? enabledForceMaterial : disabledForceMaterial;
+            helpText.text = effector.forceEnabled ? collisionMessage : enableForceMessage;
+            UpdateImageColors();
         }
     }
 }

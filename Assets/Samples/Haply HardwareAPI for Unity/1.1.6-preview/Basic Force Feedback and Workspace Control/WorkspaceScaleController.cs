@@ -63,8 +63,8 @@ namespace Haply.Samples.BasicForceFeedbackAndWorkspaceControl
         private void Awake()
         {
             // Get the rotating cursor from the HandleThread
-            m_cursor = GetComponent<HandleThread>().avatar;
-            
+            m_cursor = GetComponent<HandleThread>().avatars[0];
+            //여기임~~~
             // Check if cursor is a child of the cursor offset
             if (!m_cursor.IsChildOf(transform))
                 Debug.LogError($"Cursor '{m_cursor.name}' must be a child of '{name}'", gameObject);
