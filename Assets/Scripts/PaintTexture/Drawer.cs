@@ -9,15 +9,22 @@ public class Drawer : MonoBehaviour
     Vector2Int drawpos;    
     private Queue<Vector2Int> drawPoints = new Queue<Vector2Int>();
     public float smoothingFactor = 0.1f;
-    private int interpolationPixelCount = 1; //the number of pixels after which to draw new pixel between the drawPoints
-                                 //lower the number higher is smoothing (lowest value is one pixel)
+    private int interpolationPixelCount = 1;
 
     [SerializeField]
-    float drawInterval = 0.02f; //the interval of time(in seconds) after which to periodically set pixels of the canvas 
+    float drawInterval = 0.02f; 
 
     delegate void setPixelForCanvas(int x, int y);
     setPixelForCanvas canvasDrawOrEraseAt;
-    bool erase;   //brush operation whether to erase or draw
+    bool erase;
+
+    #region ray
+
+    Vector3 originPos;
+    Vector3 originDir;
+    private float maxRayDistance = 5;
+    
+    #endregion
 
     void Start(){
         StartCoroutine(DrawToCanvas());
@@ -44,26 +51,42 @@ public class Drawer : MonoBehaviour
         //Debug.Log("IntPix" + interpolationPixelCount);
     }
 
-    void Update(){
-        if(Input.GetMouseButtonUp(0)){
-            SetPixelsBetweenDrawPoints();
-            drawPoints.Clear();
-        }else if(Input.GetMouseButton(0) && !UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject()){
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-            if(Physics.Raycast(ray, out hit)){
-                Transform hitobj = hit.transform;
-                if(hitobj.CompareTag(Drawable.Tag)){
-                    drawingCanvas = hitobj.GetComponent<Drawable>();
-                    if(drawingCanvas != null){
-                        drawpos = new Vector2Int();
-                        drawpos.x =(int)(hit.textureCoord.x * drawingCanvas.GetTextureSizeX());
-                        drawpos.y = (int)(hit.textureCoord.y * drawingCanvas.GetTextureSizeY());
-                        AddDrawPositions(drawpos);
-                        setBrushToEraseorDraw(erase);
-                    }
+    void Update()
+    {
+        Vector3 originPos = gameObject.transform.position;
+        Vector3 originDir = gameObject.transform.forward;
+
+        RaycastHit hit; // RaycastHit 변수 선언
+
+        Ray ray = new Ray(originPos, originDir);
+
+        if (Physics.Raycast(ray, out hit, maxRayDistance))
+        {
+            Transform hitobj = hit.transform;
+            if (hitobj.CompareTag(Drawable.Tag))
+            {
+                drawingCanvas = hitobj.GetComponent<Drawable>();
+                if (drawingCanvas != null)
+                {
+                    drawpos = new Vector2Int();
+                    drawpos.x = (int)(hit.textureCoord.x * drawingCanvas.GetTextureSizeX());
+                    drawpos.y = (int)(hit.textureCoord.y * drawingCanvas.GetTextureSizeY());
+                    AddDrawPositions(drawpos);
+                    setBrushToEraseorDraw(erase);
                 }
+                
+                Debug.DrawLine(originPos, hit.point, Color.green);
             }
+            else
+            {
+                Vector3 endPoint = originPos + originDir * maxRayDistance;
+                Debug.DrawLine(originPos, endPoint, Color.red);
+            }
+        }
+        else
+        {
+            Vector3 endPoint = originPos + originDir * maxRayDistance;
+            Debug.DrawLine(originPos, endPoint, Color.red);
         }
     }
         

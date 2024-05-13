@@ -17,7 +17,7 @@ public class Drawable : MonoBehaviour
     Texture2D canvasTexture;
     [SerializeField] private int textureSizeX = 1024;
     [SerializeField] private int textureSizeY = 1024;    
-    public static string Tag = "DrawableCanvas";
+    public static string Tag = "Ground";
     private bool canvasUpdateRequired = false;
     [SerializeField]
     private float canvasUpdatePeriod = 0.1f;
