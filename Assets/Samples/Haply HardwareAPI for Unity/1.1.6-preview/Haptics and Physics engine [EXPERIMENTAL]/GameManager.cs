@@ -3,7 +3,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
-
+using DiggingTest; 
 namespace Samples.Haply.HapticsAndPhysicsEngine
 {
     public class GameManager : MonoBehaviour
@@ -17,8 +17,9 @@ namespace Samples.Haply.HapticsAndPhysicsEngine
         //public SimplePhysicsHapticEffector simpleEffector;
         public List<AdvancedPhysicsHapticEffector> advancedEffectors;
         private int currentEffectorIndex = 0; 
-
-
+        private bool forceState = false;
+        public GameObject Tutorial;
+        public GameObject advance;
         public Material enabledForceMaterial;
         public Material disabledForceMaterial;
 
@@ -31,7 +32,7 @@ namespace Samples.Haply.HapticsAndPhysicsEngine
         public Image Triangle;
         public Text hapticsFrequencyText;
         public string chooseModeMessage = "Press 2 to Advanced";
-        public string enableForceMessage= "Move the sphere at center not touching anything and hit SPACE to enable force";
+        public string enableForceMessage= "조각도가 아무 것에도 닿지 않게 이동시키고 SPACE 키를 누르면 힘이 적용됩니다.";
         public string collisionMessage = "Press C to enable/disable collision detection";
         
         void Start()
@@ -72,8 +73,22 @@ namespace Samples.Haply.HapticsAndPhysicsEngine
             else if ( Input.GetKeyDown( KeyCode.Space ) )
             {
                 ToggleForceFeedback();
+                forceState = true;
             }
-            // else if ( Input.GetKeyDown( KeyCode.C ) && advancedEffector.gameObject.activeSelf)
+            else if (!advance.activeSelf && forceState && Input.GetKeyDown(KeyCode.Alpha1))
+            {
+                ActivateTutorial();
+            }
+            else if (!Tutorial.activeSelf && forceState && Input.GetKeyDown(KeyCode.Alpha2))
+            {
+                ActivateAdvance();
+            }
+            else if (forceState && Input.GetKeyDown(KeyCode.T))
+            {
+                ResetToForceState();
+                helpText.text = advancedEffectors[currentEffectorIndex].forceEnabled ? collisionMessage : enableForceMessage;
+
+            }            // else if ( Input.GetKeyDown( KeyCode.C ) && advancedEffector.gameObject.activeSelf)
             // {
             //     advancedEffector.collisionDetection = !advancedEffector.collisionDetection;
             // }
@@ -212,6 +227,35 @@ private void UpdateImageColors()
             effector.forceEnabled ? enabledForceMaterial : disabledForceMaterial;
             helpText.text = effector.forceEnabled ? collisionMessage : enableForceMessage;
             UpdateImageColors();
+        }
+        private void ActivateTutorial()
+        {
+            Tutorial.SetActive(true);
+            advance.SetActive(false);
+            helpText.text = "T키를 누르면 모드 선택으로 돌아갑니다.";
+        }
+
+        private void ActivateAdvance()
+        {
+            Tutorial.SetActive(false);
+            advance.SetActive(true);
+            helpText.text = "T키를 누르면 모드 선택으로 돌아갑니다.";
+
+            // 현재 advanced effector의 shovel 컴포넌트를 활성화
+            foreach (var effector in advancedEffectors)
+            {
+                Shovel shovel = effector.GetComponent<Shovel>();
+                if (shovel != null)
+                {
+                    shovel.enabled = true;
+                }
+            }
+        }
+
+        private void ResetToForceState()
+        {
+            Tutorial.SetActive(false);
+            advance.SetActive(false);
         }
     }
 }
