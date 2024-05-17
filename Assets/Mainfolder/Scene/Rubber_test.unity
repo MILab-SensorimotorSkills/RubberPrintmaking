@@ -1163,15 +1163,13 @@ GameObject:
   - component: {fileID: 381377624}
   - component: {fileID: 381377623}
   - component: {fileID: 381377622}
-  - component: {fileID: 381377628}
-  - component: {fileID: 381377627}
   m_Layer: 0
   m_Name: point_narrow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &381377621
 Transform:
   m_ObjectHideFlags: 0
@@ -1305,34 +1303,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 381377620}
   m_Mesh: {fileID: 394762868}
---- !u!114 &381377627
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 381377620}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe82f1b4093965541babb75254889f92, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &381377628
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 381377620}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4669db891dca37043957787955cab4d1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  drawingCanvas: {fileID: 1419477603}
-  smoothingFactor: 0.1
-  drawInterval: 0.02
-  targetObj: {fileID: 381377620}
 --- !u!1 &390472637
 GameObject:
   m_ObjectHideFlags: 0
@@ -3058,14 +3028,13 @@ GameObject:
   - component: {fileID: 1419477600}
   - component: {fileID: 1419477599}
   - component: {fileID: 1419477598}
-  - component: {fileID: 1419477603}
   m_Layer: 0
   m_Name: Tutorail
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1419477597
 Transform:
   m_ObjectHideFlags: 0
@@ -3142,7 +3111,7 @@ MeshCollider:
   serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 0
-  m_Mesh: {fileID: 4300000, guid: 6bc852e2152356e40bb95c81bbb170f9, type: 2}
+  m_Mesh: {fileID: 4300000, guid: 319bd8840f7b7d74b8386d4155d689e8, type: 2}
 --- !u!23 &1419477601
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -3192,26 +3161,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1419477596}
-  m_Mesh: {fileID: 4300000, guid: 6bc852e2152356e40bb95c81bbb170f9, type: 2}
---- !u!114 &1419477603
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1419477596}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 42f4c6f9047fb6b479c4ddd5bb44eb9b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  brushColor: {r: 1, g: 1, b: 1, a: 1}
-  brushSize: 1
-  brushType: 1
-  brushPosition: {x: 0, y: 0}
-  textureSizeX: 1024
-  textureSizeY: 1024
-  canvasUpdatePeriod: 0.1
+  m_Mesh: {fileID: 4300000, guid: 319bd8840f7b7d74b8386d4155d689e8, type: 2}
 --- !u!1 &1431783129
 GameObject:
   m_ObjectHideFlags: 0
@@ -4257,7 +4207,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1845903448
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4282,7 +4232,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4669db891dca37043957787955cab4d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  drawingCanvas: {fileID: 1419477603}
+  drawingCanvas: {fileID: 0}
   smoothingFactor: 0.1
   drawInterval: 0.02
   targetObj: {fileID: 1845903447}
