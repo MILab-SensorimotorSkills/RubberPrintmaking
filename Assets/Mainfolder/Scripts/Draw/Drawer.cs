@@ -22,7 +22,7 @@ public class Drawer : MonoBehaviour
     public GameObject targetObj;
     Vector3 originPos;
     Vector3 originDir;
-    private float maxRayDistance = 5;
+    private float maxRayDistance = 0.1f;
     
     #endregion
 
@@ -54,7 +54,7 @@ public class Drawer : MonoBehaviour
     void Update()
     {
         Vector3 originPos = targetObj.transform.position;
-        Vector3 originDir = targetObj.transform.up;
+        Vector3 originDir = targetObj.transform.right;
 
         RaycastHit hit; // RaycastHit 변수 선언
 

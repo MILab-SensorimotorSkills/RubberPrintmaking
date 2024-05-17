@@ -3030,7 +3030,7 @@ GameObject:
   - component: {fileID: 1419477598}
   m_Layer: 0
   m_Name: Tutorail
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -7215,9 +7215,7 @@ MonoBehaviour:
   onInitialized:
     m_PersistentCalls:
       m_Calls: []
-  avatars:
-  - {fileID: 381377621}
-  - {fileID: 2240103225212679391}
+  avatar: {fileID: 0}
 --- !u!23 &3652912357394140780
 MeshRenderer:
   m_ObjectHideFlags: 0
