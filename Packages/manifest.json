@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "co.haply.hardwareapi": "file:C:/Users/user/Downloads/co.haply.hardwareapi@1.1.6-preview/package",
+    "co.haply.hardwareapi": "file:C:/Users/user/Downloads/co.haply.hardwareapi@1.1.6-preview.tar.gz",
     "com.meta.xr.sdk.core": "63.0.0",
     "com.meta.xr.sdk.interaction.ovr": "63.0.0",
     "com.meta.xr.simulator.samples": "62.0.0",
