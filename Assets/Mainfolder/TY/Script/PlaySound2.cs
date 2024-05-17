@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-//0:  파기 시작하는 소리
-//1: 파는 소리
-//2: 파는 행위를 끝내는 소리
+//05.10 OnTriggerEnter가 Stay처럼 계속해서 호출되는 문제가 있음.
+//Stay를 거치지 않고, Start가 연속으로 호출될 경우 무시하는 로직 추가 구현 필요
+//해당 문제로 lastPos가 currentPos와 동일시 되거나, 0처리 되는 문제로 오디오가 재생되지 않음.
 public class PlaySound2 : MonoBehaviour
 {
     public AudioClip[] arrAudio = new AudioClip[3];
