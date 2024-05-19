@@ -22,7 +22,7 @@ public class Drawer : MonoBehaviour
     public GameObject targetObj;
     Vector3 originPos;
     Vector3 originDir;
-    private float maxRayDistance = 0.1f;
+    private float maxRayDistance = 0.03f;
     
     #endregion
 
@@ -78,13 +78,15 @@ public class Drawer : MonoBehaviour
                 Debug.DrawLine(originPos, hit.point, Color.green);
             }
             else
-            {
+            {   
                 Vector3 endPoint = originPos + originDir * maxRayDistance;
                 Debug.DrawLine(originPos, endPoint, Color.red);
             }
         }
         else
         {
+            SetPixelsBetweenDrawPoints();
+            drawPoints.Clear();
             Vector3 endPoint = originPos + originDir * maxRayDistance;
             Debug.DrawLine(originPos, endPoint, Color.red);
         }
