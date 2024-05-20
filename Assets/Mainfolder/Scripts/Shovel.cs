@@ -105,7 +105,7 @@ namespace DiggingTest
                     if (RaycastGround(worldVertexPosition, MaxRaycastDistance, out hit))
                     {
                         Vector3 newVertexPosition = groundMesh.transform.InverseTransformPoint(hit.point);
-
+                        //소리 앵글
                         // 새로운 버텍스 위치가 초기 위치에서 Y축 아래로 maxDepth 이상 변형되지 않도록 클램핑
                         Vector3 initialWorldVertexPosition = groundMesh.transform.TransformPoint(initialVertices[i]);
                         if (newVertexPosition.y < initialWorldVertexPosition.y - maxDepth)
