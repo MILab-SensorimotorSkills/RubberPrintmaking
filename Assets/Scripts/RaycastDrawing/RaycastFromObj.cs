@@ -3,7 +3,7 @@ using UnityEngine;
 public class RaycastFromObj : MonoBehaviour
 {   
     private static GameObject raycastOrigin;
-    public float maxRayDistance = 2f;
+    public float maxRayDistance = 10f;
 
     void Start(){
         raycastOrigin = gameObject;

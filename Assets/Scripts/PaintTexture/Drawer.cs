@@ -19,10 +19,10 @@ public class Drawer : MonoBehaviour
     bool erase;
 
     #region ray
-
+    public GameObject targetObj;
     Vector3 originPos;
     Vector3 originDir;
-    private float maxRayDistance = 5;
+    private float maxRayDistance = 0.03f;
     
     #endregion
 
@@ -30,6 +30,7 @@ public class Drawer : MonoBehaviour
         StartCoroutine(DrawToCanvas());
         erase = false;
     }
+    
     public void setBrushEraser(bool erasing)
     {
         erase = erasing;
@@ -53,8 +54,8 @@ public class Drawer : MonoBehaviour
 
     void Update()
     {
-        Vector3 originPos = gameObject.transform.position;
-        Vector3 originDir = gameObject.transform.forward;
+        Vector3 originPos = targetObj.transform.position;
+        Vector3 originDir = targetObj.transform.right;
 
         RaycastHit hit; // RaycastHit 변수 선언
 
@@ -78,13 +79,15 @@ public class Drawer : MonoBehaviour
                 Debug.DrawLine(originPos, hit.point, Color.green);
             }
             else
-            {
+            {   
                 Vector3 endPoint = originPos + originDir * maxRayDistance;
                 Debug.DrawLine(originPos, endPoint, Color.red);
             }
         }
         else
         {
+            SetPixelsBetweenDrawPoints();
+            drawPoints.Clear();
             Vector3 endPoint = originPos + originDir * maxRayDistance;
             Debug.DrawLine(originPos, endPoint, Color.red);
         }
