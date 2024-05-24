@@ -1,9 +1,6 @@
 {
   "dependencies": {
     "co.haply.hardwareapi": "file:C:/Users/user/Downloads/co.haply.hardwareapi@1.1.6-preview.tar.gz",
-    "com.meta.xr.sdk.core": "63.0.0",
-    "com.meta.xr.sdk.interaction.ovr": "63.0.0",
-    "com.meta.xr.simulator.samples": "62.0.0",
     "com.rito.pivot-editor": "https://github.com/rito15/Unity-Pivot-Editor.git",
     "com.unity.collab-proxy": "2.0.5",
     "com.unity.feature.development": "1.0.1",

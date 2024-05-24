@@ -26,9 +26,15 @@ public class Drawer : MonoBehaviour
     
     #endregion
 
+    #region angle
+    private AngleUpdater angle;
+    #endregion
+
     void Start(){
         StartCoroutine(DrawToCanvas());
         erase = false;
+
+        angle = GetComponent<AngleUpdater>();
     }
     public void setBrushEraser(bool erasing)
     {
@@ -73,9 +79,11 @@ public class Drawer : MonoBehaviour
                     drawpos.y = (int)(hit.textureCoord.y * drawingCanvas.GetTextureSizeY());
                     AddDrawPositions(drawpos);
                     setBrushToEraseorDraw(erase);
+
                 }
                 
                 Debug.DrawLine(originPos, hit.point, Color.green);
+                angle.AngleUpdate(ray);
             }
             else
             {   
@@ -89,6 +97,7 @@ public class Drawer : MonoBehaviour
             drawPoints.Clear();
             Vector3 endPoint = originPos + originDir * maxRayDistance;
             Debug.DrawLine(originPos, endPoint, Color.red);
+            angle.NoAngle();
         }
     }
         

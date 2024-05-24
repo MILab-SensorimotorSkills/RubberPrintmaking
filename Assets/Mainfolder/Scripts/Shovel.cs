@@ -23,10 +23,16 @@ namespace DiggingTest
         private Dictionary<Vector2Int, List<int>> grid = new Dictionary<Vector2Int, List<int>>();
         private Vector3[] initialVertices;
 
+        #region angle
+        private AngleUpdater angle;
+        #endregion
+
         void Start()
         {
             shovelCollider = GetComponent<Collider>();
             shovelPrevPos = transform.position;
+
+            angle = GetComponent<AngleUpdater>();
 
             // 초기 버텍스 위치 저장
             initialVertices = groundMesh.mesh.vertices.Clone() as Vector3[];
@@ -76,7 +82,7 @@ namespace DiggingTest
 
         void UpdateGroundMesh()
         {
-            const float MaxRaycastDistance = 10f; // 레이캐스트 거리 증가
+            const float MaxRaycastDistance = 0.5f; // 레이캐스트 거리 증가
             const float MaxDistanceSquared = MaxRaycastDistance * MaxRaycastDistance;
             Vector3[] vertices = groundMesh.mesh.vertices;
             Vector3 shovelPosition = shovelCollider.transform.position;
@@ -106,6 +112,7 @@ namespace DiggingTest
                     {
                         Vector3 newVertexPosition = groundMesh.transform.InverseTransformPoint(hit.point);
                         //소리 앵글
+                        angle.AngleUpdate(hit, worldVertexPosition);
                         // 새로운 버텍스 위치가 초기 위치에서 Y축 아래로 maxDepth 이상 변형되지 않도록 클램핑
                         Vector3 initialWorldVertexPosition = groundMesh.transform.TransformPoint(initialVertices[i]);
                         if (newVertexPosition.y < initialWorldVertexPosition.y - maxDepth)
@@ -126,12 +133,20 @@ namespace DiggingTest
             }
         }
 
-        private bool RaycastGround(Vector3 origin, float distance, out RaycastHit hit)
-        {
-            Ray ray = new Ray(origin, Vector3.down);
-            bool result = shovelCollider.Raycast(ray, out hit, distance);
-            return result;
-        }
+private bool RaycastGround(Vector3 origin, float distance, out RaycastHit hit)
+{
+    Ray ray = new Ray(origin, Vector3.down);
+
+    // Draw the ray for visualization
+
+    bool result = shovelCollider.Raycast(ray, out hit, distance);
+    if(result)
+        Debug.DrawRay(origin, Vector3.down * distance, Color.red, 0.2f);
+
+
+    return result;
+}
+
 
         private void OnCollisionEnter(Collision other)
         {
