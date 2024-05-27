@@ -4,13 +4,20 @@ using UnityEngine.UI;
 //맞게 계산되는지 확인해야함.
 public class AngleUpdater : MonoBehaviour
 {
+    #region output
     public Text OutputText;
-    private static string OUTPUT_TEXT = "Angle: {0}";
+    private static string OUTPUT_TEXT = "Angle: {0}\nRotation\nX: {1}   Y: {2}   Z: {3}   ";
+    #endregion
 
-    public GameObject TargetObject;
+    #region ray
     private float angle;
     private Vector3 planeNormal;
     private Vector3 rayDirection;
+    #endregion
+
+    #region rotation
+    private Vector3 rotation;
+    #endregion
 
     private void Start()
     {
@@ -39,8 +46,8 @@ public class AngleUpdater : MonoBehaviour
             angle = -angle;
         }
 
-        // 각도 출력
-        OutputText.text = string.Format(OUTPUT_TEXT, angle);
+        rotation = transform.rotation.eulerAngles;
+        OutputText.text = string.Format(OUTPUT_TEXT, angle, rotation.x, rotation.y, rotation.z);
     }
 
     public void AngleUpdate(Ray ray)
@@ -53,13 +60,14 @@ public class AngleUpdater : MonoBehaviour
 
         // xz 평면과 레이의 각도 계산
         float angle = Vector3.Angle(planeNormal, rayDirection) - 90;
+        
+        rotation = transform.rotation.eulerAngles;
 
-        // 각도 출력
-        OutputText.text = string.Format(OUTPUT_TEXT, angle);
+        OutputText.text = string.Format(OUTPUT_TEXT, angle, rotation.x, rotation.y, rotation.z);
     }
 
     public void NoAngle()
     {
-        OutputText.text = string.Format(OUTPUT_TEXT, "No Value");
-    }
+        OutputText.text = string.Format(OUTPUT_TEXT, "No Value", "_", "_", "_");
+    }    
 }

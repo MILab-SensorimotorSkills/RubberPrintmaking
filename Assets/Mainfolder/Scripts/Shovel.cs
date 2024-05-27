@@ -18,6 +18,7 @@ namespace DiggingTest
         private Vector3 shovelPrevPos;
         private List<Collector> collectors = new List<Collector>();
         private Collider shovelCollider;
+        public Collider virtual_shovelCollider;
         private float timeSinceLastUpdate = 0f;
 
         private Dictionary<Vector2Int, List<int>> grid = new Dictionary<Vector2Int, List<int>>();
@@ -83,7 +84,7 @@ namespace DiggingTest
         void UpdateGroundMesh()
         {
             const float MaxRaycastDistance = 0.5f; // 레이캐스트 거리 증가
-            const float MaxDistanceSquared = MaxRaycastDistance * MaxRaycastDistance;
+            const float MaxDistanceSquared = MaxRaycastDistance;
             Vector3[] vertices = groundMesh.mesh.vertices;
             Vector3 shovelPosition = shovelCollider.transform.position;
             Vector2Int shovelGridPos = GetGridPosition(shovelPosition);
@@ -106,6 +107,7 @@ namespace DiggingTest
             {
                 Vector3 worldVertexPosition = groundMesh.transform.TransformPoint(vertices[i]);
                 if ((shovelPosition - worldVertexPosition).sqrMagnitude <= MaxDistanceSquared)
+                //그니까 조각도랑 고무판의 거리 차이가 맥스 디스턴스 이내일경우, (고무판 내부 또는 그 밑이겠지?)
                 {
                     RaycastHit hit;
                     if (RaycastGround(worldVertexPosition, MaxRaycastDistance, out hit))
@@ -139,10 +141,7 @@ private bool RaycastGround(Vector3 origin, float distance, out RaycastHit hit)
 
     // Draw the ray for visualization
 
-    bool result = shovelCollider.Raycast(ray, out hit, distance);
-    if(result)
-        Debug.DrawRay(origin, Vector3.down * distance, Color.red, 0.2f);
-
+    bool result = virtual_shovelCollider.Raycast(ray, out hit, distance);
 
     return result;
 }
