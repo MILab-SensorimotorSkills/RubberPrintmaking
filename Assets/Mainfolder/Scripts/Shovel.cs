@@ -24,16 +24,15 @@ namespace DiggingTest
         private Dictionary<Vector2Int, List<int>> grid = new Dictionary<Vector2Int, List<int>>();
         private Vector3[] initialVertices;
 
-        #region angle
-        private AngleUpdater angle;
+        #region Sound
+        private SoundPlayer sound;
         #endregion
 
         void Start()
         {
             shovelCollider = GetComponent<Collider>();
             shovelPrevPos = transform.position;
-
-            angle = GetComponent<AngleUpdater>();
+            sound = gameObject.GetComponent<SoundPlayer>();
 
             // 초기 버텍스 위치 저장
             initialVertices = groundMesh.mesh.vertices.Clone() as Vector3[];
@@ -113,8 +112,7 @@ namespace DiggingTest
                     if (RaycastGround(worldVertexPosition, MaxRaycastDistance, out hit))
                     {
                         Vector3 newVertexPosition = groundMesh.transform.InverseTransformPoint(hit.point);
-                        //소리 앵글
-                        angle.AngleUpdate(hit, worldVertexPosition);
+                        sound.PlaySound();
                         // 새로운 버텍스 위치가 초기 위치에서 Y축 아래로 maxDepth 이상 변형되지 않도록 클램핑
                         Vector3 initialWorldVertexPosition = groundMesh.transform.TransformPoint(initialVertices[i]);
                         if (newVertexPosition.y < initialWorldVertexPosition.y - maxDepth)
@@ -125,6 +123,8 @@ namespace DiggingTest
                         vertices[i] = newVertexPosition;
                         isMeshUpdated = true;
                     }
+                }else{
+                    sound.StopSound();
                 }
             }
 

@@ -22,19 +22,13 @@ public class Drawer : MonoBehaviour
     public GameObject targetObj;
     Vector3 originPos;
     Vector3 originDir;
-    private float maxRayDistance = 0.03f;
+    private float maxRayDistance = 0.06f;
     
-    #endregion
-
-    #region angle
-    private AngleUpdater angle;
     #endregion
 
     void Start(){
         StartCoroutine(DrawToCanvas());
         erase = false;
-
-        angle = GetComponent<AngleUpdater>();
     }
     public void setBrushEraser(bool erasing)
     {
@@ -83,7 +77,6 @@ public class Drawer : MonoBehaviour
                 }
                 
                 Debug.DrawLine(originPos, hit.point, Color.green);
-                angle.AngleUpdate(ray);
             }
             else
             {   
@@ -97,7 +90,6 @@ public class Drawer : MonoBehaviour
             drawPoints.Clear();
             Vector3 endPoint = originPos + originDir * maxRayDistance;
             Debug.DrawLine(originPos, endPoint, Color.red);
-            angle.NoAngle();
         }
     }
         

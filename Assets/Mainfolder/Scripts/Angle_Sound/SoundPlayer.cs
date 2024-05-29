@@ -4,19 +4,49 @@ using UnityEngine;
 
 public class SoundPlayer : MonoBehaviour
 {
-    /*private AudioSource audioSource;
-    
+    private AudioSource audioSource;
+    private bool collision = false;
+
+    private Vector3 lastPos;
+    private Vector3 currentPos;
+    private int frameCount = 0;
+    private bool isPlaying = false;
+
     // Start is called before the first frame update
     void Start()
     {
         if(audioSource == null){
-            audioSource == gameObject.GetComponent<audioSource>();
+            audioSource = gameObject.GetComponent<AudioSource>();
         }
+
+        lastPos = transform.position;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }*/
+    void Update(){
+        if(frameCount<5){
+            frameCount++;
+        }else{
+            frameCount = 0;
+            currentPos = transform.position;
+            if(collision && currentPos != lastPos){
+                if(!isPlaying){
+                    isPlaying = true;
+                    audioSource.Play();
+                }
+            }else{
+                isPlaying = false;
+                audioSource.Stop();
+            }
+        }
+
+    }
+
+
+    public void PlaySound(){
+        collision = true;
+    }
+    
+    public void StopSound(){
+        collision = false;
+    }
 }
