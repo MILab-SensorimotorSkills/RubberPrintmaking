@@ -44,9 +44,11 @@ public class SoundPlayer : MonoBehaviour
 
     public void PlaySound(){
         collision = true;
+        Debug.Log("플레이");
     }
     
     public void StopSound(){
         collision = false;
+        Debug.Log("스탑");
     }
 }
