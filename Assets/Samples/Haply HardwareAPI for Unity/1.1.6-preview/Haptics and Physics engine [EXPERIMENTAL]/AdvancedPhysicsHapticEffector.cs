@@ -3,6 +3,9 @@ using Haply.HardwareAPI.Unity;
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
+using System.Globalization;
+using CsvHelper;
+using CsvHelper.Configuration;
 
 /// <summary>
 /// <b>EXPERIMENTAL: </b><br/>
@@ -42,6 +45,39 @@ using System.IO;
 /// </remarks>
 /// 
 /// </summary>
+public class CsvData
+{
+    public float Time { get; set; }
+    public Vector3 Position { get; set; }
+    public Vector3 Force { get; set; }
+}
+
+public static class CsvReader
+{
+    public static List<CsvData> ReadCsv(string filePath)
+    {
+        var records = new List<CsvData>();
+        using (var reader = new StreamReader(filePath))
+        using (var csv = new CsvHelper.CsvReader(reader, CultureInfo.InvariantCulture))
+        {
+            csv.Configuration.RegisterClassMap<CsvDataMap>();
+            records = new List<CsvData>(csv.GetRecords<CsvData>());
+        }
+        return records;
+    }
+}
+
+public sealed class CsvDataMap : ClassMap<CsvData>
+{
+    public CsvDataMap()
+    {
+        Map(m => m.Time).Name("Time");
+        Map(m => m.Position).ConvertUsing(row => new Vector3(row.GetField<float>("PosX"), row.GetField<float>("PosY"), row.GetField<float>("PosZ")));
+        Map(m => m.Force).ConvertUsing(row => new Vector3(row.GetField<float>("ForceX"), row.GetField<float>("ForceY"), row.GetField<float>("ForceZ")));
+    }
+}
+
+
 public class AdvancedPhysicsHapticEffector : MonoBehaviour
 {
     /// <summary>
@@ -98,6 +134,8 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
     public bool collisionDetection;
     public List<Collider> touched = new();
     public float mass;
+
+    private List<CsvData> csvData;
     private void Awake()
     {
         // find the HapticThread object before the first FixedUpdate() call
@@ -106,6 +144,9 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
         // create the physics link between physic effector and device cursor
         AttachCursor(m_hapticThread.avatar.gameObject, EndPoint);
         SetupCollisionDetection();
+
+        // Load CSV data
+        csvData = CsvReader.ReadCsv("path/to/your/data.csv");
     }
 
     private void OnEnable()
@@ -125,12 +166,17 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
 
         return gravityForce;
     }
+
     private Vector3 ForceCalculation(in Vector3 position, in Vector3 velocity, in AdditionalData additionalData)
     {
+        // Find the closest CSV data point based on time
+        CsvData closestData = FindClosestData(Time.time);
 
-        var force = additionalData.physicsCursorPosition - position;
-        force *= stiffness;
-        force -= velocity * damping;
+        // Calculate the force to apply
+        Vector3 desiredForce = closestData.Force;
+        Vector3 directionCorrection = (closestData.Position - position) * stiffness;
+
+        var force = desiredForce + directionCorrection - velocity * damping;
 
         if (!forceEnabled || (collisionDetection && !additionalData.isTouching))
         {
@@ -147,8 +193,28 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
         return force;
     }
 
+    /// <summary>
+    /// Find the closest CSV data point based on the given time.
+    /// </summary>
+    /// <param name="currentTime">Current time</param>
+    /// <returns>Closest CsvData</returns>
+    private CsvData FindClosestData(float currentTime)
+    {
+        CsvData closestData = csvData[0];
+        float closestTimeDifference = Mathf.Abs(currentTime - closestData.Time);
 
+        foreach (var data in csvData)
+        {
+            float timeDifference = Mathf.Abs(currentTime - data.Time);
+            if (timeDifference < closestTimeDifference)
+            {
+                closestData = data;
+                closestTimeDifference = timeDifference;
+            }
+        }
 
+        return closestData;
+    }
 
     private void FixedUpdate() =>
         // Update AdditionalData 
@@ -264,15 +330,6 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
         additionalData.isTouching = collisionDetection && touched.Count > 0;
         return additionalData;
     }
-
-    /// <summary>
-    /// Calculate the force to apply based on the cursor position and the scene data
-    /// <para>This method is called once per haptic frame (~1000Hz) and needs to be efficient</para>
-    /// </summary>
-    /// <param name="position">cursor position</param>
-    /// <param name="velocity">cursor velocity</param>
-    /// <param name="additionalData">additional scene data synchronized by <see cref="GetAdditionalData"/> method</param>
-    /// <returns>Force to apply</returns>
 
     #endregion
 

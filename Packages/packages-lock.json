@@ -1,22 +1,23 @@
 {
   "dependencies": {
     "co.haply.hardwareapi": {
-      "version": "file:C:/Users/user/Downloads/co.haply.hardwareapi@1.1.6-preview.tar.gz",
+      "version": "1.1.6-preview",
       "depth": 0,
-      "source": "local-tarball",
+      "source": "registry",
       "dependencies": {
         "com.unity.nuget.newtonsoft-json": "3.0.2"
-      }
+      },
+      "url": "https://unitypackages.haply.co"
     },
     "com.meta.xr.sdk.core": {
-      "version": "63.0.0",
+      "version": "65.0.0",
       "depth": 0,
       "source": "registry",
       "dependencies": {},
       "url": "https://packages.unity.com"
     },
     "com.meta.xr.sdk.interaction": {
-      "version": "63.0.0",
+      "version": "65.0.0",
       "depth": 1,
       "source": "registry",
       "dependencies": {
@@ -26,12 +27,12 @@
       "url": "https://packages.unity.com"
     },
     "com.meta.xr.sdk.interaction.ovr": {
-      "version": "63.0.0",
+      "version": "65.0.0",
       "depth": 0,
       "source": "registry",
       "dependencies": {
-        "com.meta.xr.sdk.core": "63.0.0",
-        "com.meta.xr.sdk.interaction": "63.0.0"
+        "com.meta.xr.sdk.core": "65.0.0",
+        "com.meta.xr.sdk.interaction": "65.0.0"
       },
       "url": "https://packages.unity.com"
     },
