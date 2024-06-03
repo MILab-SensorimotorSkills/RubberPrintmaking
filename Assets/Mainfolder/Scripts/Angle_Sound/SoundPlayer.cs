@@ -11,6 +11,8 @@ public class SoundPlayer : MonoBehaviour
     private Vector3 currentPos;
     private int frameCount = 0;
     private bool isPlaying = false;
+    private float distance;
+    private float[] volArr = new float[] {0.4f, 0.5f, 0.6f, 0.7f};
 
     // Start is called before the first frame update
     void Start()
@@ -23,12 +25,15 @@ public class SoundPlayer : MonoBehaviour
     }
 
     void Update(){
-        if(frameCount<5){
+        if(frameCount<10){
             frameCount++;
         }else{
             frameCount = 0;
             currentPos = transform.position;
-            if(collision && currentPos != lastPos){
+            distance = Vector3.Distance(currentPos, lastPos);
+            if(collision && distance > 0.001){
+                lastPos = currentPos;
+                audioSource.volume = volArr[Random.Range(0, volArr.Length)];
                 if(!isPlaying){
                     isPlaying = true;
                     audioSource.Play();
@@ -38,17 +43,14 @@ public class SoundPlayer : MonoBehaviour
                 audioSource.Stop();
             }
         }
-
     }
 
 
     public void PlaySound(){
         collision = true;
-        Debug.Log("플레이");
     }
     
     public void StopSound(){
         collision = false;
-        Debug.Log("스탑");
     }
 }

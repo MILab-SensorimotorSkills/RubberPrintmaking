@@ -98,6 +98,10 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
     public bool collisionDetection;
     public List<Collider> touched = new();
     public float mass;
+
+    private List<CsvData> csvData;
+    private int currentIndex = 0;
+    
     private void Awake()
     {
         // find the HapticThread object before the first FixedUpdate() call

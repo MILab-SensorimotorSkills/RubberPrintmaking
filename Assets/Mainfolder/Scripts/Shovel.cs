@@ -18,7 +18,7 @@ namespace DiggingTest
         private Vector3 shovelPrevPos;
         private List<Collector> collectors = new List<Collector>();
         private Collider shovelCollider;
-        public Collider virtual_shovelCollider;
+        public GameObject virtual_shovelCollider;
         private float timeSinceLastUpdate = 0f;
 
         private Dictionary<Vector2Int, List<int>> grid = new Dictionary<Vector2Int, List<int>>();
@@ -39,9 +39,6 @@ namespace DiggingTest
 
             // 그리드 생성
             CreateGrid();
-
-            // 그리드 셀 개수 출력
-            PrintGridCellCount();
         }
 
         void Update()
@@ -120,6 +117,7 @@ namespace DiggingTest
                             newVertexPosition.y = initialWorldVertexPosition.y - maxDepth;
                         }
 
+                        // 주변 버텍스와 보간
                         vertices[i] = newVertexPosition;
                         isMeshUpdated = true;
                     }
@@ -140,33 +138,12 @@ private bool RaycastGround(Vector3 origin, float distance, out RaycastHit hit)
     Ray ray = new Ray(origin, Vector3.down);
 
     // Draw the ray for visualization
-
-    bool result = virtual_shovelCollider.Raycast(ray, out hit, distance);
+    Collider Virtual_shovelCollider = virtual_shovelCollider.GetComponent<Collider>();
+    bool result = Virtual_shovelCollider.Raycast(ray, out hit, distance);
 
     return result;
 }
 
 
-        private void OnCollisionEnter(Collision other)
-        {
-            // 특정 조건하에 충돌 로그
-        }
-
-        private void PrintGridCellCount()
-        {
-            // 메쉬의 최소 및 최대 경계값을 사용하여 그리드 셀의 개수를 계산하고 출력
-            Bounds bounds = groundMesh.mesh.bounds;
-            Vector3 meshMin = groundMesh.transform.TransformPoint(bounds.min);
-            Vector3 meshMax = groundMesh.transform.TransformPoint(bounds.max);
-
-            float meshSizeX = meshMax.x - meshMin.x;
-            float meshSizeZ = meshMax.z - meshMin.z;
-
-            int gridCellsX = Mathf.CeilToInt(meshSizeX / cellSize);
-            int gridCellsZ = Mathf.CeilToInt(meshSizeZ / cellSize);
-            int totalGridCells = gridCellsX * gridCellsZ;
-
-            Debug.Log("Total Grid Cells: " + totalGridCells);
-        }
     }
 }

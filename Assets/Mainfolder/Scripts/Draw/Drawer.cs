@@ -22,7 +22,7 @@ public class Drawer : MonoBehaviour
     public GameObject targetObj;
     Vector3 originPos;
     Vector3 originDir;
-    private float maxRayDistance = 0.06f;
+    private float maxRayDistance = 0.05f;
     
     #endregion
 
@@ -54,7 +54,7 @@ public class Drawer : MonoBehaviour
     void Update()
     {
         Vector3 originPos = targetObj.transform.position;
-        Vector3 originDir = targetObj.transform.right;
+        Vector3 originDir = targetObj.transform.forward;
 
         RaycastHit hit; // RaycastHit 변수 선언
 
@@ -71,6 +71,10 @@ public class Drawer : MonoBehaviour
                     drawpos = new Vector2Int();
                     drawpos.x = (int)(hit.textureCoord.x * drawingCanvas.GetTextureSizeX());
                     drawpos.y = (int)(hit.textureCoord.y * drawingCanvas.GetTextureSizeY());
+
+                    //xz대칭이 일어나는 문제 발생
+                    drawpos.x = drawingCanvas.GetTextureSizeX() - drawpos.x -1;
+                    drawpos.y = drawingCanvas.GetTextureSizeY() - drawpos.y - 1;
                     AddDrawPositions(drawpos);
                     setBrushToEraseorDraw(erase);
 

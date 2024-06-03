@@ -15,9 +15,8 @@ public class AngleUpdater : MonoBehaviour
     #endregion
 
     public GameObject Cube;
-    public Material Red;
-    public Material Green;
     private Renderer renderer;
+    private Color orange = new Color(1f, 0.5f, 0f);
 
     private void Start()
     {
@@ -33,8 +32,8 @@ public class AngleUpdater : MonoBehaviour
 
     void Update(){
         if(frameCount<10){
-            rotation += (int)transform.rotation.eulerAngles.x;
-            angle += (int)transform.rotation.eulerAngles.z;
+            rotation += (int)transform.rotation.eulerAngles.z;
+            angle += (int)transform.rotation.eulerAngles.x;
             frameCount++;  
         }else{
             rotation = (int)(rotation/frameCount);
@@ -49,10 +48,15 @@ public class AngleUpdater : MonoBehaviour
     }
 
     void ChangeCube(){
-        if((rotation >= 0 && rotation <= 60) || (rotation >= 340 && rotation <= 360)){
-            renderer.material = Green;
+    
+        if((rotation >= 0 && rotation <= 20) || (rotation >= 340 && rotation <=360)){
+            renderer.material.color = Color.green;
+        }else if((rotation > 20 && rotation <= 40) || (rotation >= 320 && rotation < 340)){
+            renderer.material.color = Color.blue;
+        }else if((rotation > 40 && rotation <= 60) || (rotation >= 300 && rotation < 320)){
+            renderer.material.color = orange;
         }else{
-            renderer.material = Red;
+            renderer.material.color = Color.red;
         }
     }
 
