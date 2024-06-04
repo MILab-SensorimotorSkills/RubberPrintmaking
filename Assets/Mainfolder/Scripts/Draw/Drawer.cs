@@ -73,10 +73,12 @@ public class Drawer : MonoBehaviour
                     drawpos.y = (int)(hit.textureCoord.y * drawingCanvas.GetTextureSizeY());
 
                     //xz대칭이 일어나는 문제 발생
-                    drawpos.x = drawingCanvas.GetTextureSizeX() - drawpos.x -1;
+                    drawpos.x = drawingCanvas.GetTextureSizeX() - drawpos.x - 1;
                     drawpos.y = drawingCanvas.GetTextureSizeY() - drawpos.y - 1;
                     AddDrawPositions(drawpos);
                     setBrushToEraseorDraw(erase);
+                    SetPixelsBetweenDrawPoints();
+                    Debug.Log("asdf");
 
                 }
                 
@@ -84,6 +86,7 @@ public class Drawer : MonoBehaviour
             }
             else
             {   
+                drawPoints.Clear();
                 Vector3 endPoint = originPos + originDir * maxRayDistance;
                 Debug.DrawLine(originPos, endPoint, Color.red);
             }

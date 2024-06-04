@@ -33,10 +33,11 @@ public class SoundPlayer : MonoBehaviour
             distance = Vector3.Distance(currentPos, lastPos);
             if(collision && distance > 0.001){
                 lastPos = currentPos;
-                audioSource.volume = volArr[Random.Range(0, volArr.Length)];
+                //audioSource.volume = volArr[Random.Range(0, volArr.Length)];
                 if(!isPlaying){
                     isPlaying = true;
                     audioSource.Play();
+                    Debug.Log("플레이 중");
                 }
             }else{
                 isPlaying = false;

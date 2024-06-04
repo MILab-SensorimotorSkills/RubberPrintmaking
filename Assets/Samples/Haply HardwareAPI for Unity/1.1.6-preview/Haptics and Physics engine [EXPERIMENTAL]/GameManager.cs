@@ -22,6 +22,7 @@ namespace Samples.Haply.HapticsAndPhysicsEngine
         public GameObject advance;
         public Material enabledForceMaterial;
         public Material disabledForceMaterial;
+        public GameObject Knife;
 
         [Header("UI")]
         public Text helpText;
@@ -237,6 +238,8 @@ private void UpdateImageColors()
 
         private void ActivateAdvance()
         {
+            Destroy(Knife.GetComponent<Drawer>());
+            Destroy(Knife.GetComponent<DrawManager>());
             Tutorial.SetActive(false);
             advance.SetActive(true);
             helpText.text = "T키를 누르면 모드 선택으로 돌아갑니다.";

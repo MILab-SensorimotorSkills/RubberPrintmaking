@@ -23,16 +23,16 @@ namespace DiggingTest
 
         private Dictionary<Vector2Int, List<int>> grid = new Dictionary<Vector2Int, List<int>>();
         private Vector3[] initialVertices;
-
-        #region Sound
-        private SoundPlayer sound;
-        #endregion
+        
+        //distance, depth용
+        public Vector3? hitPoint;
+  
 
         void Start()
         {
             shovelCollider = GetComponent<Collider>();
             shovelPrevPos = transform.position;
-            sound = gameObject.GetComponent<SoundPlayer>();
+            //sound = gameObject.GetComponent<SoundPlayer>();
 
             // 초기 버텍스 위치 저장
             initialVertices = groundMesh.mesh.vertices.Clone() as Vector3[];
@@ -79,7 +79,7 @@ namespace DiggingTest
 
         void UpdateGroundMesh()
         {
-            const float MaxRaycastDistance = 0.5f; // 레이캐스트 거리 증가
+            const float MaxRaycastDistance = 2f; // 레이캐스트 거리 증가
             const float MaxDistanceSquared = MaxRaycastDistance;
             Vector3[] vertices = groundMesh.mesh.vertices;
             Vector3 shovelPosition = shovelCollider.transform.position;
@@ -109,7 +109,7 @@ namespace DiggingTest
                     if (RaycastGround(worldVertexPosition, MaxRaycastDistance, out hit))
                     {
                         Vector3 newVertexPosition = groundMesh.transform.InverseTransformPoint(hit.point);
-                        sound.PlaySound();
+                        
                         // 새로운 버텍스 위치가 초기 위치에서 Y축 아래로 maxDepth 이상 변형되지 않도록 클램핑
                         Vector3 initialWorldVertexPosition = groundMesh.transform.TransformPoint(initialVertices[i]);
                         if (newVertexPosition.y < initialWorldVertexPosition.y - maxDepth)
@@ -117,12 +117,9 @@ namespace DiggingTest
                             newVertexPosition.y = initialWorldVertexPosition.y - maxDepth;
                         }
 
-                        // 주변 버텍스와 보간
                         vertices[i] = newVertexPosition;
                         isMeshUpdated = true;
                     }
-                }else{
-                    sound.StopSound();
                 }
             }
 
@@ -133,17 +130,23 @@ namespace DiggingTest
             }
         }
 
-private bool RaycastGround(Vector3 origin, float distance, out RaycastHit hit)
-{
-    Ray ray = new Ray(origin, Vector3.down);
+        private bool RaycastGround(Vector3 origin, float distance, out RaycastHit hit)
+        {
+            Ray ray = new Ray(origin, Vector3.down);
 
-    // Draw the ray for visualization
-    Collider Virtual_shovelCollider = virtual_shovelCollider.GetComponent<Collider>();
-    bool result = Virtual_shovelCollider.Raycast(ray, out hit, distance);
+            // Draw the ray for visualization
+            Collider Virtual_shovelCollider = virtual_shovelCollider.GetComponent<Collider>();
+            bool result = Virtual_shovelCollider.Raycast(ray, out hit, distance);
+            //result1 = result;
+            //Debug.Log(result1);
 
-    return result;
-}
-
+            if(result){
+                hitPoint = hit.point;
+            }else{
+                hitPoint = null;
+            }
+            return result;
+        }
 
     }
 }

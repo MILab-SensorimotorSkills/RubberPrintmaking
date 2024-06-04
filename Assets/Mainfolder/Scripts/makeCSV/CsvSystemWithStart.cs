@@ -2,17 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using DiggingTest;
+using TMPro;
 
 public class CsvSystemWithStart : MonoBehaviour
 {
     #region Object
-    public Text startTime;
+    public TMP_Text startTime;
     public GameObject textBox;
     public GameObject rubber;
     private float rubberHeight;
-    //조각도 끝 부분
-    public GameObject endPoint;
     private float endPointHeight;
+    public GameObject knife;
+    private Shovel knifeShovel;
     #endregion
 
     private CSV_Making csv;
@@ -25,10 +27,12 @@ public class CsvSystemWithStart : MonoBehaviour
     private float depth;
     //도안으로부터 떨어진 정도
     private float distance;
+    private float hitPoint;
     #endregion
 
     void Start(){
         csv = GetComponent<CSV_Making>();
+        knifeShovel = knife.GetComponent<Shovel>();
         rubberHeight = rubber.transform.position.y;
     }
 
@@ -47,7 +51,7 @@ public class CsvSystemWithStart : MonoBehaviour
         //데이터 쓰기를 멈추는 시점
         if(Input.GetKeyDown(KeyCode.Q) && WriteData){
             WriteData = false;
-            startTime.text = "종료";
+            startTime.text = "End";
             textBox.SetActive(true);
             
         }
@@ -71,7 +75,7 @@ public class CsvSystemWithStart : MonoBehaviour
                     startTime.text = count.ToString();
                     break;
                 case 0:
-                    startTime.text = "시작";
+                    startTime.text = "Start";
                     break;
             }
             count--;
@@ -91,8 +95,9 @@ public class CsvSystemWithStart : MonoBehaviour
     }
 
     void CulculateDepth(){
-        endPointHeight = endPoint.transform.position.y;
-        depth = endPointHeight - rubberHeight;
+        /*hitPoint = knifeShovel.hitPoint.y;
+        depth = hitPoint - rubberHeight; */
+
     }
 
     // void CulculateDistance(){
