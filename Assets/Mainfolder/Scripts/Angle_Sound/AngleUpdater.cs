@@ -49,11 +49,11 @@ public class AngleUpdater : MonoBehaviour
 
     void ChangeCube(){
     
-        if(((rotation >= 0 && rotation <= 20) || (rotation >= 340 && rotation <=360)) && (angle >= 8 && angle<=20)){
+        if(((rotation >= 0 && rotation <= 30) || (rotation >= 330 && rotation <=360)) && (angle >= 8 && angle<=20)){
             renderer.material.color = Color.green;
-        }else if(((rotation > 20 && rotation <= 40) || (rotation >= 320 && rotation < 340)) && (angle > 20 && angle <= 25)){
+        }else if(((rotation > 30 && rotation <= 50) || (rotation >= 310 && rotation < 330)) && (angle > 20 && angle <= 25)){
             renderer.material.color = Color.blue;
-        }else if(((rotation > 40 && rotation <= 60) || (rotation >= 300 && rotation < 320)) && (angle > 25 && angle <= 35)){
+        }else if(((rotation > 50 && rotation <= 70) || (rotation >= 290 && rotation < 310)) && (angle > 25 && angle <= 35)){
             renderer.material.color = orange;
         }else{
             renderer.material.color = Color.red;

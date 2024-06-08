@@ -101,7 +101,8 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
 
     private List<CsvData> csvData;
     private int currentIndex = 0;
-    
+    private List<Vector3> colliderWorldPositions = new List<Vector3>(); // List to store world positions
+
     private void Awake()
     {
         // find the HapticThread object before the first FixedUpdate() call
@@ -313,6 +314,7 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
             // store touched object
             touched.Add(collision.collider);
             isColliding = true;
+            colliderWorldPositions.Add(collision.collider.transform.position); 
 
         }
     }
@@ -328,9 +330,13 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
         {
             touched.Remove(collision.collider);
             isColliding = false;
+            colliderWorldPositions.Remove(collision.collider.transform.position); // Remove world position
 
         }
     }
-
+    public List<Vector3> GetColliderWorldPositions()
+    {
+        return colliderWorldPositions;
+    }
     #endregion
 }

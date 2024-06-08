@@ -6,9 +6,9 @@ PhysicMaterial:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Rubber
+  m_Name: test
   dynamicFriction: 2
-  staticFriction: 0.5
-  bounciness: 1
-  frictionCombine: 0
+  staticFriction: 2.4
+  bounciness: 0.5
+  frictionCombine: 3
   bounceCombine: 0

@@ -78,7 +78,6 @@ public class Drawer : MonoBehaviour
                     AddDrawPositions(drawpos);
                     setBrushToEraseorDraw(erase);
                     SetPixelsBetweenDrawPoints();
-                    Debug.Log("asdf");
 
                 }
                 

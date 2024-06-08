@@ -25,7 +25,7 @@ namespace DiggingTest
         private Vector3[] initialVertices;
         
         //distance, depth용
-        public Vector3? hitPoint;
+        public Vector3 hitPoint;
   
 
         void Start()
@@ -79,7 +79,7 @@ namespace DiggingTest
 
         void UpdateGroundMesh()
         {
-            const float MaxRaycastDistance = 2f; // 레이캐스트 거리 증가
+            const float MaxRaycastDistance = 0.5f; // 레이캐스트 거리 증가
             const float MaxDistanceSquared = MaxRaycastDistance;
             Vector3[] vertices = groundMesh.mesh.vertices;
             Vector3 shovelPosition = shovelCollider.transform.position;
@@ -142,8 +142,8 @@ namespace DiggingTest
 
             if(result){
                 hitPoint = hit.point;
-            }else{
-                hitPoint = null;
+                // Debug.Log(hit.point+"HIT.POINT");
+                Debug.Log(hitPoint+"hitPOINT");
             }
             return result;
         }
