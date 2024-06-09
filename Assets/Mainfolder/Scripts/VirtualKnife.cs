@@ -15,6 +15,8 @@ public class VirtualKnife : MonoBehaviour
 
     private List<Vector3> recordedPositions = new List<Vector3>();
     private float angle_Condition;
+        private float zPositionLock;
+    private bool isZLocked = false;
     public PhysicMaterial defaultMaterial;
     public PhysicMaterial changedMaterial;
 
@@ -35,11 +37,14 @@ public class VirtualKnife : MonoBehaviour
         {   
             if (virtualObject.transform.position.y < -0.155f)
             {
+                LockZPosition(transform.position.z);
                 SetPhysicalProperties(true);
             }
             else
             {
                 SetPhysicalProperties(false);
+                UnlockZPosition();
+
             }
 
             CheckObjectColor();
@@ -48,13 +53,11 @@ public class VirtualKnife : MonoBehaviour
 
             float yPosition = initialPosition.y; 
 
-            if (mainForce > 0.24f)
+            if (mainForce > 3f && advancedHapticEffector.collidingTag == "Ground")
             {
                 float previousLowestY = GetPreviousLowestY(transform.position);
                 //이전 최저 위치에서부터 다시 누르기 시작
                 yPosition = Mathf.Lerp(previousLowestY, Mathf.Clamp(initialPosition.y - mainForce / 60.0f, -0.217f, initialPosition.y), Mathf.Clamp(mainForce / 20.0f, 0, 1));
-                advancedHapticEffector.forceX = 1f;
-                advancedHapticEffector.forceZ = 1f;
 
                 //angle_Condition이 0이면 더 이상 눌러지지 않게
                 if (angle_Condition == 0f)
@@ -63,6 +66,7 @@ public class VirtualKnife : MonoBehaviour
                 }
 
                 RecordPosition(transform.position); //위치 기록
+
             }
  
             virtualObject.transform.position = new Vector3(
@@ -163,4 +167,26 @@ public class VirtualKnife : MonoBehaviour
             }
         }
     }
+    void LockZPosition(float zPosition)
+    {
+        if (!isZLocked)
+        {
+            zPositionLock = zPosition;
+            isZLocked = true;
+        }
+
+        // z축 위치를 고정하기 위한 힘 피드백 적용
+        float zDifference = zPositionLock - transform.position.z;
+        advancedHapticEffector.forceZ = zDifference * 1;
+    }
+
+    void UnlockZPosition()
+    {
+        if (isZLocked && virtualObject.transform.position.y >= initialPosition.y)
+        {
+            isZLocked = false;
+            advancedHapticEffector.forceZ = 0f;
+        }
+    }
+       
 }

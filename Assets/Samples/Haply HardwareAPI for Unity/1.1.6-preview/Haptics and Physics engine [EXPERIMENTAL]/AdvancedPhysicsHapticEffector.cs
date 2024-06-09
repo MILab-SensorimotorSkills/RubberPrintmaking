@@ -69,7 +69,7 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
     public float stiffness = 400f;
     [Range(0, 3)]
     public float damping = 1;
-
+    public string collidingTag = string.Empty;
     private HapticThread m_hapticThread;
     public GameObject EndPoint;
     // PHYSICS
@@ -313,6 +313,7 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
             // store touched object
             touched.Add(collision.collider);
             isColliding = true;
+            collidingTag = collision.collider.tag;
 
         }
     }
@@ -328,7 +329,10 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
         {
             touched.Remove(collision.collider);
             isColliding = false;
-
+            if (touched.Count == 0)
+            {
+                collidingTag = string.Empty;
+            }
         }
     }
 
