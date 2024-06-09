@@ -766,6 +766,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   virtualObject: {fileID: 175133657}
+  Cube: {fileID: 521620635}
+  defaultMaterial: {fileID: 13400000, guid: a00f8223146817e4c87abb30236cba00, type: 2}
+  changedMaterial: {fileID: 13400000, guid: ef7732db21c88354f8c59a1eacde3bef, type: 2}
 --- !u!114 &111692418
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1099,7 +1102,7 @@ MeshCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 175133657}
-  m_Material: {fileID: 13400000, guid: ef7732db21c88354f8c59a1eacde3bef, type: 2}
+  m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -5221,7 +5224,7 @@ MeshCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1419477596}
-  m_Material: {fileID: 13400000, guid: e1e823e1ae23994488b86fde387b2814, type: 2}
+  m_Material: {fileID: 13400000, guid: a00f8223146817e4c87abb30236cba00, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0

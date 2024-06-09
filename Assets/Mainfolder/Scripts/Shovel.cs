@@ -143,7 +143,7 @@ namespace DiggingTest
             if(result){
                 hitPoint = hit.point;
                 // Debug.Log(hit.point+"HIT.POINT");
-                Debug.Log(hitPoint+"hitPOINT");
+                //Debug.Log(hitPoint+"hitPOINT");
             }
             return result;
         }
