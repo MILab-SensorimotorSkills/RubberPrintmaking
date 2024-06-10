@@ -9,6 +9,7 @@ public class VirtualKnife : MonoBehaviour
     public GameObject Cube;
 
     private AdvancedPhysicsHapticEffector advancedHapticEffector;
+    //private Disturbance advancedHapticEffector;
 
     private Vector3 initialPosition;
     private Shovel knifeShovel;
@@ -22,7 +23,9 @@ public class VirtualKnife : MonoBehaviour
 
     void Start()
     {
-        advancedHapticEffector = GetComponent<AdvancedPhysicsHapticEffector>();
+        advancedHapticEffector = GetComponent<AdvancedPhysicsHapticEffector>();           
+        //advancedHapticEffector = GetComponent<Disturbance>();
+
         knifeShovel = GetComponent<Shovel>();
 
         if (virtualObject != null)
@@ -37,13 +40,13 @@ public class VirtualKnife : MonoBehaviour
         {   
             if (virtualObject.transform.position.y < -0.155f)
             {
-                LockZPosition(transform.position.z);
+                // LockZPosition(transform.position.z);
                 SetPhysicalProperties(true);
             }
             else
             {
                 SetPhysicalProperties(false);
-                UnlockZPosition();
+                // UnlockZPosition();
 
             }
 
@@ -57,7 +60,7 @@ public class VirtualKnife : MonoBehaviour
             {
                 float previousLowestY = GetPreviousLowestY(transform.position);
                 //이전 최저 위치에서부터 다시 누르기 시작
-                yPosition = Mathf.Lerp(previousLowestY, Mathf.Clamp(initialPosition.y - mainForce / 60.0f, -0.217f, initialPosition.y), Mathf.Clamp(mainForce / 20.0f, 0, 1));
+                yPosition = Mathf.Lerp(previousLowestY, Mathf.Clamp(initialPosition.y - mainForce / 20.0f, -0.217f, initialPosition.y), Mathf.Clamp(mainForce / 20.0f, 0, 1));
 
                 //angle_Condition이 0이면 더 이상 눌러지지 않게
                 if (angle_Condition == 0f)
@@ -106,7 +109,7 @@ public class VirtualKnife : MonoBehaviour
 
         foreach (Vector3 recordedPosition in recordedPositions)
         {
-            if (Mathf.Abs(recordedPosition.x - currentPosition.x) <= 0.01f && Mathf.Abs(recordedPosition.z - currentPosition.z) <= 0.01f)
+            if (Mathf.Abs(recordedPosition.x - currentPosition.x) <= 0.02 && Mathf.Abs(recordedPosition.z - currentPosition.z) <= 0.02f)
             {
                 if (recordedPosition.y < lowestY)
                 {

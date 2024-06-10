@@ -5,53 +5,75 @@ using UnityEngine;
 public class SoundPlayer : MonoBehaviour
 {
     private AudioSource audioSource;
-    private bool collision = false;
+    private Vector3 lastPosition;
+    private float positionCheckInterval = 0.2f; // 위치를 체크하는 간격 (초)
+    private bool isGrounded = false;
+    private float positionThreshold = 0.0005f; // 위치 변화 임계값
 
-    private Vector3 lastPos;
-    private Vector3 currentPos;
-    private int frameCount = 0;
-    private bool isPlaying = false;
-    private float distance;
-    private float[] volArr = new float[] {0.4f, 0.5f, 0.6f, 0.7f};
-
-    // Start is called before the first frame update
     void Start()
     {
-        if(audioSource == null){
-            audioSource = gameObject.GetComponent<AudioSource>();
+        audioSource = GetComponent<AudioSource>();
+
+        if (audioSource == null)
+        {
+            Debug.LogError("AudioSource component is missing on this GameObject.");
         }
 
-        lastPos = transform.position;
+        lastPosition = transform.position;
+        StartCoroutine(CheckPosition());
     }
 
-    void Update(){
-        if(frameCount<10){
-            frameCount++;
-        }else{
-            frameCount = 0;
-            currentPos = transform.position;
-            distance = Vector3.Distance(currentPos, lastPos);
-            if(collision && distance > 0.001){
-                lastPos = currentPos;
-                //audioSource.volume = volArr[Random.Range(0, volArr.Length)];
-                if(!isPlaying){
-                    isPlaying = true;
-                    audioSource.Play();
-                    Debug.Log("플레이 중");
-                }
-            }else{
-                isPlaying = false;
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "Ground")
+        {
+            isGrounded = true;
+            if (audioSource != null && !audioSource.isPlaying)
+            {
+                audioSource.Play();
+            }
+        }
+    }
+
+    void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.tag == "Ground")
+        {
+            isGrounded = false;
+            if (audioSource != null && audioSource.isPlaying)
+            {
                 audioSource.Stop();
             }
         }
     }
 
+    IEnumerator CheckPosition()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(positionCheckInterval);
 
-    public void PlaySound(){
-        collision = true;
-    }
-    
-    public void StopSound(){
-        collision = false;
+            // 위치 변화 계산
+            float positionDifference = Vector3.Distance(transform.position, lastPosition);
+
+            // 위치 변화가 임계값 이하이면 소리 일시 중지
+            if (isGrounded && positionDifference < positionThreshold)
+            {
+                if (audioSource != null && audioSource.isPlaying)
+                {
+                    audioSource.Pause();
+                }
+            }
+            // 위치 변화가 임계값 이상이면 소리 이어서 재생
+            else if (isGrounded && positionDifference >= positionThreshold)
+            {
+                if (audioSource != null && !audioSource.isPlaying)
+                {
+                    audioSource.UnPause();
+                }
+            }
+
+            lastPosition = transform.position;
+        }
     }
 }
