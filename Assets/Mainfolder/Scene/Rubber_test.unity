@@ -737,7 +737,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc274a84a8ed5ef49a7dd0e3384cc417, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  forceFeedbackType: 2
+  forceFeedbackType: 0
   forceX: 0
   forceY: 0
   forceZ: 0
@@ -803,8 +803,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   virtualObject: {fileID: 175133657}
   Cube: {fileID: 521620635}
-  defaultMaterial: {fileID: 13400000, guid: a00f8223146817e4c87abb30236cba00, type: 2}
-  changedMaterial: {fileID: 13400000, guid: ef7732db21c88354f8c59a1eacde3bef, type: 2}
+  maximunDepth: -0.254
 --- !u!114 &111692418
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -845,6 +844,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f47f9d137917119489ab0929376fcd06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  virtualCollider: {fileID: 175133657}
 --- !u!82 &111692423
 AudioSource:
   m_ObjectHideFlags: 0
@@ -979,7 +979,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2230960730257420659, guid: 42e7c085180189140b6c3f90a00765b7, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.125
+      value: 0.1215
       objectReference: {fileID: 0}
     - target: {fileID: 2230960730257420659, guid: 42e7c085180189140b6c3f90a00765b7, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1269,7 +1269,7 @@ Rigidbody:
   m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 2
 --- !u!64 &175133660
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -1277,7 +1277,7 @@ MeshCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 175133657}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: ef7732db21c88354f8c59a1eacde3bef, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -1289,7 +1289,7 @@ MeshCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 5
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 0
   m_Mesh: {fileID: 4300000, guid: 319bd8840f7b7d74b8386d4155d689e8, type: 2}
 --- !u!23 &175133661
@@ -1391,7 +1391,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &192535919
 Transform:
   m_ObjectHideFlags: 0
@@ -5555,14 +5555,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1290166999}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.39794865, y: 0, z: 0, w: 0.9174077}
-  m_LocalPosition: {x: -0.03, y: 1.07, z: -2.51}
+  m_LocalRotation: {x: 0.46209496, y: -0, z: -0, w: 0.88683045}
+  m_LocalPosition: {x: -0.03, y: 1.563, z: -2.392}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1854924536}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 46.9, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 55.045, y: 0, z: 0}
 --- !u!1 &1359376609
 GameObject:
   m_ObjectHideFlags: 0
@@ -8013,7 +8013,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1854924531}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 1.19}
   m_LocalScale: {x: 0.011582576, y: 0.011582576, z: 0.011582576}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -8022,7 +8022,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0, y: 0}
+  m_AnchoredPosition: {x: -0, y: -0.14}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1854924537
@@ -8057,7 +8057,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11f4033896cdbe545863fae605e74706, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Tester: test_jy
+  Tester: vrtest
 --- !u!1 &1940215718
 GameObject:
   m_ObjectHideFlags: 0
@@ -13659,6 +13659,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f47f9d137917119489ab0929376fcd06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  virtualCollider: {fileID: 0}
 --- !u!82 &7085651383547373105
 AudioSource:
   m_ObjectHideFlags: 0

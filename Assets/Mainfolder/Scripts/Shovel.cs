@@ -133,13 +133,13 @@ namespace DiggingTest
         private bool RaycastGround(Vector3 origin, float distance, out RaycastHit hit)
         {
             Ray ray = new Ray(origin, Vector3.down);
-
+        
             // Draw the ray for visualization
             Collider Virtual_shovelCollider = virtual_shovelCollider.GetComponent<Collider>();
             bool result = Virtual_shovelCollider.Raycast(ray, out hit, distance);
             //result1 = result;
             //Debug.Log(result1);
-
+            
             if(result){
                 hitPoint = hit.point;
                 // Debug.Log(hit.point+"HIT.POINT");

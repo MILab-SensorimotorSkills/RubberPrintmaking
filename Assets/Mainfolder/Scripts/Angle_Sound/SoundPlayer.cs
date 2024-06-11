@@ -4,76 +4,64 @@ using UnityEngine;
 
 public class SoundPlayer : MonoBehaviour
 {
+    public GameObject virtualCollider;  // virtualCollider 오브젝트를 공개 변수로 선언
     private AudioSource audioSource;
-    private Vector3 lastPosition;
-    private float positionCheckInterval = 0.2f; // 위치를 체크하는 간격 (초)
-    private bool isGrounded = false;
-    private float positionThreshold = 0.0005f; // 위치 변화 임계값
+    private float yThreshold = -0.157f;
+    private float volumeMinY = -0.217f;
+    private float volumeMaxY = -0.157f;
+    private float volumeMin = 0.6f;
+    private float volumeMax = 1.0f;
 
     void Start()
     {
         audioSource = GetComponent<AudioSource>();
+        audioSource.Stop();
 
         if (audioSource == null)
         {
             Debug.LogError("AudioSource component is missing on this GameObject.");
         }
 
-        lastPosition = transform.position;
-        StartCoroutine(CheckPosition());
+        if (virtualCollider == null)
+        {
+            Debug.LogError("virtualCollider GameObject reference is missing.");
+        }
     }
 
-    void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.tag == "Ground")
+    void Update()
+    {   
+        if (virtualCollider == null)
         {
-            isGrounded = true;
-            if (audioSource != null && !audioSource.isPlaying)
+            return;
+        }
+
+        float currentY = virtualCollider.transform.position.y;
+
+        if (currentY < yThreshold)
+        {
+            if (!audioSource.isPlaying)
             {
                 audioSource.Play();
             }
-        }
-    }
 
-    void OnTriggerExit(Collider other)
-    {
-        if (other.gameObject.tag == "Ground")
-        {
-            isGrounded = false;
-            if (audioSource != null && audioSource.isPlaying)
+            // Adjust volume based on y position
+            if (currentY >= volumeMinY && currentY <= volumeMaxY)
             {
-                audioSource.Stop();
+                float t = (currentY - volumeMinY) / (volumeMaxY - volumeMinY);
+                audioSource.volume = Mathf.Lerp(volumeMin, volumeMax, t);
+            }
+            else if (currentY < volumeMinY)
+            {
+                audioSource.volume = volumeMin;
+            }
+            else if (currentY > volumeMaxY)
+            {
+                audioSource.volume = volumeMax;
             }
         }
-    }
-
-    IEnumerator CheckPosition()
-    {
-        while (true)
+        else
         {
-            yield return new WaitForSeconds(positionCheckInterval);
-
-            // 위치 변화 계산
-            float positionDifference = Vector3.Distance(transform.position, lastPosition);
-
-            // 위치 변화가 임계값 이하이면 소리 일시 중지
-            if (isGrounded && positionDifference < positionThreshold)
-            {
-                if (audioSource != null && audioSource.isPlaying)
-                {
-                    audioSource.Pause();
-                }
-            }
-            // 위치 변화가 임계값 이상이면 소리 이어서 재생
-            else if (isGrounded && positionDifference >= positionThreshold)
-            {
-                if (audioSource != null && !audioSource.isPlaying)
-                {
-                    audioSource.UnPause();
-                }
-            }
-
-            lastPosition = transform.position;
+            audioSource.Stop();
         }
     }
 }
