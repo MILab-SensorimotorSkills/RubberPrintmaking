@@ -53,7 +53,7 @@ public class AngleUpdater : MonoBehaviour
             renderer.material.color = Color.green;
         }else if(((rotation > 0 && rotation <= 80) || (rotation >= 280 && rotation < 360)) && (angle >=0 && angle <= 50)){
             renderer.material.color = Color.blue;
-        }else if(((rotation > 0 && rotation <= 110) || (rotation >= 250 && rotation < 360)) && (angle >=0 && angle <= 80)){
+        }else if(((rotation > 0 && rotation <= 100) || (rotation >= 240 && rotation < 360)) && (angle >=0 && angle <= 70)){
             renderer.material.color = orange;
         }else{
             renderer.material.color = Color.red;

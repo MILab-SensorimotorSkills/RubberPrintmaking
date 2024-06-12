@@ -17,6 +17,9 @@ public class VirtualKnife : MonoBehaviour
     private float angle_Condition;
     public float maximunDepth;
     private float minimumY;
+        private bool isXZLocked = false;
+    private Vector3 lockedXZPosition;
+
 
     void Start()
     {
@@ -38,7 +41,6 @@ public class VirtualKnife : MonoBehaviour
             float yPosition = initialPosition.y;
             CheckObjectColor();
 
-            float previousLowestY = GetPreviousLowestY(transform.position);
             
             // 오브젝트의 위치가 초기 위치보다 높아지면 가상 오브젝트의 위치를 초기 위치로 리셋
             if (transform.position.y >= initialPosition.y + 0.05f)
@@ -48,19 +50,44 @@ public class VirtualKnife : MonoBehaviour
             }
             else
             {
+                float previousLowestY = GetPreviousLowestY(transform.position); //사용
+                yPosition = Mathf.Min(previousLowestY, minimumY);
+
                 // 메인 로직
-                if ((mainForce > 0.25f && mainForce <= 3f) || angle_Condition == 0f)
+                if ((mainForce > 0.25f && mainForce <= 4f) || angle_Condition == 0f)
                 {
                     yPosition = Mathf.Min(yPosition, previousLowestY);
+                    if (transform.position.y <= initialPosition.y - 0.05f)
+                    {
+                        Debug.Log(123);
+                        if (!isXZLocked)
+                        {
+                            // X, Z 좌표를 고정
+                            lockedXZPosition = new Vector3(transform.position.x, 0, transform.position.z);
+                            isXZLocked = true;
+                        }
+
+                        // X, Z 좌표에 대한 힘 피드백 적용
+                        float xDifference = lockedXZPosition.x - transform.position.x;
+                        float zDifference = lockedXZPosition.z - transform.position.z;
+
+                        advancedHapticEffector.forceX = xDifference * 5; // 반향 힘을 줌
+                        advancedHapticEffector.forceZ = zDifference * 5; // 반향 힘을 줌
+                    }
+                    else
+                    {
+                        // X, Z 좌표에 대한 힘 피드백 제거
+                        advancedHapticEffector.forceX = 0;
+                        advancedHapticEffector.forceZ = 0;
+                    }
                 }
-                else if (mainForce > 3f && angle_Condition != 0f)
+                else if (mainForce > 4f && angle_Condition != 0f)
                 {
-                    yPosition = Mathf.Lerp(previousLowestY, Mathf.Clamp(initialPosition.y - mainForce / 20.0f, maximunDepth, initialPosition.y), Mathf.Clamp(mainForce / 20.0f, 0, 1));
-                    RecordPosition(transform.position); // 위치 기록
+                    yPosition = Mathf.Lerp(previousLowestY, Mathf.Clamp(initialPosition.y - mainForce / 40.0f, maximunDepth, initialPosition.y), Mathf.Clamp(mainForce / 40.0f, 0, 1));
+                    RecordPosition(transform.position); //위치기록
                 }
 
                 // 현재 위치와 최소 y값을 비교하여 yPosition 업데이트
-                yPosition = Mathf.Min(yPosition, minimumY);
                 minimumY = yPosition;
             }
 
@@ -70,7 +97,6 @@ public class VirtualKnife : MonoBehaviour
                 initialPosition.z
             );
 
-            Debug.Log("Minimum Y: " + minimumY);
         }
     }
 
@@ -92,7 +118,7 @@ public class VirtualKnife : MonoBehaviour
 
         if (!positionUpdated)
         {
-            recordedPositions.Add(new Vector3(virtualObjectPosition.x, Mathf.Max(virtualObjectPosition.y, maximunDepth), virtualObjectPosition.z));
+            recordedPositions.Add(new Vector3(position.x, Mathf.Max(virtualObjectPosition.y, maximunDepth), position.z));
         }
     }
 
@@ -103,7 +129,7 @@ public class VirtualKnife : MonoBehaviour
 
         foreach (Vector3 recordedPosition in recordedPositions)
         {
-            if (Mathf.Abs(recordedPosition.x - virtualObjectPosition.x) <= 0.01f && Mathf.Abs(recordedPosition.z - virtualObjectPosition.z) <= 0.01f)
+            if (Mathf.Abs(recordedPosition.x - currentPosition.x) <= 0.01f && Mathf.Abs(recordedPosition.z - currentPosition.z) <= 0.01f)
             {
                 if (recordedPosition.y < lowestY)
                 {
