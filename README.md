@@ -44,7 +44,7 @@ RubberPrintmaking
 ```
 
 <br/>
-----
+* * *
 
 ### Environment Setting
 
