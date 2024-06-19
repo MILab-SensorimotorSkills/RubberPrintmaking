@@ -75,7 +75,7 @@ RubberPrintmaking
 ### User manual
 Hardware API for Unity Version 📘 1.1.6-preview <--             
 플러그인 설치가 완료 되었다면, 프로젝트 실행이 가능하다. 그러나, 원할한 힘 피드백과 고무판화 시뮬레이션을 위해서는 인스펙터 창에서 컴포넌트가 제대로 할당되었나 확인할 필요가 있다.
-아래와 같이 할당되어 있다면 문제없이 실행 가능하다. 또한 advanced physics haptic effector의 force feedback type을 수정하여 훈련 시나리오(레코드앤플레이-교정-방해)를 수정할 수 있다.
+아래와 같이 할당되어 있다면 문제없이 실행 가능하다. 또한 advanced physics haptic effector의 force feedback type을 수정하여 훈련 시나리오(기본-유도-방해)를 수정할 수 있다.
 
 ![image](https://github.com/MILab-SensorimotorSkills/RubberPrintmaking/assets/42615916/df608900-a6ae-4d11-857d-dad223e26b94)
 ![image](https://github.com/MILab-SensorimotorSkills/RubberPrintmaking/assets/42615916/d897c274-917a-454c-87c4-71e9e486592b)
