@@ -44,7 +44,7 @@ RubberPrintmaking
 ```
 
 <br/>
-* * *
+-----
 
 ### Environment Setting
 
@@ -61,7 +61,7 @@ RubberPrintmaking
 
     
 <br/>
-----
+-----
 
 ### SDK setting Inverse3
 - Inverse3 기기와 이에 대한 기반 지식이 없다면 사용이 불가능하다. [개발자 지원 페이지]([https://www.bhaptics.com/support/developers](https://develop.haply.co/releases/inverse-sdk-unity))를 참고
@@ -70,7 +70,7 @@ RubberPrintmaking
   
  
 <br/>
-----
+-----
 
 ### User manual
 Hardware API for Unity Version 📘 1.1.6-preview <--             
@@ -89,19 +89,19 @@ Hardware API for Unity Version 📘 1.1.6-preview <--
 ![image](https://github.com/MILab-SensorimotorSkills/RubberPrintmaking/assets/42615916/d849e281-f165-4854-9a4d-f9d57ca2ec0b)
 
 <br/>
-----
+-----
 
 ### [System Modular AI](https://github.com/MILab-SensorimotorSkills/RubberPrintmaking/tree/main/AI) <-- link
 
 <br/>
-----
+-----
 
 ### Troubleshooting
    1) inverse3의 팅김 및 연결 오류 --> usb 포트 및 하드웨어와 유니티의 간혈적 충돌 문제
    2) 포스 피드백의 부자연스러움 & 떨림 --> 유니티 엔진의 최적화 한계
 
 <br/>
-----
+-----
 
 ### ETC
  - **본 프로젝트는 한양대학교 CAD를위한모델링및시뮬레이션 과제입니다.
