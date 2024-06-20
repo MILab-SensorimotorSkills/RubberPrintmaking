@@ -9,17 +9,15 @@ public class VirtualKnife : MonoBehaviour
     public GameObject Cube;
 
     private AdvancedPhysicsHapticEffector advancedHapticEffector;
+    private Rigidbody virtualObjectRb;
 
-    private Vector3 initialPosition;
+    public Vector3 initialPosition;
     private Shovel knifeShovel;
 
     private List<Vector3> recordedPositions = new List<Vector3>();
     private float angle_Condition;
     public float maximunDepth;
     private float minimumY;
-        private bool isXZLocked = false;
-    private Vector3 lockedXZPosition;
-
 
     void Start()
     {
@@ -28,6 +26,11 @@ public class VirtualKnife : MonoBehaviour
 
         if (virtualObject != null)
         {
+            virtualObjectRb = virtualObject.GetComponent<Rigidbody>();
+            if (virtualObjectRb == null)
+            {
+                virtualObjectRb = virtualObject.AddComponent<Rigidbody>();
+            }
             initialPosition = virtualObject.transform.position;
             minimumY = initialPosition.y;
         }
@@ -54,36 +57,13 @@ public class VirtualKnife : MonoBehaviour
                 yPosition = Mathf.Min(previousLowestY, minimumY);
 
                 // 메인 로직
-                if ((mainForce > 0.25f && mainForce <= 4f) || angle_Condition == 0f)
+                if ((mainForce > 0.25f && mainForce <= 8f) || angle_Condition == 0f)
                 {
                     yPosition = Mathf.Min(yPosition, previousLowestY);
-                    if (transform.position.y <= initialPosition.y - 0.05f)
-                    {
-                        Debug.Log(123);
-                        if (!isXZLocked)
-                        {
-                            // X, Z 좌표를 고정
-                            lockedXZPosition = new Vector3(transform.position.x, 0, transform.position.z);
-                            isXZLocked = true;
-                        }
-
-                        // X, Z 좌표에 대한 힘 피드백 적용
-                        float xDifference = lockedXZPosition.x - transform.position.x;
-                        float zDifference = lockedXZPosition.z - transform.position.z;
-
-                        advancedHapticEffector.forceX = xDifference * 5; // 반향 힘을 줌
-                        advancedHapticEffector.forceZ = zDifference * 5; // 반향 힘을 줌
-                    }
-                    else
-                    {
-                        // X, Z 좌표에 대한 힘 피드백 제거
-                        advancedHapticEffector.forceX = 0;
-                        advancedHapticEffector.forceZ = 0;
-                    }
                 }
-                else if (mainForce > 4f && angle_Condition != 0f)
+                else if (mainForce > 8f && angle_Condition != 0f)
                 {
-                    yPosition = Mathf.Lerp(previousLowestY, Mathf.Clamp(initialPosition.y - mainForce / 40.0f, maximunDepth, initialPosition.y), Mathf.Clamp(mainForce / 40.0f, 0, 1));
+                    yPosition = Mathf.Lerp(previousLowestY, Mathf.Clamp(initialPosition.y - mainForce / 60.0f, maximunDepth, initialPosition.y), Mathf.Clamp(mainForce / 60.0f, 0, 1));
                     RecordPosition(transform.position); //위치기록
                 }
 
@@ -91,11 +71,11 @@ public class VirtualKnife : MonoBehaviour
                 minimumY = yPosition;
             }
 
-            virtualObject.transform.position = new Vector3(
+            virtualObjectRb.MovePosition(new Vector3(
                 initialPosition.x,
                 yPosition,
                 initialPosition.z
-            );
+            ));
 
         }
     }

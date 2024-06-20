@@ -404,6 +404,8 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
     private ConfigurableJoint m_joint;
     private Rigidbody m_rigidbody;
 
+    private PointMover pointMover;
+
     private const float MinimumReconfigureDelta = 0.5f;
     private bool needConfigure =>
         (complexJoint && m_joint.zMotion != ConfigurableJointMotion.Limited)
@@ -423,7 +425,7 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
 
     // Random noise parameters
     private System.Random random = new System.Random();
-    public float randomNoiseIntensity = 0.01f; // Random noise intensity
+    public float randomNoiseIntensity = 1f; // Random noise intensity
 
     private List<CsvData1> csvData = new List<CsvData1>();
     private int currentIndex = 0;
@@ -433,12 +435,15 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
         // find the HapticThread object before the first FixedUpdate() call
         m_hapticThread = FindObjectOfType<HapticThread>();
 
+        // Find the PointMover object
+        pointMover = FindObjectOfType<PointMover>();
+
         // create the physics link between physic effector and device cursor
         AttachCursor(m_hapticThread.avatar.gameObject, EndPoint);
         SetupCollisionDetection();
 
         // Load CSV data
-        LoadCsvData("Assets/Mainfolder/Force Data/normalize1.csv"); // 경로를 실제 CSV 파일 경로로 변경하세요.
+        LoadCsvData("Assets/Mainfolder/Force Data/scaling1.csv"); // 경로를 실제 CSV 파일 경로로 변경하세요.
     }
 
     private void OnEnable()
@@ -494,17 +499,52 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
         return force;
     }
 
+    // private Vector3 CalculateDisturbanceForce(Vector3 position, Vector3 velocity, AdditionalData additionalData)
+    // {
+    //     var force = additionalData.physicsCursorPosition - position;
+    //     force *= stiffness;
+    //     force -= velocity * damping;
+
+    //     // Apply Perlin noise to always add disturbance
+    //     float noiseX = (float)(random.NextDouble() * 0.1 - 0.05) * randomNoiseIntensity;
+    //     float noiseY = (float)(random.NextDouble() * 0.1 - 0.05) * randomNoiseIntensity;
+    //     float noiseZ = (float)(random.NextDouble() * 0.1 - 0.05) * randomNoiseIntensity;
+    //     force += new Vector3(noiseX, forceY, forceZ);
+
+    //     if (!forceEnabled || (collisionDetection && !additionalData.isTouching))
+    //     {
+    //         // Don't compute additional forces if there are no collisions which prevents feeling drag/friction while moving through air. 
+    //         force += new Vector3(forceX, forceY, forceZ);
+    //     }
+    //     else
+    //     {
+    //         force += Gravitiy();
+    //     }
+        
+    //     MainForce = force.magnitude;
+
+    //     if (isColliding)
+    //     {
+    //         // Debug.Log($"Calculated Force: {MainForce} Newtons");
+    //     }
+    //     return force;
+    // }
+
+
     private Vector3 CalculateDisturbanceForce(Vector3 position, Vector3 velocity, AdditionalData additionalData)
     {
         var force = additionalData.physicsCursorPosition - position;
         force *= stiffness;
         force -= velocity * damping;
 
-        // Apply Perlin noise to always add disturbance
-        float noiseX = (float)(random.NextDouble() * 2 - 1) * randomNoiseIntensity;
-        float noiseY = (float)(random.NextDouble() * 2 - 1) * randomNoiseIntensity;
-        float noiseZ = (float)(random.NextDouble() * 2 - 1) * randomNoiseIntensity;
-        force += new Vector3(noiseX, noiseY, noiseZ);
+        // Apply a small offset to the position to create disturbance
+        Vector3 disturbanceOffset = new Vector3(
+            (float)(random.NextDouble() * 0.002 - 0.0005), // Small disturbance in X axis
+            (float)(random.NextDouble() * 0.002 - 0.0005), // Small disturbance in Y axis
+            (float)(random.NextDouble() * 0.002 - 0.0005)  // Small disturbance in Z axis
+        );
+
+        force += disturbanceOffset * stiffness;
 
         if (!forceEnabled || (collisionDetection && !additionalData.isTouching))
         {
@@ -515,7 +555,7 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
         {
             force += Gravitiy();
         }
-        
+
         MainForce = force.magnitude;
 
         if (isColliding)
@@ -525,6 +565,8 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
         return force;
     }
 
+    
+
 
     private Vector3 CalculateGuidanceForce(Vector3 position, Vector3 velocity, AdditionalData additionalData)
     {
@@ -532,13 +574,36 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
         force *= stiffness;
         force -= velocity * damping;
 
-        // Apply guidance force from CSV data
-        if (csvData != null && csvData.Count > 0)
+        // Apply guidance force based on the direction from PointMover
+        if (pointMover != null)
         {
-            var currentData = csvData[currentIndex];
-            force += new Vector3(currentData.forceX, currentData.forceY, currentData.forceZ);
-            currentIndex = (currentIndex + 1) % csvData.Count;
+            Vector3 guidanceDirection = pointMover.CurrentDirection;
+            if (guidanceDirection != Vector3.zero)
+            {
+                // Calculate the user's force in the direction of guidanceDirection
+                float userForceInGuidanceDirection = Vector3.Dot(force, guidanceDirection.normalized);
+
+                // Add additional force only if the user's force in the guidance direction is less than 0.5N
+                if (userForceInGuidanceDirection < 0.1f)
+                {
+                    force += guidanceDirection.normalized * 0.5f; // 유도 방향에 따라 0.5N의 힘 추가
+                }
+            }
         }
+
+        // Add additional force in -y direction if PointMover is moving and no collision is detected
+        // if (pointMover != null && pointMover.CurrentDirection != Vector3.zero && (collisionDetection && !additionalData.isTouching))
+        // {
+        //     force += Vector3.down * 0.1f; // -y축 방향으로 0.5N의 힘 추가
+        // }
+
+        // // Apply guidance force from CSV data
+        // if (csvData != null && csvData.Count > 0)
+        // {
+        //     var currentData = csvData[currentIndex];
+        //     force += new Vector3(currentData.forceX, currentData.forceY, currentData.forceZ);
+        //     currentIndex = (currentIndex + 1) % csvData.Count;
+        // }
 
         if (!forceEnabled || (collisionDetection && !additionalData.isTouching))
         {
@@ -557,6 +622,51 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
         }
         return force;
     }
+
+    // private Vector3 CalculateGuidanceForce(Vector3 position, Vector3 velocity, AdditionalData additionalData)
+    // {
+    //     var force = additionalData.physicsCursorPosition - position;
+    //     force *= stiffness;
+    //     force -= velocity * damping;
+
+    //     // Apply guidance force from CSV data
+    //     if (csvData != null && csvData.Count > 0)
+    //     {
+    //         var currentData = csvData[currentIndex];
+            
+    //         // Check if mainforce is less than the absolute value of forceY
+    //         if (MainForce < Mathf.Abs(currentData.forceY))
+    //         {
+    //             // Add the difference to -y axis
+    //             Debug.Log($"Current ForceY: {currentData.forceY} N");
+    //             float additionalForceY = Mathf.Abs(currentData.forceY) - MainForce;
+    //             force += new Vector3(0, -additionalForceY, 0);
+    //             Debug.Log($"Addition ForceY: {additionalForceY} N");
+    //         }
+
+    //         currentIndex = (currentIndex + 1) % csvData.Count;
+    //     }
+
+    //     if (!forceEnabled || (collisionDetection && !additionalData.isTouching))
+    //     {
+    //         force += new Vector3(forceX, forceY, forceZ);
+    //     }
+    //     else
+    //     {
+    //         force += Gravitiy();
+    //     }
+
+    //     MainForce = force.magnitude;
+
+    //     if (isColliding)
+    //     {
+    //         // Debug.Log($"Calculated Force: {MainForce} Newtons");
+    //     }
+    //     return force;
+    // }
+
+
+    
 
     private void FixedUpdate()
     {
@@ -628,7 +738,7 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
         {
             m_joint.xMotion = m_joint.yMotion = m_joint.zMotion = ConfigurableJointMotion.Locked;
             m_joint.angularXMotion = m_joint.angularYMotion = m_joint.angularZMotion = ConfigurableJointMotion.Locked;
-            m_rigidbody.drag = 0;
+            m_rigidbody.drag = 20;
         }
         else
         {
@@ -709,8 +819,9 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
             touched.Add(collision.collider);
             isColliding = true;
             collidingTag = collision.collider.tag;
-
-        }
+                OnDestroyListener listener = collision.collider.gameObject.AddComponent<OnDestroyListener>();
+                listener.OnDestroyEvent += () => RemoveCollider(collision.collider);
+            }
     }
 
     /// <summary>
@@ -731,6 +842,21 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
         }
     }
 
+
+
+private void RemoveCollider(Collider collider)
+        {
+            if (touched.Contains(collider))
+            {
+                touched.Remove(collider);
+                if (touched.Count == 0)
+                {
+                    collidingTag = string.Empty;
+                    isColliding = false;
+                }
+            }
+        }
+
     #endregion
 
     // CSV Data loading
@@ -746,10 +872,10 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
         foreach (var line in lines)
         {
             var values = line.Split(',');
-            if (values.Length >= 3 &&
-                float.TryParse(values[0], out float forceX) &&
-                float.TryParse(values[1], out float forceY) &&
-                float.TryParse(values[2], out float forceZ))
+            if (values.Length >= 6 &&
+                float.TryParse(values[3], out float forceZ) &&
+                float.TryParse(values[4], out float forceX) &&
+                float.TryParse(values[5], out float forceY))
             {
                 csvData.Add(new CsvData1 { forceX = forceX, forceY = forceY, forceZ = forceZ });
             }

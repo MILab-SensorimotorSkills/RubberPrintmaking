@@ -164,19 +164,32 @@ private void OnGUI()
 
         // Display information for the first touched object
         var touchedObject = advancedEffectors[currentEffectorIndex].touched[0];
-        var collider = touchedObject.GetComponent<Collider>();
-        var physicMaterial = collider.material;
-        var rb = touchedObject.GetComponent<Rigidbody>();
 
-        string text = $"PhysicsMaterial: {physicMaterial.name.Replace("(Instance)", "")}\n" +
-                      $"dynamic friction: {physicMaterial.dynamicFriction}, static friction: {physicMaterial.staticFriction}\n";
-
-        if (rb != null)
+        // Null 체크 추가
+        if (touchedObject != null)
         {
-            text += $"mass: {rb.mass}, drag: {rb.drag}, angular drag: {rb.angularDrag}\n";
-        }
+            var collider = touchedObject.GetComponent<Collider>();
+            if (collider != null)
+            {
+                var physicMaterial = collider.material;
+                var rb = touchedObject.GetComponent<Rigidbody>();
 
-        GUI.Label(new Rect(20, 40, 800, 200), text);
+                string text = $"PhysicsMaterial: {physicMaterial.name.Replace("(Instance)", "")}\n" +
+                              $"dynamic friction: {physicMaterial.dynamicFriction}, static friction: {physicMaterial.staticFriction}\n";
+
+                if (rb != null)
+                {
+                    text += $"mass: {rb.mass}, drag: {rb.drag}, angular drag: {rb.angularDrag}\n";
+                }
+
+                GUI.Label(new Rect(20, 40, 800, 200), text);
+            }
+        }
+        else
+        {
+            // touchedObject가 null인 경우 리스트에서 제거
+            advancedEffectors[currentEffectorIndex].touched.RemoveAt(0);
+        }
     }
 
     GUI.color = textColor;
@@ -188,6 +201,7 @@ private void OnGUI()
 
     GUI.color = Color.white;
 }
+
 private void UpdateImageColors()
 {
     Normal.color = Color.grey;

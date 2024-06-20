@@ -29,7 +29,14 @@ public class ForceAndPosition : MonoBehaviour
             // save the first device effector position 
             m_initialPosition = position;
         }
-        // return opposite force to stay at initial position
-        return (m_initialPosition - position) * stiffness;
+
+        // calculate the force excluding the y-axis
+        Vector3 force = new Vector3(
+            (m_initialPosition.x - position.x) * stiffness,
+            0, // no force applied in the y-axis
+            (m_initialPosition.z - position.z) * stiffness
+        );
+
+        return force;
     }
 }
