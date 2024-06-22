@@ -127,6 +127,7 @@ public class PointMover : MonoBehaviour
 
     public Vector3 CurrentDirection => currentDirection; // 외부에서 현재 방향을 가져오기 위한 속성
     public Vector3 PointToMovePosition => pointToMove.position; // 외부에서 pointToMove 위치를 가져오기 위한 속성
+    public GameObject Direction;
 
     void Update()
     {
@@ -139,6 +140,7 @@ public class PointMover : MonoBehaviour
             }
             Debug.Log("Starting movement");
             StartCoroutine(MoveAlongPath());
+            Direction.GetComponent<DirectionUpdater>().PlayDirection();
         }
     }
 
