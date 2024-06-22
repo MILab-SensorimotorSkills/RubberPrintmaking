@@ -400,6 +400,10 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
     public float limitSpring = 500000f;
     public float limitDamper = 10000f;
     public float MainForce = 0;
+    public float MainForceX = 0;
+    public float MainForceY = 0;
+    public float MainForceZ = 0;
+
 
     private ConfigurableJoint m_joint;
     private Rigidbody m_rigidbody;
@@ -430,6 +434,9 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
     private List<CsvData1> csvData = new List<CsvData1>();
     private int currentIndex = 0;
 
+    private Vector3 targetPosition;
+
+
     private void Awake()
     {
         // find the HapticThread object before the first FixedUpdate() call
@@ -437,13 +444,21 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
 
         // Find the PointMover object
         pointMover = FindObjectOfType<PointMover>();
+        if (pointMover == null)
+        {
+            Debug.LogError("PointMover not found in the scene.");
+        }
+        else
+        {
+            Debug.Log("PointMover successfully found.");
+        }
 
         // create the physics link between physic effector and device cursor
         AttachCursor(m_hapticThread.avatar.gameObject, EndPoint);
         SetupCollisionDetection();
 
         // Load CSV data
-        LoadCsvData("Assets/Mainfolder/Force Data/scaling1.csv"); // 경로를 실제 CSV 파일 경로로 변경하세요.
+        //LoadCsvData("Assets/Mainfolder/Force Data/scaling1.csv"); // 경로를 실제 CSV 파일 경로로 변경하세요.
     }
 
     private void OnEnable()
@@ -483,14 +498,20 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
         var force = additionalData.physicsCursorPosition - position;
         force *= stiffness;
         force -= velocity * damping;
-
+        //Debug.Log(force);
         if (!forceEnabled || (collisionDetection && !additionalData.isTouching))
         {
             // Don't compute forces if there are no collisions which prevents feeling drag/friction while moving through air. 
             force = new Vector3(forceX, forceY, forceZ);
         }
+        
         force += Gravitiy();
+        MainForceX = force.x;
+        MainForceY = force.y;
+        MainForceZ = force.z; 
         MainForce = force.magnitude;
+
+        //Debug.Log($"DefaultForce Y: {force.y}");
 
         if (isColliding)
         {
@@ -498,37 +519,6 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
         }
         return force;
     }
-
-    // private Vector3 CalculateDisturbanceForce(Vector3 position, Vector3 velocity, AdditionalData additionalData)
-    // {
-    //     var force = additionalData.physicsCursorPosition - position;
-    //     force *= stiffness;
-    //     force -= velocity * damping;
-
-    //     // Apply Perlin noise to always add disturbance
-    //     float noiseX = (float)(random.NextDouble() * 0.1 - 0.05) * randomNoiseIntensity;
-    //     float noiseY = (float)(random.NextDouble() * 0.1 - 0.05) * randomNoiseIntensity;
-    //     float noiseZ = (float)(random.NextDouble() * 0.1 - 0.05) * randomNoiseIntensity;
-    //     force += new Vector3(noiseX, forceY, forceZ);
-
-    //     if (!forceEnabled || (collisionDetection && !additionalData.isTouching))
-    //     {
-    //         // Don't compute additional forces if there are no collisions which prevents feeling drag/friction while moving through air. 
-    //         force += new Vector3(forceX, forceY, forceZ);
-    //     }
-    //     else
-    //     {
-    //         force += Gravitiy();
-    //     }
-        
-    //     MainForce = force.magnitude;
-
-    //     if (isColliding)
-    //     {
-    //         // Debug.Log($"Calculated Force: {MainForce} Newtons");
-    //     }
-    //     return force;
-    // }
 
 
     private Vector3 CalculateDisturbanceForce(Vector3 position, Vector3 velocity, AdditionalData additionalData)
@@ -537,25 +527,34 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
         force *= stiffness;
         force -= velocity * damping;
 
-        // Apply a small offset to the position to create disturbance
-        Vector3 disturbanceOffset = new Vector3(
-            (float)(random.NextDouble() * 0.002 - 0.0005), // Small disturbance in X axis
-            (float)(random.NextDouble() * 0.002 - 0.0005), // Small disturbance in Y axis
-            (float)(random.NextDouble() * 0.002 - 0.0005)  // Small disturbance in Z axis
-        );
+        // // Apply a small offset to the position to create disturbance
+        // Vector3 disturbanceOffset = new Vector3(
+        //     (float)(random.NextDouble() * 0.002 - 0.0005), // Small disturbance in X axis
+        //     (float)(random.NextDouble() * 0.002 - 0.0005), // Small disturbance in Y axis
+        //     (float)(random.NextDouble() * 0.002 - 0.0005)  // Small disturbance in Z axis
+        // );
 
-        force += disturbanceOffset * stiffness;
+        // force += disturbanceOffset * stiffness;
+        if (pointMover != null)
+        {
+            Vector3 guidanceDirection = pointMover.CurrentDirection;
+            if (guidanceDirection != Vector3.zero)
+            {
+                // Apply force in the opposite direction of guidanceDirection
+                force += -guidanceDirection.normalized * 1.0f; // 반대 방향으로 0.5N의 힘 추가
+            }
+        }
 
         if (!forceEnabled || (collisionDetection && !additionalData.isTouching))
         {
             // Don't compute additional forces if there are no collisions which prevents feeling drag/friction while moving through air. 
-            force += new Vector3(forceX, forceY, forceZ);
+            force = new Vector3(forceX, forceY, forceZ);
         }
-        else
-        {
-            force += Gravitiy();
-        }
-
+        
+        force += Gravitiy();
+        MainForceX = force.x;
+        MainForceY = force.y;
+        MainForceZ = force.z; 
         MainForce = force.magnitude;
 
         if (isColliding)
@@ -566,7 +565,6 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
     }
 
     
-
 
     private Vector3 CalculateGuidanceForce(Vector3 position, Vector3 velocity, AdditionalData additionalData)
     {
@@ -574,46 +572,49 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
         force *= stiffness;
         force -= velocity * damping;
 
-        // Apply guidance force based on the direction from PointMover
         if (pointMover != null)
         {
             Vector3 guidanceDirection = pointMover.CurrentDirection;
-            if (guidanceDirection != Vector3.zero)
-            {
-                // Calculate the user's force in the direction of guidanceDirection
-                float userForceInGuidanceDirection = Vector3.Dot(force, guidanceDirection.normalized);
 
-                // Add additional force only if the user's force in the guidance direction is less than 0.5N
+            //Debug.Log($"guidanceDirection: {guidanceDirection}, targetPosition: {targetPosition}, current position: {position}");
+
+            // if (guidanceDirection != Vector3.zero && position != targetPosition)
+            // {
+            //     float distanceToTarget = Vector3.Distance(position, targetPosition);
+            //     // Calculate the user's force in the direction of guidanceDirection
+            //     float userForceInGuidanceDirection = Vector3.Dot(force, guidanceDirection.normalized);
+
+            //     // Add additional force only if the user's force in the guidance direction is less than 1.0N
+            //     if (userForceInGuidanceDirection < 1.0f)
+            //     {
+            //         // Calculate the scaling factor for the guidance force based on the distance to the target
+            //         float scalingFactor = Mathf.Clamp01(distanceToTarget / 1.0f); // 1.0f은 최대 거리를 의미합니다. 필요에 따라 조정 가능합니다.
+            //         force += guidanceDirection.normalized * scalingFactor;
+            //     }
+            // }
+            if (guidanceDirection != Vector3.zero && position != targetPosition)
+            {
+                float userForceInGuidanceDirection = Vector3.Dot(force, guidanceDirection.normalized);
                 if (userForceInGuidanceDirection < 0.1f)
                 {
-                    force += guidanceDirection.normalized * 0.5f; // 유도 방향에 따라 0.5N의 힘 추가
+                    force += guidanceDirection.normalized * 1.0f;
                 }
             }
         }
-
-        // Add additional force in -y direction if PointMover is moving and no collision is detected
-        // if (pointMover != null && pointMover.CurrentDirection != Vector3.zero && (collisionDetection && !additionalData.isTouching))
-        // {
-        //     force += Vector3.down * 0.1f; // -y축 방향으로 0.5N의 힘 추가
-        // }
-
-        // // Apply guidance force from CSV data
-        // if (csvData != null && csvData.Count > 0)
-        // {
-        //     var currentData = csvData[currentIndex];
-        //     force += new Vector3(currentData.forceX, currentData.forceY, currentData.forceZ);
-        //     currentIndex = (currentIndex + 1) % csvData.Count;
-        // }
+        else
+        {
+            //Debug.LogError("PointMover is null");
+        }
 
         if (!forceEnabled || (collisionDetection && !additionalData.isTouching))
         {
-            force += new Vector3(forceX, forceY, forceZ);
-        }
-        else
-        {
-            force += Gravitiy();
+            force = new Vector3(forceX, forceY, forceZ);
         }
 
+        force += Gravitiy();
+        MainForceX = force.x;
+        MainForceY = force.y;
+        MainForceZ = force.z;
         MainForce = force.magnitude;
 
         if (isColliding)
@@ -623,66 +624,42 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
         return force;
     }
 
-    // private Vector3 CalculateGuidanceForce(Vector3 position, Vector3 velocity, AdditionalData additionalData)
-    // {
-    //     var force = additionalData.physicsCursorPosition - position;
-    //     force *= stiffness;
-    //     force -= velocity * damping;
-
-    //     // Apply guidance force from CSV data
-    //     if (csvData != null && csvData.Count > 0)
-    //     {
-    //         var currentData = csvData[currentIndex];
-            
-    //         // Check if mainforce is less than the absolute value of forceY
-    //         if (MainForce < Mathf.Abs(currentData.forceY))
-    //         {
-    //             // Add the difference to -y axis
-    //             Debug.Log($"Current ForceY: {currentData.forceY} N");
-    //             float additionalForceY = Mathf.Abs(currentData.forceY) - MainForce;
-    //             force += new Vector3(0, -additionalForceY, 0);
-    //             Debug.Log($"Addition ForceY: {additionalForceY} N");
-    //         }
-
-    //         currentIndex = (currentIndex + 1) % csvData.Count;
-    //     }
-
-    //     if (!forceEnabled || (collisionDetection && !additionalData.isTouching))
-    //     {
-    //         force += new Vector3(forceX, forceY, forceZ);
-    //     }
-    //     else
-    //     {
-    //         force += Gravitiy();
-    //     }
-
-    //     MainForce = force.magnitude;
-
-    //     if (isColliding)
-    //     {
-    //         // Debug.Log($"Calculated Force: {MainForce} Newtons");
-    //     }
-    //     return force;
-    // }
-
-
-    
 
     private void FixedUpdate()
     {
-        // Update AdditionalData 
         m_hapticThread.SetAdditionalData(GetAdditionalData());
+        if (pointMover != null)
+        {
+            targetPosition = pointMover.PointToMovePosition;
+            //Debug.Log($"아제발 - GuidanceDirection: {pointMover.CurrentDirection}, PointToMovePosition: {pointMover.PointToMovePosition}");
+    
+        }
     }
 
     private void Update()
     {
-#if UNITY_EDITOR
+        for (int i = touched.Count - 1; i >= 0; i--)
+        {
+            if (touched[i] == null)
+            {
+                touched.RemoveAt(i);
+            }
+        }
+        if (touched.Count > 1)
+        {
+            for (int i = touched.Count - 1; i > 0; i--)
+            {
+                RemoveCollider(touched[i]);
+            }
+        }
+    #if UNITY_EDITOR
         if (needConfigure)
         {
             ConfigureJoint();
         }
-#endif
+    #endif
     }
+
 
 
     //PHYSICS
@@ -811,40 +788,39 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
     /// Called when effector touch other game object
     /// </summary>
     /// <param name="collision">collision information</param>
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (forceEnabled && collisionDetection && !touched.Contains(collision.collider))
+        // Collision detection
+        private void OnCollisionEnter(Collision collision)
         {
-            // store touched object
-            touched.Add(collision.collider);
-            isColliding = true;
-            collidingTag = collision.collider.tag;
-                OnDestroyListener listener = collision.collider.gameObject.AddComponent<OnDestroyListener>();
+            if (forceEnabled && collisionDetection && !touched.Contains(collision.collider))
+            {
+                // 충돌한 오브젝트 추가
+                touched.Add(collision.collider);
+                isColliding = true;
+                collidingTag = collision.collider.tag;
+
+                // 파괴될 때 콜라이더 제거 리스너 추가
+                OnDestroyListener listener = collision.collider.gameObject.GetComponent<OnDestroyListener>();
+                if (listener == null)
+                {
+                    listener = collision.collider.gameObject.AddComponent<OnDestroyListener>();
+                }
                 listener.OnDestroyEvent += () => RemoveCollider(collision.collider);
             }
-    }
+        }
 
     /// <summary>
     /// Called when effector move away from another game object 
     /// </summary>
     /// <param name="collision">collision information</param>
-    private void OnCollisionExit(Collision collision)
-    {
-
-        if (forceEnabled && collisionDetection && touched.Contains(collision.collider))
+        private void OnCollisionExit(Collision collision)
         {
-            touched.Remove(collision.collider);
-            isColliding = false;
-            if (touched.Count == 0)
+            if (forceEnabled && collisionDetection && touched.Contains(collision.collider))
             {
-                collidingTag = string.Empty;
+                RemoveCollider(collision.collider);
             }
         }
-    }
 
-
-
-private void RemoveCollider(Collider collider)
+        private void RemoveCollider(Collider collider)
         {
             if (touched.Contains(collider))
             {
