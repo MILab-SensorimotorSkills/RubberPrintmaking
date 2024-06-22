@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "co.haply.hardwareapi": "file:C:/Users/user/Downloads/co.haply.hardwareapi@1.1.6-preview.tar.gz",
+    "co.haply.hardwareapi": "file:C:/Users/taeyo/Downloads/co.haply.hardwareapi@1.1.6-preview/package",
     "com.rito.pivot-editor": "https://github.com/rito15/Unity-Pivot-Editor.git",
     "com.unity.collab-proxy": "2.0.5",
     "com.unity.feature.development": "1.0.1",
