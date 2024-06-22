@@ -57,7 +57,7 @@ public class VirtualKnife : MonoBehaviour
                 float previousLowestY = GetPreviousLowestY(transform.position);
                 yPosition = Mathf.Min(previousLowestY, minimumY);
 
-                if ((mainForce > 7f && mainForce <= 10f) || angle_Condition == 0f)
+                if ((mainForce > 7f && mainForce <= 8f) || angle_Condition == 0f)
                 {
                     yPosition = Mathf.Min(yPosition, previousLowestY);
                 }
@@ -74,15 +74,15 @@ public class VirtualKnife : MonoBehaviour
                     {
                         depthAdjustment = maximunDepth * 0.4f;
                     }
-                    else if (mainForceY >= 25f)
+                    else if (mainForceY >= 20f)
                     {
                         depthAdjustment = maximunDepth * 0.2f;
                     }
-                    else if (mainForceY >= 15f)
+                    else if (mainForceY >= 10f)
                     {
                         depthAdjustment = maximunDepth * 0.1f;
                     }
-                    else if (mainForceY >= 10f)
+                    else if (mainForceY >= 8f)
                     {
                         depthAdjustment = maximunDepth * 0.05f;
                     }
