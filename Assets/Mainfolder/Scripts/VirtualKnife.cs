@@ -61,7 +61,7 @@ public class VirtualKnife : MonoBehaviour
                 {
                     yPosition = Mathf.Min(yPosition, previousLowestY);
                 }
-                 else if (mainForce > 10f && angle_Condition != 0f )
+                 else if (mainForce > 8f && angle_Condition != 0f )
                  //&& Mathf.Abs(mainForceX) < 0.1f || Mathf.Abs(mainForceZ) < 0.1f 
                 {
                     float depthAdjustment = 0f;

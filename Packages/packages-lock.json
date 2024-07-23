@@ -1,9 +1,9 @@
 {
   "dependencies": {
     "co.haply.hardwareapi": {
-      "version": "file:C:/Users/taeyo/Downloads/co.haply.hardwareapi@1.1.6-preview/package",
+      "version": "file:C:/Users/user/Downloads/co.haply.hardwareapi@1.1.6-preview.tar.gz",
       "depth": 0,
-      "source": "local",
+      "source": "local-tarball",
       "dependencies": {
         "com.unity.nuget.newtonsoft-json": "3.0.2"
       }
