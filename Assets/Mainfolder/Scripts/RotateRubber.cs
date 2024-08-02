@@ -12,6 +12,6 @@ public class RotateRubber : MonoBehaviour
         float horizontalInput = Input.GetAxis("Horizontal");
 
         // 오브젝트를 Y축으로 회전시킵니다.
-        transform.Rotate(0, horizontalInput * rotationSpeed * Time.deltaTime, 0);
+        //transform.Rotate(0, horizontalInput * rotationSpeed * Time.deltaTime, 0);
     }
 }
