@@ -15,12 +15,30 @@
       "dependencies": {},
       "url": "https://packages.unity.com"
     },
+    "com.github-glitchenzo.nugetforunity": {
+      "version": "https://github.com/GlitchEnzo/NuGetForUnity.git?path=/src/NuGetForUnity",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "90fa6db024148d466fe738f58fd4263c7267346b"
+    },
     "com.rito.pivot-editor": {
       "version": "https://github.com/rito15/Unity-Pivot-Editor.git",
       "depth": 0,
       "source": "git",
       "dependencies": {},
       "hash": "6df9361222c2ddc28324116c6cda89b42e76fb2b"
+    },
+    "com.unity.barracuda": {
+      "version": "https://github.com/Unity-Technologies/barracuda-release.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.unity.burst": "1.6.0",
+        "com.unity.modules.jsonserialize": "1.0.0",
+        "com.unity.modules.imageconversion": "1.0.0"
+      },
+      "hash": "557e93387683363215675397db49479d42d99174"
     },
     "com.unity.burst": {
       "version": "1.8.7",
@@ -86,8 +104,8 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.ide.visualstudio": {
-      "version": "2.0.18",
-      "depth": 1,
+      "version": "2.0.22",
+      "depth": 0,
       "source": "registry",
       "dependencies": {
         "com.unity.test-framework": "1.1.9"
