@@ -4,13 +4,13 @@ using System.Linq;
 
 public class OnnxInference : MonoBehaviour
 {
-    public NNModel modelAsset; // 모델을 에셋으로 참조
+    public NNModel modelAsset; 
     private Model runtimeModel;
     private IWorker worker;
 
-    private int timeSteps = 10; // 타임스텝 수
-    private int inputSize = 3; // 입력 크기 (x, y, z)
-    private int batchSize = 1; // 배치 크기
+    private int timeSteps = 10;
+    private int inputSize = 3;
+    private int batchSize = 1; 
 
     void Start()
     {
