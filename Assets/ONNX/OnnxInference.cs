@@ -46,10 +46,10 @@ public class OnnxInference : MonoBehaviour
         }
 
         // TensorShape를 사용하여 텐서 생성
-        Tensor inputTensor = new Tensor(new TensorShape(batchSize, timeSteps, inputSize), inputData);
+        Tensor inputTensor = new Tensor(new TensorShape(batchSize, 1, timeSteps, inputSize), inputData);
 
         // 텐서 정보 디버깅 출력
-        Debug.Log("Input Tensor Shape: " + inputTensor.shape.ToString());
+        Debug.Log("Input Tensor Shape: " + string.Join(", ", inputTensor.shape));
         Debug.Log("Input Tensor Data: " + string.Join(", ", inputData));
 
         worker.Execute(inputTensor);
