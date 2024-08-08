@@ -765,6 +765,7 @@ GameObject:
   - component: {fileID: 111692423}
   - component: {fileID: 111692422}
   - component: {fileID: 111692424}
+  - component: {fileID: 111692425}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -871,7 +872,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc274a84a8ed5ef49a7dd0e3384cc417, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  forceFeedbackType: 1
+  forceFeedbackType: 0
   forceX: 0
   forceY: 0
   forceZ: 0
@@ -1096,6 +1097,19 @@ MonoBehaviour:
   backRotation: {x: 0, y: 0, z: 0, w: 1}
   leftRotation: {x: 0, y: 0.70710677, z: 0, w: 0.70710677}
   rightRotation: {x: 0, y: 0.70710677, z: 0, w: 0.70710677}
+--- !u!114 &111692425
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 111692404}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 574d9d553f2f5d34996c13c53b0e6286, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  modelAsset: {fileID: 5022602860645237092, guid: 06e2241927ee5da47a3c79136f11b2d2, type: 3}
 --- !u!1001 &130859601
 PrefabInstance:
   m_ObjectHideFlags: 0
