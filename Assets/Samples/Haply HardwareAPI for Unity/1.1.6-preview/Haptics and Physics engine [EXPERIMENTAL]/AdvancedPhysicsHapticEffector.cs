@@ -92,9 +92,8 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
     private int currentIndex = 0;
 
     private Vector3 targetPosition;
-
     private OnnxInference onnxInference;
-    private int timeSteps = 10;
+
 
     private void Awake()
     {
@@ -295,6 +294,11 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
         return force;
     }
 
+    private Queue<Dictionary<string, float>> queue = new Queue<Dictionary<string, float>>();
+    private int timeSteps = 3;
+
+    // static int maxQueueSize = 20;
+
     private void FixedUpdate()
     {
         m_hapticThread.SetAdditionalData(GetAdditionalData());
@@ -303,22 +307,84 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
             targetPosition = pointMover.PointToMovePosition;
         }
 
-        if (onnxInference != null)
+        // if (onnxInference != null)
+        // {
+        //     float[] xData = new float[timeSteps];
+        //     float[] yData = new float[timeSteps];
+        //     float[] zData = new float[timeSteps];
+
+        //     for (int i = 0; i < timeSteps; i++)
+        //     {
+        //         xData[i] = MainForceX;
+        //         yData[i] = MainForceY;
+        //         zData[i] = MainForceZ;
+        //     }
+
+        //     int predictedClass = onnxInference.ProcessRealtimeData(xData, yData, zData);
+        //     Debug.Log($"Predicted Class from ONNX: {predictedClass}");
+        // }
+        // 새 Force 데이터를 딕셔너리에 추가
+
+        Dictionary<string, float> forceData = new Dictionary<string, float>
         {
-            float[] xData = new float[timeSteps];
-            float[] yData = new float[timeSteps];
-            float[] zData = new float[timeSteps];
+            { "MainForceX", MainForceX },
+            { "MainForceY", MainForceY },
+            { "MainForceZ", MainForceZ }
+        };
 
-            for (int i = 0; i < timeSteps; i++)
-            {
-                xData[i] = MainForceX;
-                yData[i] = MainForceY;
-                zData[i] = MainForceZ;
-            }
-
-            int predictedClass = onnxInference.ProcessRealtimeData(xData, yData, zData);
-            Debug.Log($"Predicted Class from ONNX: {predictedClass}");
+        // 큐의 크기가 최대 크기를 초과하면, 맨 앞의 데이터를 제거
+        if (queue.Count >= timeSteps)
+        {
+            queue.Dequeue();
         }
+
+        // 새로운 Force 데이터를 큐에 추가
+        queue.Enqueue(forceData);
+
+        if (queue.Count == timeSteps)
+        {
+            int predictedClass = onnxInference.ProcessRealtimeData(queue);
+            // Debug.Log($"Predicted Class from ONNX: {predictedClass}");
+        }
+        else
+        {
+            Debug.Log($"Waiting for enough data: {queue.Count}/{timeSteps}");
+        }
+
+
+        // if (onnxInference != null)
+        // {
+        //     // 큐의 데이터를 이용하여 xData, yData, zData 배열 생성
+        //     float[] xData = new float[queue.Count];
+        //     float[] yData = new float[queue.Count];
+        //     float[] zData = new float[queue.Count];
+
+        //     int index = 0;
+        //     foreach (var data in queue)
+        //     {
+        //         xData[index] = data["MainForceX"];
+        //         yData[index] = data["MainForceY"];
+        //         zData[index] = data["MainForceZ"];
+        //         index++;
+        //     }
+
+        //     // ONNX 인퍼런스를 실행하여 예측된 클래스를 가져옴
+        //     int predictedClass = onnxInference.ProcessRealtimeData(xData, yData, zData);
+        //     Debug.Log($"Predicted Class from ONNX: {predictedClass}");
+        // }
+
+        // 큐의 데이터가 충분히 쌓였는지 확인
+        // if (queue.Count == timeSteps)
+        // {
+        //     // 큐의 데이터를 ONNX 모델에 전달
+        //     int predictedClass = onnxInference.ProcessRealtimeData(queue);
+        //     Debug.Log($"Predicted Class from ONNX: {predictedClass}");
+        // }
+        // else
+        // {
+        //     Debug.Log($"Waiting for enough data: {queue.Count}/{timeSteps}");
+        // }
+
     }
 
 
@@ -522,27 +588,27 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
     #endregion
 
     // CSV Data loading
-    private void LoadCsvData(string path)
-    {
-        if (!File.Exists(path))
-        {
-            Debug.LogError("CSV file not found at path: " + path);
-            return;
-        }
+    // private void LoadCsvData(string path)
+    // {
+    //     if (!File.Exists(path))
+    //     {
+    //         Debug.LogError("CSV file not found at path: " + path);
+    //         return;
+    //     }
 
-        var lines = File.ReadAllLines(path);
-        foreach (var line in lines)
-        {
-            var values = line.Split(',');
-            if (values.Length >= 6 &&
-                float.TryParse(values[3], out float forceZ) &&
-                float.TryParse(values[4], out float forceX) &&
-                float.TryParse(values[5], out float forceY))
-            {
-                csvData.Add(new CsvData1 { forceX = forceX, forceY = forceY, forceZ = forceZ });
-            }
-        }
-    }
+    //     var lines = File.ReadAllLines(path);
+    //     foreach (var line in lines)
+    //     {
+    //         var values = line.Split(',');
+    //         if (values.Length >= 6 &&
+    //             float.TryParse(values[3], out float forceZ) &&
+    //             float.TryParse(values[4], out float forceX) &&
+    //             float.TryParse(values[5], out float forceY))
+    //         {
+    //             csvData.Add(new CsvData1 { forceX = forceX, forceY = forceY, forceZ = forceZ });
+    //         }
+    //     }
+    // }
 }
 
 public struct CsvData1
