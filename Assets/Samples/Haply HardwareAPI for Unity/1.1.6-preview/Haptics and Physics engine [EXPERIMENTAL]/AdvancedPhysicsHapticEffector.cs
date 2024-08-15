@@ -294,7 +294,9 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
         return force;
     }
 
-    private Queue<Dictionary<string, float>> queue = new Queue<Dictionary<string, float>>();
+    // private Queue<Dictionary<string, float>> queue = new Queue<Dictionary<string, float>>();
+    
+    Queue<float[]> queue = new Queue<float[]>();
     private int timeSteps = 3;
 
     // static int maxQueueSize = 20;
@@ -324,32 +326,40 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
         //     Debug.Log($"Predicted Class from ONNX: {predictedClass}");
         // }
         // 새 Force 데이터를 딕셔너리에 추가
+        float[] forceData = { MainForceX, MainForceY, MainForceZ };
 
-        Dictionary<string, float> forceData = new Dictionary<string, float>
+
+        if (queue.Count != 3)
         {
-            { "MainForceX", MainForceX },
-            { "MainForceY", MainForceY },
-            { "MainForceZ", MainForceZ }
-        };
-
-        // 큐의 크기가 최대 크기를 초과하면, 맨 앞의 데이터를 제거
-        if (queue.Count >= timeSteps)
-        {
-            queue.Dequeue();
-        }
-
-        // 새로운 Force 데이터를 큐에 추가
-        queue.Enqueue(forceData);
-
-        if (queue.Count == timeSteps)
-        {
-            int predictedClass = onnxInference.ProcessRealtimeData(queue);
-            // Debug.Log($"Predicted Class from ONNX: {predictedClass}");
+            // 필요한 경우 forceData를 큐에 추가하거나 다른 작업을 수행합니다.
+            queue.Enqueue(forceData);
+            Debug.Log(queue.Count);
         }
         else
         {
-            Debug.Log($"Waiting for enough data: {queue.Count}/{timeSteps}");
+            queue.Dequeue();
+            queue.Enqueue(forceData);
+            int predictedClass = onnxInference.ProcessRealtimeData(queue);
         }
+
+        // // 큐의 크기가 최대 크기를 초과하면, 맨 앞의 데이터를 제거
+        // if (queue.Count >= timeSteps)
+        // {
+        //     queue.Dequeue();
+        // }
+
+        // // 새로운 Force 데이터를 큐에 추가
+        // queue.Enqueue(forceData);
+
+        // if (queue.Count == timeSteps)
+        // {
+        //     int predictedClass = onnxInference.ProcessRealtimeData(queue);
+        //     // Debug.Log($"Predicted Class from ONNX: {predictedClass}");
+        // }
+        // else
+        // {
+        //     Debug.Log($"Waiting for enough data: {queue.Count}/{timeSteps}");
+        // }
 
 
         // if (onnxInference != null)
