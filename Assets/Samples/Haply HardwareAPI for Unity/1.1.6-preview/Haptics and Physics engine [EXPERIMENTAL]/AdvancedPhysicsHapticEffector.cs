@@ -297,7 +297,7 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
     // private Queue<Dictionary<string, float>> queue = new Queue<Dictionary<string, float>>();
     
     Queue<float[]> queue = new Queue<float[]>();
-    private int timeSteps = 3;
+    private int timeSteps = 10;
 
     // static int maxQueueSize = 20;
 
@@ -329,7 +329,7 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
         float[] forceData = { MainForceX, MainForceY, MainForceZ };
 
 
-        if (queue.Count != 3)
+        if (queue.Count != timeSteps)
         {
             // 필요한 경우 forceData를 큐에 추가하거나 다른 작업을 수행합니다.
             queue.Enqueue(forceData);
@@ -340,6 +340,7 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
             queue.Dequeue();
             queue.Enqueue(forceData);
             int predictedClass = onnxInference.ProcessRealtimeData(queue);
+            
         }
 
         // // 큐의 크기가 최대 크기를 초과하면, 맨 앞의 데이터를 제거

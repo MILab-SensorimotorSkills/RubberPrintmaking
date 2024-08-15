@@ -10,7 +10,7 @@ public class OnnxInference : MonoBehaviour
     private Model runtimeModel;
     private IWorker worker;
 
-    private int timeSteps = 3; // 모델이 기대하는 시퀀스 길이
+    private int timeSteps = 10; // 모델이 기대하는 시퀀스 길이
     private int inputSize = 3;  // 입력 특징 수
     private int batchSize = 1;
     private Models models;
@@ -28,7 +28,7 @@ public class OnnxInference : MonoBehaviour
     void Start()
     {
         
-        models = new Models("C:\\Users\\jy\\Desktop\\RubberPrintmaking\\Assets\\ONNX\\lstm_test.onnx");
+        models = new Models("C:\\Users\\jy\\Desktop\\RubberPrintmaking\\Assets\\ONNX\\lstm_test3.onnx");
         // ONNX 모델 로드 및  초기화
         // runtimeModel = ModelLoader.Load(modelAsset);
         // // worker = WorkerFactory.CreateWorker(WorkerFactory.Type.Compute, runtimeModel); //GPU를 사용
@@ -44,7 +44,7 @@ public class OnnxInference : MonoBehaviour
         float[][] arrayOfArrays = queue.ToArray();
         float[] a = arrayOfArrays.SelectMany(x => x).ToArray();
 
-        var output = models.Predict(a, 3, 3);
+        var output = models.Predict(a, timeSteps, inputSize);
         Debug.Log("결과 : "+ output);
         Debug.Log("결과 : "+ Utils.myDictionary[output]);
 
