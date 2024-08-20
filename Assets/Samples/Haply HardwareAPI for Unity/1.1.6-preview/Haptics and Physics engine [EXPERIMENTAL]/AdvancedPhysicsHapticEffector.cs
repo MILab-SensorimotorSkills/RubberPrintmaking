@@ -297,9 +297,11 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
     // private Queue<Dictionary<string, float>> queue = new Queue<Dictionary<string, float>>();
     
     Queue<float[]> queue = new Queue<float[]>();
-    private int timeSteps = 3;
+    private int timeSteps = 10;
 
     // static int maxQueueSize = 20;
+    private float g = 0.2391f;
+    private float y_g;
 
     private void FixedUpdate()
     {
@@ -309,27 +311,14 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
             targetPosition = pointMover.PointToMovePosition;
         }
 
-        // if (onnxInference != null)
-        // {
-        //     float[] xData = new float[timeSteps];
-        //     float[] yData = new float[timeSteps];
-        //     float[] zData = new float[timeSteps];
-
-        //     for (int i = 0; i < timeSteps; i++)
-        //     {
-        //         xData[i] = MainForceX;
-        //         yData[i] = MainForceY;
-        //         zData[i] = MainForceZ;
-        //     }
-
-        //     int predictedClass = onnxInference.ProcessRealtimeData(xData, yData, zData);
-        //     Debug.Log($"Predicted Class from ONNX: {predictedClass}");
-        // }
+        y_g = MainForceY - g;
         // 새 Force 데이터를 딕셔너리에 추가
-        float[] forceData = { MainForceX, MainForceY, MainForceZ };
+        // float[] forceData = { MainForceX, MainForceY, MainForceZ };
+        // float[] forceData = { MainForceX, y_g, MainForceZ };
+        float[] forceData = { MainForceZ, MainForceX, -y_g };
 
 
-        if (queue.Count != 3)
+        if (queue.Count != timeSteps)
         {
             // 필요한 경우 forceData를 큐에 추가하거나 다른 작업을 수행합니다.
             queue.Enqueue(forceData);
@@ -339,61 +328,10 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
         {
             queue.Dequeue();
             queue.Enqueue(forceData);
+            // Debug.Log("forceData: " + string.Join(", ", forceData));
             int predictedClass = onnxInference.ProcessRealtimeData(queue);
+            
         }
-
-        // // 큐의 크기가 최대 크기를 초과하면, 맨 앞의 데이터를 제거
-        // if (queue.Count >= timeSteps)
-        // {
-        //     queue.Dequeue();
-        // }
-
-        // // 새로운 Force 데이터를 큐에 추가
-        // queue.Enqueue(forceData);
-
-        // if (queue.Count == timeSteps)
-        // {
-        //     int predictedClass = onnxInference.ProcessRealtimeData(queue);
-        //     // Debug.Log($"Predicted Class from ONNX: {predictedClass}");
-        // }
-        // else
-        // {
-        //     Debug.Log($"Waiting for enough data: {queue.Count}/{timeSteps}");
-        // }
-
-
-        // if (onnxInference != null)
-        // {
-        //     // 큐의 데이터를 이용하여 xData, yData, zData 배열 생성
-        //     float[] xData = new float[queue.Count];
-        //     float[] yData = new float[queue.Count];
-        //     float[] zData = new float[queue.Count];
-
-        //     int index = 0;
-        //     foreach (var data in queue)
-        //     {
-        //         xData[index] = data["MainForceX"];
-        //         yData[index] = data["MainForceY"];
-        //         zData[index] = data["MainForceZ"];
-        //         index++;
-        //     }
-
-        //     // ONNX 인퍼런스를 실행하여 예측된 클래스를 가져옴
-        //     int predictedClass = onnxInference.ProcessRealtimeData(xData, yData, zData);
-        //     Debug.Log($"Predicted Class from ONNX: {predictedClass}");
-        // }
-
-        // 큐의 데이터가 충분히 쌓였는지 확인
-        // if (queue.Count == timeSteps)
-        // {
-        //     // 큐의 데이터를 ONNX 모델에 전달
-        //     int predictedClass = onnxInference.ProcessRealtimeData(queue);
-        //     Debug.Log($"Predicted Class from ONNX: {predictedClass}");
-        // }
-        // else
-        // {
-        //     Debug.Log($"Waiting for enough data: {queue.Count}/{timeSteps}");
-        // }
 
     }
 
