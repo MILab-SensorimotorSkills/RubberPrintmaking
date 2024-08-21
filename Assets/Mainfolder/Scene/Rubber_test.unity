@@ -996,7 +996,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc274a84a8ed5ef49a7dd0e3384cc417, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  forceFeedbackType: 1
+  forceFeedbackType: 0
   forceX: 0
   forceY: 0
   forceZ: 0
@@ -1014,6 +1014,7 @@ MonoBehaviour:
   MainForceX: 0
   MainForceY: 0
   MainForceZ: 0
+  sphereTransform: {fileID: 111692405}
   collisionDetection: 0
   touched: []
   mass: 0
@@ -3351,6 +3352,7 @@ MonoBehaviour:
   MainForceX: 0
   MainForceY: 0
   MainForceZ: 0
+  sphereTransform: {fileID: 0}
   collisionDetection: 0
   touched: []
   mass: 0
@@ -18200,6 +18202,7 @@ MonoBehaviour:
   MainForceX: 0
   MainForceY: 0
   MainForceZ: 0
+  sphereTransform: {fileID: 0}
   collisionDetection: 0
   touched: []
   mass: 0

@@ -60,6 +60,7 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
     public float MainForceX = 0;
     public float MainForceY = 0;
     public float MainForceZ = 0;
+    public Transform sphereTransform; 
 
 
     private ConfigurableJoint m_joint;
@@ -93,6 +94,7 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
 
     private Vector3 targetPosition;
     private OnnxInference onnxInference;
+    private float distance_2d;
 
 
     private void Awake()
@@ -205,13 +207,24 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
         // );
 
         // force += disturbanceOffset * stiffness;
+
+        // 반대 방향대로 미는 disturbance
+        // if (pointMover != null)
+        // {
+        //     Vector3 guidanceDirection = pointMover.CurrentDirection;
+        //     if (guidanceDirection != Vector3.zero)
+        //     {
+        //         // Apply force in the opposite direction of guidanceDirection
+        //         force += -guidanceDirection.normalized * 1.0f; // 반대 방향으로 1N의 힘 추가
+        //     }
+        // }
         if (pointMover != null)
         {
             Vector3 guidanceDirection = pointMover.CurrentDirection;
             if (guidanceDirection != Vector3.zero)
             {
-                // Apply force in the opposite direction of guidanceDirection
-                force += -guidanceDirection.normalized * 1.0f; // 반대 방향으로 0.5N의 힘 추가
+                float scalingFactor = Mathf.Clamp(5.0f / (distance_2d + 0.1f), 0, 5.0f);
+                force += -guidanceDirection.normalized * scalingFactor;
             }
         }
 
@@ -246,28 +259,25 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
         {
             Vector3 guidanceDirection = pointMover.CurrentDirection;
 
-            //Debug.Log($"guidanceDirection: {guidanceDirection}, targetPosition: {targetPosition}, current position: {position}");
-
+            // 방향대로 이끌어주는 guidance
             // if (guidanceDirection != Vector3.zero && position != targetPosition)
             // {
-            //     float distanceToTarget = Vector3.Distance(position, targetPosition);
-            //     // Calculate the user's force in the direction of guidanceDirection
             //     float userForceInGuidanceDirection = Vector3.Dot(force, guidanceDirection.normalized);
-
-            //     // Add additional force only if the user's force in the guidance direction is less than 1.0N
-            //     if (userForceInGuidanceDirection < 1.0f)
+            //     if (userForceInGuidanceDirection < 0.1f)
             //     {
-            //         // Calculate the scaling factor for the guidance force based on the distance to the target
-            //         float scalingFactor = Mathf.Clamp01(distanceToTarget / 1.0f); // 1.0f은 최대 거리를 의미합니다. 필요에 따라 조정 가능합니다.
-            //         force += guidanceDirection.normalized * scalingFactor;
+            //         force += guidanceDirection.normalized * 1.0f;
             //     }
             // }
+            
+            // Trajectory의 거리가 클수록 guidance 힘이 커짐
             if (guidanceDirection != Vector3.zero && position != targetPosition)
             {
+                float scalingFactor = Mathf.Clamp(distance_2d, 0, 5.0f);
                 float userForceInGuidanceDirection = Vector3.Dot(force, guidanceDirection.normalized);
+
                 if (userForceInGuidanceDirection < 0.1f)
                 {
-                    force += guidanceDirection.normalized * 1.0f;
+                    force += guidanceDirection.normalized * scalingFactor;
                 }
             }
         }
@@ -297,7 +307,7 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
     // private Queue<Dictionary<string, float>> queue = new Queue<Dictionary<string, float>>();
     
     Queue<float[]> queue = new Queue<float[]>();
-    private int timeSteps = 100;
+    private int timeSteps = 10;
 
     // static int maxQueueSize = 20;
     private float g = 0.2391f;
@@ -309,7 +319,24 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
         if (pointMover != null)
         {
             targetPosition = pointMover.PointToMovePosition;
+            // Debug.Log(sphereTransform.position);
+            // Debug.Log(targetPosition);
+
+        
+            // Trajectory Point와 조각칼 끝의 거리 (3d)
+            // float distance = Vector3.Distance(sphereTransform.position, targetPosition);
+            // Debug.Log(distance);
+
+            // Y축 깊이는 고려하지 않은 XZ평면의 2d 거리
+            Vector3 spherePositionXZ = new Vector3(sphereTransform.position.x, 0, sphereTransform.position.z);
+            Vector3 targetPositionXZ = new Vector3(targetPosition.x, 0, targetPosition.z);
+            
+            distance_2d = Vector3.Distance(spherePositionXZ, targetPositionXZ);
+            // Debug.Log(distance_2d);
+            
         }
+
+        // Debug.Log(physicsCursorPosition)
 
         y_g = MainForceY - g;
         // 새 Force 데이터를 딕셔너리에 추가

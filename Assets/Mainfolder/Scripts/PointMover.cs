@@ -10,6 +10,8 @@ public class PointMover : MonoBehaviour
     public bool[] isArc; // 각 구간이 원호 이동인지 여부를 나타내는 배열
 
     private bool isMoving = false;
+    private bool isPaused = false; // 일시정지 상태인지 여부
+    private Coroutine currentCoroutine; // 현재 진행 중인 코루틴을 저장
     private bool isClockwiseDirection = false; // 원 그릴 때, 시계 방향인지 반시계방향인지 확인
     private Vector3 currentDirection; // 현재 이동 방향
 
@@ -19,16 +21,33 @@ public class PointMover : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.P) && !isMoving)
+        if (Input.GetKeyDown(KeyCode.P))
         {
-            if (pathPoints.Length != durations.Length || pathPoints.Length != isArc.Length)
+            if (!isMoving)
             {
-                //Debug.LogError("Path points, durations, and isArc arrays must have the same length");
-                return;
+                if (pathPoints.Length != durations.Length || pathPoints.Length != isArc.Length)
+                {
+                    Debug.LogError("Path points, durations, and isArc arrays must have the same length");
+                    return;
+                }
+                Debug.Log("Starting movement");
+                isPaused = false; // 재생 상태로 설정
+                isMoving = true;
+                currentCoroutine = StartCoroutine(MoveAlongPath());
+                Direction.GetComponent<DirectionUpdater>().PlayDirection();
             }
-            Debug.Log("Starting movement");
-            StartCoroutine(MoveAlongPath());
-            Direction.GetComponent<DirectionUpdater>().PlayDirection();
+            else if (isPaused)
+            {
+                // 일시정지 상태에서 P를 누르면 재개
+                Debug.Log("Resuming movement");
+                isPaused = false;
+            }
+            else
+            {
+                // 진행 중일 때 P를 누르면 일시정지
+                Debug.Log("Pausing movement");
+                isPaused = true;
+            }
         }
     }
 
@@ -39,9 +58,13 @@ public class PointMover : MonoBehaviour
 
     IEnumerator MoveAlongPath()
     {
-        isMoving = true;
         for (int i = 0; i < pathPoints.Length; i++)
         {
+            while (isPaused) // 일시정지 상태면 기다림
+            {
+                yield return null;
+            }
+
             if (isArc[i])
             {
                 yield return StartCoroutine(MoveAlongArc(pathPoints[i], durations[i]));
@@ -64,6 +87,11 @@ public class PointMover : MonoBehaviour
 
         while (elapsedTime < duration)
         {
+            while (isPaused) // 일시정지 상태면 기다림
+            {
+                yield return null;
+            }
+
             pointToMove.position = Vector3.Lerp(startPosition, endPosition, elapsedTime / duration);
             elapsedTime += Time.deltaTime;
             yield return null;
@@ -72,8 +100,6 @@ public class PointMover : MonoBehaviour
         pointToMove.position = endPosition;
         currentDirection = Vector3.zero; // 이동이 끝나면 방향을 초기화
     }
-
-   
 
     IEnumerator MoveAlongArc(Transform target, float duration)
     {
@@ -100,6 +126,11 @@ public class PointMover : MonoBehaviour
         float elapsedTime = 0;
         while (elapsedTime < duration)
         {
+            while (isPaused) // 일시정지 상태면 기다림
+            {
+                yield return null;
+            }
+
             float t = elapsedTime / duration;
             float angle = Mathf.PI * t; // 0에서 π까지의 각도를 사용하여 반원을 그립니다.
 
@@ -122,10 +153,10 @@ public class PointMover : MonoBehaviour
         pointToMove.position = endPosition;
         currentDirection = Vector3.zero; // 이동이 끝나면 방향을 초기화
     }
-
 }
 
 /*
+///그머냐 그거 곡선 하다가 말았음.
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;

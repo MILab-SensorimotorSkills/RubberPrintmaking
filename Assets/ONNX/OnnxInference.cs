@@ -11,7 +11,7 @@ public class OnnxInference : MonoBehaviour
     // private Model runtimeModel; //barracuda 모델 불러오기
     // private IWorker worker;
 
-    private int timeSteps = 100; // 모델이 기대하는 시퀀스 길이
+    private int timeSteps = 10; // 모델이 기대하는 시퀀스 길이
     private int inputSize = 3;  // 입력 특징 수
     // private int batchSize = 1;
     private Models models;
