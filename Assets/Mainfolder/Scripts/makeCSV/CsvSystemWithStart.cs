@@ -204,20 +204,13 @@ public class CsvSystemWithStart : MonoBehaviour
     {
         if (knifeHeight <= -0.141)
         {
-            if (hapticEffector != null)
-            {
-                float distance_2d = hapticEffector.distance_2d; // NullReferenceException 방지
-                minDistance = distance_2d;  // distance_2d 값을 사용하여 최소 거리를 설정
+            float distance_2d = hapticEffector.distance_2d;
+            minDistance = distance_2d;  // distance_2d 값을 사용하여 최소 거리를 설정
 
-                if (minDistance != 0)
-                {
-                    distances0x.Add(minDistance);
-                    Debug.Log(minDistance);
-                }
-            }
-            else
+            if (minDistance != 0)
             {
-                Debug.LogError("hapticEffector is not assigned!");
+                distances0x.Add(minDistance);
+                Debug.Log(minDistance);
             }
         }
         else
@@ -226,7 +219,6 @@ public class CsvSystemWithStart : MonoBehaviour
         }
         distances.Add(minDistance);
     }
-
 
 
 
