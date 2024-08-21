@@ -297,7 +297,7 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
     // private Queue<Dictionary<string, float>> queue = new Queue<Dictionary<string, float>>();
     
     Queue<float[]> queue = new Queue<float[]>();
-    private int timeSteps = 10;
+    private int timeSteps = 100;
 
     // static int maxQueueSize = 20;
     private float g = 0.2391f;
