@@ -1019,6 +1019,7 @@ MonoBehaviour:
   touched: []
   mass: 0
   randomNoiseIntensity: 0.0001
+  distance_2d: 0
 --- !u!114 &111692413
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3357,6 +3358,7 @@ MonoBehaviour:
   touched: []
   mass: 0
   randomNoiseIntensity: 1
+  distance_2d: 0
 --- !u!114 &381377624
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11407,6 +11409,7 @@ MonoBehaviour:
   - {fileID: 1765353810}
   - {fileID: 41720017}
   - {fileID: 304992122}
+  hapticEffector: {fileID: 111692410}
 --- !u!114 &1854924538
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18207,6 +18210,7 @@ MonoBehaviour:
   touched: []
   mass: 0
   randomNoiseIntensity: 1
+  distance_2d: 0
 --- !u!114 &7085651383547373104
 MonoBehaviour:
   m_ObjectHideFlags: 0

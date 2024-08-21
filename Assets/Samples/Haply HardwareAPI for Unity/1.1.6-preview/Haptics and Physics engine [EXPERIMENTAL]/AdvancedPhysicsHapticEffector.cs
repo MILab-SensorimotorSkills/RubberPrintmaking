@@ -94,7 +94,7 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
 
     private Vector3 targetPosition;
     private OnnxInference onnxInference;
-    private float distance_2d;
+    public float distance_2d;
 
 
     private void Awake()
@@ -218,6 +218,8 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
         //         force += -guidanceDirection.normalized * 1.0f; // 반대 방향으로 1N의 힘 추가
         //     }
         // }
+
+        // Trajectory와의 거리가 작을수록 disturbance 힘이 강해짐
         if (pointMover != null)
         {
             Vector3 guidanceDirection = pointMover.CurrentDirection;
@@ -269,7 +271,7 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
             //     }
             // }
             
-            // Trajectory의 거리가 클수록 guidance 힘이 커짐
+            // Trajectory와의 거리가 클수록 guidance 힘이 커짐
             if (guidanceDirection != Vector3.zero && position != targetPosition)
             {
                 float scalingFactor = Mathf.Clamp(distance_2d, 0, 5.0f);
