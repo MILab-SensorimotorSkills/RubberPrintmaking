@@ -18,6 +18,50 @@ public class PointMover : MonoBehaviour
     public Vector3 CurrentDirection => currentDirection; // 외부에서 현재 방향을 가져오기 위한 속성
     public Vector3 PointToMovePosition => pointToMove.position; // 외부에서 pointToMove 위치를 가져오기 위한 속성
     public GameObject Direction;
+    public OnnxInference onnxInference;
+     private Vector3 lastPosition;
+    void OnEnable()
+    {
+        if(onnxInference != null){
+            onnxInference.OnOutputCalculated += HandleOutput;
+        }
+    }
+    void OnDisable()
+    {
+        if(onnxInference !=null){
+            onnxInference.OnOutputCalculated -= HandleOutput;
+        }
+    }
+    void Start()
+    {
+        lastPosition = pointToMove.position;
+    }
+
+    private void HandleOutput(int output)
+    {
+        lastPosition = pointToMove.position;
+        // Debug.Log(lastPosition);
+        bool isPosition = (pointToMove.position != lastPosition);
+
+        // if (isPosition && output == 0){
+        //     isPaused = true;
+        //     Debug.Log("Movement paused due to output being 'No force'");
+        // }
+        // else if (isPosition)
+        // {
+        //     isPaused = false;
+        //     Debug.Log("Movement play");
+        // }
+        if (output == 0){
+            isPaused = true;
+            Debug.Log("Movement paused due to output being 'No force'");
+        }
+        else{
+            isPaused = false;
+            Debug.Log("Movement play");
+        }        
+
+    }
 
     void Update()
     {

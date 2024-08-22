@@ -13,7 +13,8 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
     {
         Default,
         Disturbance,
-        Guidance
+        Guidance,
+        Hybrid
     }
 
     [Header("Force Feedback Type")]
@@ -160,9 +161,60 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
                 return CalculateDisturbanceForce(position, velocity, additionalData);
             case ForceFeedbackType.Guidance:
                 return CalculateGuidanceForce(position, velocity, additionalData);
+            case ForceFeedbackType.Hybrid:
+                return CalculateHybridForce(position, velocity, additionalData);
             default:
                 return Vector3.zero;
         }
+    }
+
+    private Vector3 CalculateHybridForce(Vector3 position, Vector3 velocity, AdditionalData additionalData)
+    {
+        var force = additionalData.physicsCursorPosition - position;
+        force *= stiffness;
+        force -= velocity * damping;
+        if (pointMover != null)
+        {
+            Vector3 guidanceDirection = pointMover.CurrentDirection;
+            if (distance_2d < 0.5f){ //포인트와의 거리가 1보다 작으면 disturbance
+                if (guidanceDirection != Vector3.zero)
+                {
+                    float scalingFactor = Mathf.Clamp(2.0f / (distance_2d + 0.1f), 0, 2.0f);
+                    force += -guidanceDirection.normalized * scalingFactor;
+                }
+            }
+            else
+            { //포인트와의 거리가 1보다 크면 guidance
+                if (guidanceDirection != Vector3.zero && position != targetPosition)
+                {
+                    float scalingFactor = Mathf.Clamp(distance_2d, 0, 5.0f);
+                    float userForceInGuidanceDirection = Vector3.Dot(force, guidanceDirection.normalized);
+
+                    if (userForceInGuidanceDirection < 0.1f) 
+                    {
+                        force += guidanceDirection.normalized * scalingFactor;
+                    }
+                }
+            }
+            
+        }
+        if (!forceEnabled || (collisionDetection && !additionalData.isTouching))
+        {
+            // 충돌이 없으면 힘 계산 X
+            force = new Vector3(forceX, forceY, forceZ);
+        }
+        
+        force += Gravitiy();
+        MainForceX = force.x;
+        MainForceY = force.y;
+        MainForceZ = force.z; 
+        MainForce = force.magnitude;
+
+        if (isColliding)
+        {
+            // Debug.Log($"Calculated Force: {MainForce} Newtons");
+        }
+        return force;
     }
 
     private Vector3 CalculateDefaultForce(Vector3 position, Vector3 velocity, AdditionalData additionalData)
@@ -199,7 +251,7 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
         force *= stiffness;
         force -= velocity * damping;
 
-        // // Apply a small offset to the position to create disturbance
+        // 랜덤노이즈 넣은 Disturbance
         // Vector3 disturbanceOffset = new Vector3(
         //     (float)(random.NextDouble() * 0.002 - 0.0005), // Small disturbance in X axis
         //     (float)(random.NextDouble() * 0.002 - 0.0005), // Small disturbance in Y axis
@@ -340,27 +392,31 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
 
         // Debug.Log(physicsCursorPosition)
 
-        y_g = MainForceY - g;
-        // 새 Force 데이터를 딕셔너리에 추가
-        // float[] forceData = { MainForceX, MainForceY, MainForceZ };
-        // float[] forceData = { MainForceX, y_g, MainForceZ };
-        float[] forceData = { MainForceZ, MainForceX, -y_g };
+        if (forceFeedbackType == ForceFeedbackType.Hybrid)
+        {
+            y_g = MainForceY - g;
+            // 새 Force 데이터를 딕셔너리에 추가
+            // float[] forceData = { MainForceX, MainForceY, MainForceZ };
+            // float[] forceData = { MainForceX, y_g, MainForceZ };
+            float[] forceData = { MainForceZ, MainForceX, -y_g };
 
 
-        if (queue.Count != timeSteps)
-        {
-            // 필요한 경우 forceData를 큐에 추가하거나 다른 작업을 수행합니다.
-            queue.Enqueue(forceData);
-            Debug.Log(queue.Count);
+            if (queue.Count != timeSteps)
+            {
+                // 필요한 경우 forceData를 큐에 추가하거나 다른 작업을 수행합니다.
+                queue.Enqueue(forceData);
+                Debug.Log(queue.Count);
+            }
+            else
+            {
+                queue.Dequeue();
+                queue.Enqueue(forceData);
+                // Debug.Log("forceData: " + string.Join(", ", forceData));
+                int predictedClass = onnxInference.ProcessRealtimeData(queue);
+                
+            }
         }
-        else
-        {
-            queue.Dequeue();
-            queue.Enqueue(forceData);
-            // Debug.Log("forceData: " + string.Join(", ", forceData));
-            int predictedClass = onnxInference.ProcessRealtimeData(queue);
-            
-        }
+        
 
     }
 
