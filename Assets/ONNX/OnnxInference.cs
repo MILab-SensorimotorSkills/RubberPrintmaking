@@ -3,6 +3,8 @@ using UnityEngine;
 using System.Linq;
 using System.Collections.Generic;
 using Unity.XR.Oculus;
+using Unity.VisualScripting;
+using UnityEditor.ShaderGraph.Internal;
 
 public class OnnxInference : MonoBehaviour
 {
@@ -14,8 +16,7 @@ public class OnnxInference : MonoBehaviour
     private int timeSteps = 10; // 모델이 기대하는 시퀀스 길이
     private int inputSize = 3;  // 입력 특징 수
     // private int batchSize = 1;
-    private Models models;
-    
+    private Models models;  
 
     void Start()
     {
@@ -27,6 +28,7 @@ public class OnnxInference : MonoBehaviour
         // worker = WorkerFactory.CreateWorker(WorkerFactory.Type.Auto, runtimeModel);
     }
 
+    public event System.Action<int> OnOutputCalculated;
     // 실시간 데이터 처리
     public int ProcessRealtimeData(Queue<float[]> queue)
     {
@@ -36,11 +38,14 @@ public class OnnxInference : MonoBehaviour
         float[][] arrayOfArrays = queue.ToArray();
         float[] a = arrayOfArrays.SelectMany(x => x).ToArray();
 
-        var output = models.Predict(a, timeSteps, inputSize);
+        int output = models.Predict(a, timeSteps, inputSize);
         // Debug.Log("결과 : "+ output);
         Debug.Log("결과 : "+ Utils.myDictionary[output]);
+        // Debug.Log(output);
 
-        return 1;
+        OnOutputCalculated?.Invoke(output);
+
+        return output;
     }
 
 }
