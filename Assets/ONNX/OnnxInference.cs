@@ -17,6 +17,7 @@ public class OnnxInference : MonoBehaviour
     private int inputSize = 3;  // 입력 특징 수
     // private int batchSize = 1;
     private Models models;  
+    // private bool isInferenceRunning = false;
 
     void Start()
     {
@@ -26,6 +27,20 @@ public class OnnxInference : MonoBehaviour
         // runtimeModel = ModelLoader.Load(modelAsset);
         // // worker = WorkerFactory.CreateWorker(WorkerFactory.Type.Compute, runtimeModel); //GPU를 사용
         // worker = WorkerFactory.CreateWorker(WorkerFactory.Type.Auto, runtimeModel);
+    }
+
+    void Update()
+    {
+        // if (Input.GetKeyDown(KeyCode.I)) //I를 눌렀을 때 추론
+        // {
+        //     if(isInferenceRunning)
+        //     {
+        //         StopInference();
+        //     }
+        //     else{
+        //         StartInference();
+        //     }
+        // }
     }
 
     public event System.Action<int> OnOutputCalculated;
@@ -47,6 +62,16 @@ public class OnnxInference : MonoBehaviour
 
         return output;
     }
+
+    // private void StartInference()
+    // {
+    //     isInferenceRunning = true;
+    // }
+
+    // private void StopInference()
+    // {
+    //     isInferenceRunning = false;
+    // }
 
 }
 

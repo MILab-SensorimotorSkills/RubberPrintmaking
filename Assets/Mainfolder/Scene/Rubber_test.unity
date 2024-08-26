@@ -1170,7 +1170,7 @@ MonoBehaviour:
   stiffness: 400
   damping: 1
   collidingTag: 
-  EndPoint: {fileID: 0}
+  EndPoint: {fileID: 1289325808}
   complexJoint: 1
   drag: 20
   linearLimit: 0
@@ -1185,6 +1185,7 @@ MonoBehaviour:
   touched: []
   mass: 0
   randomNoiseIntensity: 0.0001
+  onnxInference: {fileID: 0}
   distance_2d: 0
 --- !u!114 &111692413
 MonoBehaviour:
@@ -3690,6 +3691,7 @@ MonoBehaviour:
   touched: []
   mass: 0
   randomNoiseIntensity: 1
+  onnxInference: {fileID: 0}
   distance_2d: 0
 --- !u!114 &381377624
 MonoBehaviour:
@@ -18987,6 +18989,7 @@ MonoBehaviour:
   touched: []
   mass: 0
   randomNoiseIntensity: 1
+  onnxInference: {fileID: 0}
   distance_2d: 0
 --- !u!114 &7085651383547373104
 MonoBehaviour:

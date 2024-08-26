@@ -9,7 +9,7 @@ public class PointMover : MonoBehaviour
     public float[] durations; // 각 구간별 소요 시간
     public bool[] isArc; // 각 구간이 원호 이동인지 여부를 나타내는 배열
 
-    private bool isMoving = false;
+    private bool isPlaying = false;
     private bool isPaused = false; // 일시정지 상태인지 여부
     private Coroutine currentCoroutine; // 현재 진행 중인 코루틴을 저장
     private bool isClockwiseDirection = false; // 원 그릴 때, 시계 방향인지 반시계방향인지 확인
@@ -19,7 +19,7 @@ public class PointMover : MonoBehaviour
     public Vector3 PointToMovePosition => pointToMove.position; // 외부에서 pointToMove 위치를 가져오기 위한 속성
     public GameObject Direction;
     public OnnxInference onnxInference;
-     private Vector3 lastPosition;
+    private Vector3 lastPosition;
     void OnEnable()
     {
         if(onnxInference != null){
@@ -52,14 +52,25 @@ public class PointMover : MonoBehaviour
         //     isPaused = false;
         //     Debug.Log("Movement play");
         // }
-        if (output == 0){
+
+        if(!isPaused && output ==0)
+        {
             isPaused = true;
             Debug.Log("Movement paused due to output being 'No force'");
         }
-        else{
-            isPaused = false;
+        else if (isPaused && output !=0)
+        {
+            isPaused=false;
             Debug.Log("Movement play");
-        }        
+        }
+        // if (output == 0){
+        //     isPaused = true;
+        //     Debug.Log("Movement paused due to output being 'No force'");
+        // }
+        // else{
+        //     isPaused = false;
+        //     Debug.Log("Movement play");
+        // }        
 
     }
 
@@ -67,7 +78,7 @@ public class PointMover : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.P))
         {
-            if (!isMoving)
+            if (!isPlaying)
             {
                 if (pathPoints.Length != durations.Length || pathPoints.Length != isArc.Length)
                 {
@@ -76,7 +87,7 @@ public class PointMover : MonoBehaviour
                 }
                 Debug.Log("Starting movement");
                 isPaused = false; // 재생 상태로 설정
-                isMoving = true;
+                isPlaying = true;
                 currentCoroutine = StartCoroutine(MoveAlongPath());
                 Direction.GetComponent<DirectionUpdater>().PlayDirection();
             }
@@ -118,7 +129,7 @@ public class PointMover : MonoBehaviour
                 yield return StartCoroutine(MoveToPoint(pathPoints[i], durations[i]));
             }
         }
-        isMoving = false;
+        isPlaying = false;
         currentDirection = Vector3.zero; // 이동이 끝나면 방향을 초기화
     }
 

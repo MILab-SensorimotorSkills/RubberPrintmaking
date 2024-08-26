@@ -61,7 +61,7 @@ namespace Manus.Interaction
 
 		#region Protected Types
 		float m_Value = 0.0f;
-		float m_SteppedValue = 0.0f;
+		// float m_SteppedValue = 0.0f;
 		#endregion // Protected Fields
 
 		#endregion // Fields & Properties

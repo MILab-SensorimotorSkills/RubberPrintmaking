@@ -5,6 +5,7 @@ using Haply.HardwareAPI.Unity;
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
+using UnityEditor.ShaderGraph.Internal;
 
 
 public class AdvancedPhysicsHapticEffector : MonoBehaviour
@@ -91,11 +92,13 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
     public float randomNoiseIntensity = 1f; // Random noise intensity
 
     private List<CsvData1> csvData = new List<CsvData1>();
-    private int currentIndex = 0;
+    // private int currentIndex = 0;
 
     private Vector3 targetPosition;
-    private OnnxInference onnxInference;
+    public OnnxInference onnxInference;
     public float distance_2d;
+    
+    private int output;
 
 
     private void Awake()
@@ -162,13 +165,13 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
             case ForceFeedbackType.Guidance:
                 return CalculateGuidanceForce(position, velocity, additionalData);
             case ForceFeedbackType.Hybrid:
-                return CalculateHybridForce(position, velocity, additionalData);
+                return CalculateHybridForce(position, velocity, additionalData, output);
             default:
                 return Vector3.zero;
         }
     }
 
-    private Vector3 CalculateHybridForce(Vector3 position, Vector3 velocity, AdditionalData additionalData)
+    private Vector3 CalculateHybridForce(Vector3 position, Vector3 velocity, AdditionalData additionalData, int output)
     {
         var force = additionalData.physicsCursorPosition - position;
         force *= stiffness;
@@ -176,18 +179,23 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
         if (pointMover != null)
         {
             Vector3 guidanceDirection = pointMover.CurrentDirection;
-            if (distance_2d < 0.5f){ //포인트와의 거리가 1보다 작으면 disturbance
+            // if (output != 0 && distance_2d < 0.2f) //포인트와의 거리가 xx보다 작으면 disturbance
+            if (distance_2d < 0.2f)
+            {
                 if (guidanceDirection != Vector3.zero)
                 {
-                    float scalingFactor = Mathf.Clamp(2.0f / (distance_2d + 0.1f), 0, 2.0f);
-                    force += -guidanceDirection.normalized * scalingFactor;
+                    float scalingFactor = Mathf.Clamp(-2.0f / (distance_2d + 0.1f), -2.0f, 0);
+                    Debug.Log(scalingFactor);
+                    force += guidanceDirection.normalized * scalingFactor;
                 }
             }
-            else
+            // else if(output != 0 && distance_2d >= 0.2f)
+            else if(distance_2d >= 0.2f)
             { //포인트와의 거리가 1보다 크면 guidance
                 if (guidanceDirection != Vector3.zero && position != targetPosition)
                 {
                     float scalingFactor = Mathf.Clamp(distance_2d, 0, 5.0f);
+                    Debug.Log(scalingFactor);
                     float userForceInGuidanceDirection = Vector3.Dot(force, guidanceDirection.normalized);
 
                     if (userForceInGuidanceDirection < 0.1f) 
