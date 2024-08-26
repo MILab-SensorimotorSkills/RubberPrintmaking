@@ -179,18 +179,23 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
         if (pointMover != null)
         {
             Vector3 guidanceDirection = pointMover.CurrentDirection;
-            if (output != 0 && distance_2d < 0.2f){ //포인트와의 거리가 1보다 작으면 disturbance
+            // if (output != 0 && distance_2d < 0.2f) //포인트와의 거리가 xx보다 작으면 disturbance
+            if (distance_2d < 0.2f)
+            {
                 if (guidanceDirection != Vector3.zero)
                 {
-                    float scalingFactor = Mathf.Clamp(1.0f / (distance_2d + 0.1f), 0, 1.0f);
-                    force += -guidanceDirection.normalized * scalingFactor;
+                    float scalingFactor = Mathf.Clamp(-2.0f / (distance_2d + 0.1f), -2.0f, 0);
+                    Debug.Log(scalingFactor);
+                    force += guidanceDirection.normalized * scalingFactor;
                 }
             }
-            else if(output != 0 && distance_2d >= 0.2f)
+            // else if(output != 0 && distance_2d >= 0.2f)
+            else if(distance_2d >= 0.2f)
             { //포인트와의 거리가 1보다 크면 guidance
                 if (guidanceDirection != Vector3.zero && position != targetPosition)
                 {
                     float scalingFactor = Mathf.Clamp(distance_2d, 0, 5.0f);
+                    Debug.Log(scalingFactor);
                     float userForceInGuidanceDirection = Vector3.Dot(force, guidanceDirection.normalized);
 
                     if (userForceInGuidanceDirection < 0.1f) 
