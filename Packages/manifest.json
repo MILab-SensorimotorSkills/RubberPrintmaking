@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "co.haply.hardwareapi": "file:C:\\Users\\jy\\Downloads\\co.haply.hardwareapi@1.1.6-preview.tar.gz",
+    "co.haply.hardwareapi": "file:C:/Users/kdh03/Downloads/co.haply.hardwareapi@1.1.6-preview.tar.gz",
     "com.github-glitchenzo.nugetforunity": "https://github.com/GlitchEnzo/NuGetForUnity.git?path=/src/NuGetForUnity",
     "com.rito.pivot-editor": "https://github.com/rito15/Unity-Pivot-Editor.git",
     "com.unity.barracuda": "https://github.com/Unity-Technologies/barracuda-release.git",
