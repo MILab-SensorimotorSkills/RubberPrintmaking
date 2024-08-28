@@ -20,59 +20,65 @@ public class PointMover : MonoBehaviour
     public GameObject Direction;
     public OnnxInference onnxInference;
     private Vector3 lastPosition;
-    void OnEnable()
-    {
-        if(onnxInference != null){
-            onnxInference.OnOutputCalculated += HandleOutput;
-        }
-    }
-    void OnDisable()
-    {
-        if(onnxInference !=null){
-            onnxInference.OnOutputCalculated -= HandleOutput;
-        }
-    }
+
+    // !!!!!!! 추론 이벤트 처리
+    // void OnEnable()
+    // {
+    //     if(onnxInference != null){
+    //         onnxInference.OnOutputCalculated += HandleOutput;
+    //     }
+    // }
+    // void OnDisable()
+    // {
+    //     if(onnxInference !=null){
+    //         onnxInference.OnOutputCalculated -= HandleOutput;
+    //     }
+    // }
     void Start()
     {
         lastPosition = pointToMove.position;
     }
 
-    private void HandleOutput(int output)
-    {
-        lastPosition = pointToMove.position;
-        // Debug.Log(lastPosition);
-        bool isPosition = (pointToMove.position != lastPosition);
+    // !!!!!!! 추론 이벤트 처리
+    // private void HandleOutput(int output) 
+    // {
+    //     lastPosition = pointToMove.position;
+    //     // Debug.Log(lastPosition);
+    //     bool isPosition = (pointToMove.position != lastPosition);
 
-        // if (isPosition && output == 0){
-        //     isPaused = true;
-        //     Debug.Log("Movement paused due to output being 'No force'");
-        // }
-        // else if (isPosition)
-        // {
-        //     isPaused = false;
-        //     Debug.Log("Movement play");
-        // }
+    //     // if (isPosition && output == 0){
+    //     //     isPaused = true;
+    //     //     Debug.Log("Movement paused due to output being 'No force'");
+    //     // }
+    //     // else if (isPosition)
+    //     // {
+    //     //     isPaused = false;
+    //     //     Debug.Log("Movement play");
+    //     // }
 
-        if(!isPaused && output ==0)
-        {
-            isPaused = true;
-            Debug.Log("Movement paused due to output being 'No force'");
-        }
-        else if (isPaused && output !=0)
-        {
-            isPaused=false;
-            Debug.Log("Movement play");
-        }
-        // if (output == 0){
-        //     isPaused = true;
-        //     Debug.Log("Movement paused due to output being 'No force'");
-        // }
-        // else{
-        //     isPaused = false;
-        //     Debug.Log("Movement play");
-        // }        
+    //     // if(!isPaused && output ==0) //Noforce이면 움직이지 않게
+    //     if(!isPaused)
+    //     {
+    //         isPaused = true;
+    //         Debug.Log("Movement paused due to output being 'No force'");
+    //     }
+    //     // else if (isPaused && output !=0) //Noforce가 아니면 움직이도록
+        
+    //     else if (isPaused)
+    //     {
+    //         isPaused=false;
+    //         Debug.Log("Movement play");
+    //     }
+    //     // if (output == 0){
+    //     //     isPaused = true;
+    //     //     Debug.Log("Movement paused due to output being 'No force'");
+    //     // }
+    //     // else{
+    //     //     isPaused = false;
+    //     //     Debug.Log("Movement play");
+    //     // }        
 
-    }
+    // }
 
     void Update()
     {

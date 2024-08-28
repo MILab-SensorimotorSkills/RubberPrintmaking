@@ -171,6 +171,7 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
         }
     }
 
+    private Vector3 NoforceDirection;
     private Vector3 CalculateHybridForce(Vector3 position, Vector3 velocity, AdditionalData additionalData, int output)
     {
         var force = additionalData.physicsCursorPosition - position;
@@ -178,14 +179,36 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
         force -= velocity * damping;
         if (pointMover != null)
         {
+            Debug.Log("결과"+output);
             Vector3 guidanceDirection = pointMover.CurrentDirection;
-            // if (output != 0 && distance_2d < 0.2f) //포인트와의 거리가 xx보다 작으면 disturbance
+            Debug.Log(guidanceDirection);
+
+            // if (pointMover.CurrentDirection == Vector3.zero)
+            // {
+            //     Debug.Log("흠");
+            //     Debug.Log(sphereTransform.position);
+            //     Vector3 spherePosition = sphereTransform.position;
+            //     Debug.Log("target"+ spherePosition);
+            //     NoforceDirection = (targetPosition - spherePosition).normalized;
+            //     // float NoforceGuidance = Mathf.Clamp(distance_2d, 0, 5.0f);
+            //     force += NoforceDirection * 1.0f;
+                
+            // }
+
+            // if(output == 0)
+            // {
+            //     Debug.Log("sdaf");
+            //     float NoforceGuidance = Mathf.Clamp(distance_2d, 0, 5.0f);
+            //     force += NoforceDirection * NoforceGuidance;
+            // }
+
+                // if (output != 0 && distance_2d < 0.2f) //포인트와의 거리가 xx보다 작으면 disturbance
             if (distance_2d < 0.2f)
             {
                 if (guidanceDirection != Vector3.zero)
                 {
-                    float scalingFactor = Mathf.Clamp(-2.0f / (distance_2d + 0.1f), -2.0f, 0);
-                    Debug.Log(scalingFactor);
+                    float scalingFactor = Mathf.Clamp(-1.0f / (distance_2d + 0.1f), -1.0f, 0);
+                    // Debug.Log(scalingFactor);
                     force += guidanceDirection.normalized * scalingFactor;
                 }
             }
@@ -195,7 +218,7 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
                 if (guidanceDirection != Vector3.zero && position != targetPosition)
                 {
                     float scalingFactor = Mathf.Clamp(distance_2d, 0, 5.0f);
-                    Debug.Log(scalingFactor);
+                    // Debug.Log(scalingFactor);
                     float userForceInGuidanceDirection = Vector3.Dot(force, guidanceDirection.normalized);
 
                     if (userForceInGuidanceDirection < 0.1f) 
@@ -204,6 +227,7 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
                     }
                 }
             }
+            
             
         }
         if (!forceEnabled || (collisionDetection && !additionalData.isTouching))
