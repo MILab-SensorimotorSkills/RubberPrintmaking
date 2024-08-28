@@ -96,11 +96,23 @@ public class VirtualKnife : MonoBehaviour
                 minimumY = yPosition;
             }
 
-            virtualObjectRb.MovePosition(new Vector3(
-                initialPosition.x,
-                yPosition,
-                initialPosition.z
-            ));
+            // virtualObjectRb.MovePosition(new Vector3(
+            //     initialPosition.x,
+            //     yPosition,
+            //     initialPosition.z
+            // ));
+
+            // 위치 차이를 절대값으로 비교하여 업데이트
+            if (Mathf.Abs(virtualObject.transform.position.y - yPosition) > 0.0001f)
+            {
+                Vector3 targetPosition = new Vector3(
+                    virtualObject.transform.position.x,  // x 위치는 그대로 유지
+                    yPosition,                           // y 위치만 업데이트
+                    virtualObject.transform.position.z  // z 위치는 그대로 유지
+                );
+
+                virtualObjectRb.MovePosition(targetPosition);
+            }
         }
     }
 
