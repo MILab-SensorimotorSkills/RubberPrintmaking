@@ -418,7 +418,7 @@ namespace DiggingTest
 
         [Header("Settings Terrain")]
         public bool updateGround = false;
-        public float updateInterval = 0.01f; 
+        public float updateInterval = 0.05f; 
         public float cellSize = 0.1f; // 그리드 셀 크기
         public float maxDepth = 0.7f; // 최대 깊이, 인스펙터에서 조정 가능
 
