@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "co.haply.hardwareapi": {
-      "version": "file:C:/Users/kdh03/Downloads/co.haply.hardwareapi@1.1.6-preview.tar.gz",
+      "version": "file:C:/Users/chltn/Downloads/co.haply.hardwareapi@1.1.6-preview.tar.gz",
       "depth": 0,
       "source": "local-tarball",
       "dependencies": {
