@@ -486,6 +486,8 @@ public class PointMover : MonoBehaviour
     public OnnxInference onnxInference;
     private Vector3 lastPosition;
 
+    private bool directionStarted = false; // DirectionUpdater가 시작되었는지 여부 확인
+
     void Start()
     {
         lastPosition = pointToMove.position;
@@ -512,19 +514,28 @@ public class PointMover : MonoBehaviour
             isPaused = false; // 재생 상태로 설정
             isPlaying = true;
             currentCoroutine = StartCoroutine(MoveAlongPath());
-            Direction.GetComponent<DirectionUpdater>().PlayDirection();
+
+            if (!directionStarted)
+            {
+                // 화살표가 아직 시작되지 않았다면 동시에 시작
+                Debug.Log("Starting DirectionUpdater");
+                Direction.GetComponent<DirectionUpdater>().PlayDirection();
+                directionStarted = true; // 시작되었음을 표시
+            }
         }
         else if (isPaused)
         {
             // 일시정지 상태에서 P를 누르면 재개
             Debug.Log("Resuming movement");
             isPaused = false;
+            Direction.GetComponent<DirectionUpdater>().PlayDirection(); // 화살표도 재개
         }
         else
         {
             // 진행 중일 때 P를 누르면 일시정지
             Debug.Log("Pausing movement");
             isPaused = true;
+            Direction.GetComponent<DirectionUpdater>().PlayDirection(); // 화살표도 일시정지
         }
     }
 
@@ -623,3 +634,4 @@ public class PointMover : MonoBehaviour
         currentDirection = Vector3.zero; // 이동이 끝나면 방향을 초기화
     }
 }
+
