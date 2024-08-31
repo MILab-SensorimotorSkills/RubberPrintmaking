@@ -51,6 +51,7 @@ public class DirectionUpdater : MonoBehaviour
 
     private bool isPaused = false; // 일시정지 상태를 나타내는 변수
     private Coroutine currentCoroutine; // 현재 실행 중인 코루틴을 저장
+    private bool isPlaying = false;
 
     void Start()
     {
@@ -62,31 +63,25 @@ public class DirectionUpdater : MonoBehaviour
 
     public void PlayDirection()
     {
-        if (currentCoroutine != null)
+        if (!isPlaying)
         {
-            StopCoroutine(currentCoroutine); // 기존 코루틴이 있으면 정지
+            Debug.Log("화살표 시작");
+            isPaused = false; // 재생 상태로 설정
+            isPlaying = true;
+            currentCoroutine = StartCoroutine(ActivateObjectsInSequence());
+            Debug.Log("Start Coroutine");
         }
-        currentCoroutine = StartCoroutine(ActivateObjectsInSequence());
-    }
-
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.P))
+        else if (isPaused)
         {
-            if (isPaused)
-            {
-                // 재생
-                isPaused = false;
-                if (currentCoroutine == null)
-                {
-                    currentCoroutine = StartCoroutine(ActivateObjectsInSequence());
-                }
-            }
-            else
-            {
-                // 일시정지
-                isPaused = true;
-            }
+            // 일시정지 상태에서 재개
+            Debug.Log("화살표 재생");
+            isPaused = false;
+        }
+        else
+        {
+            // 진행 중일 때 일시정지
+            Debug.Log("화살표 일시정지");
+            isPaused = true;
         }
     }
 
@@ -124,6 +119,8 @@ public class DirectionUpdater : MonoBehaviour
             objectsToActivate[i].SetActive(false);
         }
 
+        isPlaying = false; // 모든 작업이 끝나면 다시 시작할 수 있도록 플래그 초기화
         currentCoroutine = null; // 모든 작업이 끝나면 코루틴을 초기화
     }
 }
+
