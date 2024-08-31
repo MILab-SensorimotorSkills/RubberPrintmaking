@@ -314,7 +314,7 @@ Transform:
   m_GameObject: {fileID: 41197209}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.2633, y: 0.193, z: 0.1772}
+  m_LocalPosition: {x: -0.2815, y: 0.193, z: 0.1715}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -6394,7 +6394,7 @@ Transform:
   m_GameObject: {fileID: 794109918}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.165, y: 0.193, z: 0.284}
+  m_LocalPosition: {x: -0.1651, y: 0.193, z: 0.2918}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -6840,7 +6840,7 @@ Transform:
   m_GameObject: {fileID: 843102431}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.2157, y: 0.193, z: 0.3093}
+  m_LocalPosition: {x: -0.2197, y: 0.193, z: 0.3093}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -7217,9 +7217,9 @@ MonoBehaviour:
   - {fileID: 1912256691}
   - {fileID: 231089943}
   activationTimes:
-  - 3
-  - 3
-  - 3
+  - 12
+  - 5.5
+  - 16.3
   - 11
   - 11
   - 11
@@ -7739,7 +7739,7 @@ Transform:
   m_GameObject: {fileID: 986989623}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.2615, y: 0.193, z: 0.3025}
+  m_LocalPosition: {x: -0.2684, y: 0.193, z: 0.2976}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -7856,7 +7856,7 @@ Transform:
   m_GameObject: {fileID: 1018973969}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.2028, y: 0.193, z: 0.2131}
+  m_LocalPosition: {x: -0.2178, y: 0.193, z: 0.2023}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -8305,7 +8305,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79663d83521dda644a71fb3079f641e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotationSpeed: 100
+  rotationSpeed: 40
 --- !u!1 &1158762328
 GameObject:
   m_ObjectHideFlags: 0
@@ -14092,33 +14092,33 @@ MonoBehaviour:
   - {fileID: 1213945549}
   durations:
   - 3
+  - 3
   - 2
-  - 1.5
-  - 1.5
+  - 2
   - 2
   - 0
   - 1.5
-  - 1.5
+  - 2.5
   - 1.5
   - 0
-  - 0.4
-  - 0.4
-  - 0.4
-  - 0.2
-  - 0.3
-  - 0.3
-  - 0.2
-  - 1
-  - 1.8
-  - 1.8
+  - 1.5
+  - 0.6
+  - 0.6
+  - 0.6
   - 0.5
+  - 0.5
+  - 0.5
+  - 0.5
+  - 2.5
+  - 2.5
+  - 1
+  - 3
   - 2
-  - 2
-  - 1
-  - 1
-  - 1
-  - 2
-  - 1
+  - 1.5
+  - 1.5
+  - 1.5
+  - 2.5
+  - 1.5
   - 2
   - 0
   - 1.5
