@@ -191,22 +191,24 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
             // }
 
             // if (output != 0 && distance_2d < 0.2f) //포인트와의 거리가 xx보다 작으면 disturbance
-            if (distance_2d < 0.2f)
+            if (distance_2d < 0.3f)
             {
                 if (guidanceDirection != Vector3.zero)
                 {
-                    float scalingFactor = Mathf.Clamp(-1.0f / (distance_2d + 0.1f), -1.0f, 0);
+                    float scalingFactor = Mathf.Clamp(-2.0f / (distance_2d + 0.1f), -2.0f, 0);
                     // Debug.Log(scalingFactor);
                     force += guidanceDirection.normalized * scalingFactor;
+                    // Debug.Log("disturbance");
                 }
             }
             // else if(output != 0 && distance_2d >= 0.2f)
-            else if(distance_2d >= 0.2f)
+            else if(distance_2d >= 0.3f)
             { //포인트와의 거리가 1보다 크면 guidance
                 if (guidanceDirection != Vector3.zero && position != targetPosition)
                 { 
                     float scalingFactor = Mathf.Clamp(distance_2d, 0, 5.0f);
                     force += NoforceDirection * scalingFactor;
+                    // Debug.Log("guidance");
                 }
                 
                 // if (guidanceDirection != Vector3.zero && position != targetPosition)
@@ -445,7 +447,8 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
         // Debug.Log(physicsCursorPosition)
 
         //Hybrid일때만 상태 추론
-        if (forceFeedbackType == ForceFeedbackType.Guidance)
+        /*
+        if (forceFeedbackType == ForceFeedbackType.Hybrid)
         {
             y_g = MainForceY - g;
             // 새 Force 데이터를 딕셔너리에 추가
@@ -469,7 +472,28 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
                 
             }
         }
-        
+        */
+        y_g = MainForceY - g;
+        // 새 Force 데이터를 딕셔너리에 추가
+        // float[] forceData = { MainForceX, MainForceY, MainForceZ };
+        // float[] forceData = { MainForceX, y_g, MainForceZ };
+        float[] forceData = { MainForceZ, MainForceX, -y_g };
+
+
+        if (queue.Count != timeSteps)
+        {
+            // 필요한 경우 forceData를 큐에 추가하거나 다른 작업을 수행합니다.
+            queue.Enqueue(forceData);
+            Debug.Log(queue.Count);
+        }
+        else
+        {
+            queue.Dequeue();
+            queue.Enqueue(forceData);
+            // Debug.Log("forceData: " + string.Join(", ", forceData));
+            int predictedClass = onnxInference.ProcessRealtimeData(queue);
+            
+        }
 
     }
 

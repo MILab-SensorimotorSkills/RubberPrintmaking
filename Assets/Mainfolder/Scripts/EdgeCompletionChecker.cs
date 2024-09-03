@@ -1,3 +1,4 @@
+/*
 using UnityEngine;
 public class EdgeCompletionChecker : MonoBehaviour
 {
@@ -40,3 +41,4 @@ public class EdgeCompletionChecker : MonoBehaviour
                Mathf.Abs(a.b - b.b) < tolerance;
     }
 }
+*/
