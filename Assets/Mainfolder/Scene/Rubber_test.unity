@@ -1193,7 +1193,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc274a84a8ed5ef49a7dd0e3384cc417, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  forceFeedbackType: 0
+  forceFeedbackType: 1
   forceX: 0
   forceY: 0
   forceZ: 0
@@ -8214,6 +8214,7 @@ GameObject:
   - component: {fileID: 1134759086}
   - component: {fileID: 1134759085}
   - component: {fileID: 1134759087}
+  - component: {fileID: 1134759088}
   m_Layer: 3
   m_Name: Advanced (1)
   m_TagString: Ground
@@ -8306,6 +8307,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rotationSpeed: 40
+--- !u!114 &1134759088
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1134759083}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30d6e6519d362ef468ca6ec4480b1981, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1158762328
 GameObject:
   m_ObjectHideFlags: 0
