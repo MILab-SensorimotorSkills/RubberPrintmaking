@@ -99,7 +99,9 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
     public float distance_2d;
     
     private int output;
-
+    private List<Vector2> spherePath = new List<Vector2>();  // spherePosition의 x, z 경로를 저장할 리스트
+    private List<Vector2> targetPath = new List<Vector2>();  // targetPosition의 x, z 경로를 저장할 리스트
+    private float matchingAccuracy = 0f;
 
     private void Awake()
     {
@@ -414,6 +416,13 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
 
     private void FixedUpdate()
     {
+        // spherePosition과 targetPosition의 현재 x, z 좌표를 각각 저장
+        Vector2 currentSpherePosition = new Vector2(sphereTransform.position.x, sphereTransform.position.z);
+        Vector2 currentTargetPosition = new Vector2(pointMover.PointToMovePosition.x, pointMover.PointToMovePosition.z);
+
+        spherePath.Add(currentSpherePosition);
+        targetPath.Add(currentTargetPosition);
+
         m_hapticThread.SetAdditionalData(GetAdditionalData());
         if (pointMover != null)
         {
@@ -497,6 +506,49 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
 
     }
 
+    private void OnApplicationQuit()
+    {
+        CalculateFinalAccuracy();
+    }
+
+    private void CalculateFinalAccuracy()
+    {
+        int totalPoints = Mathf.Min(spherePath.Count, targetPath.Count);  // 비교할 수 있는 최소 샘플 개수
+        if (totalPoints == 0)
+        {
+            Debug.Log("경로가 기록되지 않았습니다.");
+            return;
+        }
+
+        float totalDistance = 0f;
+
+        for (int i = 0; i < totalPoints; i++)
+        {
+            totalDistance += Vector2.Distance(spherePath[i], targetPath[i]);
+        }
+
+        // 평균 거리 계산
+        float averageDistance = totalDistance / totalPoints;
+
+        // 최대 허용 오차 (예: 5.0)
+        float maxAllowedDistance = 1.0f;
+
+        // 평균 거리를 기반으로 정확도 계산
+        if (averageDistance <= 0.1f)
+        {
+            matchingAccuracy = 100f;
+        }
+        else if (averageDistance < maxAllowedDistance)
+        {
+            matchingAccuracy = Mathf.Clamp(100f - ((averageDistance - 0.1f) / (maxAllowedDistance - 0.1f)) * 100f, 0f, 100f);
+        }
+        else
+        {
+            matchingAccuracy = 0f;
+        }
+
+        Debug.Log($"최종 경로 일치 정확도: {matchingAccuracy}%");
+    }
 
     private void Update()
     {
