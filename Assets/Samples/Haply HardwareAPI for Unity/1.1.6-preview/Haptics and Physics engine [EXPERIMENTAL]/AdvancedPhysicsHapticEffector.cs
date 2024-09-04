@@ -98,8 +98,45 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
     public OnnxInference onnxInference;
     public float distance_2d;
     
-    private int output;
+    private int lastOutput;
 
+
+
+
+
+
+
+
+
+    private float totalPoints = 0f; // 콜라이더 경계를 따라 설정된 포인트의 총 개수
+    private float matchedPoints = 0f; // 올바르게 깎은 포인트의 개수
+    public PolygonCollider2D dogCollider; // Inspector에서 할당된 강아지 모양의 PolygonCollider2D
+
+
+
+
+
+    void Start()
+    {
+        // OnnxInference 스크립트의 OnOutputCalculated 이벤트를 구독합니다.
+        onnxInference.OnOutputCalculated += HandleOutputCalculated;
+    }
+
+    private void HandleOutputCalculated(int output)
+    {
+        // 이 메서드는 OnnxInference 스크립트에서 output 값이 계산될 때 호출됩니다.
+        lastOutput = output;
+        //Debug.Log("Received output from OnnxInference: " + lastOutput);
+    }
+
+    void OnDestroy()
+    {
+        // 구독 해제
+        if (onnxInference != null)
+        {
+            onnxInference.OnOutputCalculated -= HandleOutputCalculated;
+        }
+    }
 
     private void Awake()
     {
@@ -135,6 +172,38 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
             Debug.Log("OnnxInference successfully found.");
         }
 
+
+
+
+
+
+
+
+
+
+        if (dogCollider == null)
+        {
+            if (dogCollider == null)
+            {
+                totalPoints = GetColliderEdgePointsCount();
+                Debug.Log("Total points on collider edge: " + totalPoints); // Debug 로그 추가
+            }
+        }
+
+
+
+
+
+
+        // 콜라이더 경계의 총 포인트 개수 계산
+        totalPoints = GetColliderEdgePointsCount();
+
+
+
+
+
+
+
     }
 
     private void OnEnable()
@@ -165,14 +234,14 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
             case ForceFeedbackType.Guidance:
                 return CalculateGuidanceForce(position, velocity, additionalData);
             case ForceFeedbackType.Hybrid:
-                return CalculateHybridForce(position, velocity, additionalData, output);
+                return CalculateHybridForce(position, velocity, additionalData, lastOutput);
             default:
                 return Vector3.zero;
         }
     }
 
     private Vector3 NoforceDirection;
-    private Vector3 CalculateHybridForce(Vector3 position, Vector3 velocity, AdditionalData additionalData, int output)
+    private Vector3 CalculateHybridForce(Vector3 position, Vector3 velocity, AdditionalData additionalData, int lastOutput)
     {
         var force = additionalData.physicsCursorPosition - position;
         force *= stiffness;
@@ -425,7 +494,7 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
             NoforceDirection = (targetPosition - spherePosition).normalized;
             // Debug.Log(NoforceDirection);
 
-            // Debug.Log(sphereTransform.position);
+            // Debug.Log(sphereTransform.position); 
             // Debug.Log(targetPosition);
 
         
@@ -440,37 +509,154 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
             distance_2d = Vector3.Distance(spherePositionXZ, targetPositionXZ);
             // Debug.Log(distance_2d);
         
+
+
+
+
+
+
+
+
+            // lastOutput 0, 1, 2인 경우에만 계산 수행
+            if (lastOutput == 1 || lastOutput == 2 || lastOutput == 3)
+            {
+                // 콜라이더 경계와의 매칭 여부 확인
+                if (IsWithinRange(spherePosition))
+                {
+                    matchedPoints++;
+                }
+            }
+
+
+
+
+
+
+
+
+
+
+
         }
 
         // Debug.Log(physicsCursorPosition)
 
         //Hybrid일때만 상태 추론
-        if (forceFeedbackType == ForceFeedbackType.Guidance)
-        {
-            y_g = MainForceY - g;
-            // 새 Force 데이터를 딕셔너리에 추가
-            // float[] forceData = { MainForceX, MainForceY, MainForceZ };
-            // float[] forceData = { MainForceX, y_g, MainForceZ };
-            float[] forceData = { MainForceZ, MainForceX, -y_g };
+        // if (forceFeedbackType == ForceFeedbackType.Guidance)
+        // {
+        //     y_g = MainForceY - g;
+        //     // 새 Force 데이터를 딕셔너리에 추가
+        //     // float[] forceData = { MainForceX, MainForceY, MainForceZ };
+        //     // float[] forceData = { MainForceX, y_g, MainForceZ };
+        //     float[] forceData = { MainForceZ, MainForceX, -y_g };
 
 
-            if (queue.Count != timeSteps)
-            {
-                // 필요한 경우 forceData를 큐에 추가하거나 다른 작업을 수행합니다.
-                queue.Enqueue(forceData);
-                Debug.Log(queue.Count);
-            }
-            else
-            {
-                queue.Dequeue();
-                queue.Enqueue(forceData);
-                // Debug.Log("forceData: " + string.Join(", ", forceData));
-                int predictedClass = onnxInference.ProcessRealtimeData(queue);
+        //     if (queue.Count != timeSteps)
+        //     {
+        //         // 필요한 경우 forceData를 큐에 추가하거나 다른 작업을 수행합니다.
+        //         queue.Enqueue(forceData);
+        //         Debug.Log(queue.Count);
+        //     }
+        //     else
+        //     {
+        //         queue.Dequeue();
+        //         queue.Enqueue(forceData);
+        //         // Debug.Log("forceData: " + string.Join(", ", forceData));
+        //         int predictedClass = onnxInference.ProcessRealtimeData(queue);
                 
-            }
-        }
-        
+        //     }
+        // }
+         y_g = MainForceY - g;
+        // 새 Force 데이터를 딕셔너리에 추가
+        // float[] forceData = { MainForceX, MainForceY, MainForceZ };
+        // float[] forceData = { MainForceX, y_g, MainForceZ };
+        float[] forceData = { MainForceZ, MainForceX, -y_g };
 
+
+        if (queue.Count != timeSteps)
+        {
+            // 필요한 경우 forceData를 큐에 추가하거나 다른 작업을 수행합니다.
+            queue.Enqueue(forceData);
+            Debug.Log(queue.Count);
+        }
+        else
+        {
+            queue.Dequeue();
+            queue.Enqueue(forceData);
+            // Debug.Log("forceData: " + string.Join(", ", forceData));
+            int predictedClass = onnxInference.ProcessRealtimeData(queue);
+            
+        }
+
+        // Debug.Log(lastOutput);
+
+    }
+
+
+    private void OnDisable()
+    {
+        CalculateAndPrintAccuracy(); // 정확도 계산 및 출력
+    }
+
+    // 콜라이더 경계의 총 포인트 개수를 계산하는 함수
+    private float GetColliderEdgePointsCount()
+    {
+        return dogCollider.points.Length;
+    }
+
+    private bool IsWithinRange(Vector3 spherePosition)
+    {
+    if (dogCollider == null)
+    {
+        Debug.LogError("IsWithinRange called but dogCollider is not assigned.");
+        return false;
+    }
+
+    float matchThreshold = 0.1f; // 허용되는 범위
+
+    List<Vector2> newPoints = new List<Vector2>(dogCollider.points); // 기존 포인트를 리스트로 변환
+
+    for (int i = 0; i < dogCollider.points.Length; i++)
+    {
+        // PolygonCollider2D의 각 포인트를 가져와서 x와 y를 3D 공간의 x와 z로 변환
+        Vector3 colliderPoint = dogCollider.transform.TransformPoint(new Vector3(dogCollider.points[i].x, 0, dogCollider.points[i].y));
+
+        // spherePosition의 x와 z를 PolygonCollider2D의 x와 z와 비교
+        float distance = Vector2.Distance(new Vector2(spherePosition.x, spherePosition.z), new Vector2(colliderPoint.x, colliderPoint.z));
+        if (distance <= matchThreshold)
+        {
+
+            // 포인트를 리스트에서 제거
+            newPoints.RemoveAt(i);
+
+            // PolygonCollider2D의 포인트 배열을 업데이트
+            dogCollider.points = newPoints.ToArray();
+
+            return true; // 일정 범위 내에 있는 경우
+        }
+    }
+
+    return false; // 범위를 벗어난 경우
+}
+
+
+    // 최종 정확도를 계산하고 출력하는 함수
+    private void CalculateAndPrintAccuracy()
+    {
+        float accuracy = (matchedPoints / totalPoints) * 100f;
+
+        // 범위를 벗어난 경우 점수 감점
+        float penalty = (totalPoints - matchedPoints) * 0.01f; // 예: 10% 감점
+        accuracy -= penalty;
+
+        // 정확도는 0% 이상이어야 함
+        accuracy = Mathf.Max(accuracy, 0f);
+
+        Debug.Log("Final Accuracy: " + accuracy + "%");
+
+        Debug.Log("matchedPoints: " + matchedPoints);
+
+        Debug.Log("totalPoints: " + totalPoints);
     }
 
 
