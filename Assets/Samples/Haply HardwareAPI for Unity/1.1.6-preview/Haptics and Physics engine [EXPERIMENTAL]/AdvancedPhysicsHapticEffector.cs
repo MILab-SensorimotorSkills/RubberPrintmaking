@@ -7,7 +7,6 @@ using UnityEngine;
 using System.IO;
 using UnityEditor.ShaderGraph.Internal;
 
-
 public class AdvancedPhysicsHapticEffector : MonoBehaviour
 {
     public enum ForceFeedbackType
@@ -100,6 +99,29 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
     
     private int output;
 
+    void Start()
+    {
+        if (onnxInference != null)
+        {
+            // Subscribe to the OnOutputCalculated event
+            onnxInference.OnOutputCalculated += HandleOutputCalculated;
+        }
+    }
+
+    void OnDestroy()
+    {
+        if (onnxInference != null)
+        {
+            // Unsubscribe to prevent memory leaks
+            onnxInference.OnOutputCalculated -= HandleOutputCalculated;
+        }
+    }
+
+    private void HandleOutputCalculated(int output)
+    {
+        // Debug.Log("Output received in another script: " + output);
+        // Use the output as needed
+    }
 
     private void Awake()
     {
@@ -193,7 +215,8 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
             // if (output != 0 && distance_2d < 0.2f) //포인트와의 거리가 xx보다 작으면 disturbance
             if (distance_2d < 0.3f)
             {
-                if (guidanceDirection != Vector3.zero)
+                // if (guidanceDirection != Vector3.zero)
+                if (output != 0)
                 {
                     float scalingFactor = Mathf.Clamp(-2.0f / (distance_2d + 0.1f), -2.0f, 0);
                     // Debug.Log(scalingFactor);
