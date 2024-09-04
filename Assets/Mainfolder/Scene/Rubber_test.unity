@@ -450,7 +450,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!212 &43422362
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1746,7 +1746,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc274a84a8ed5ef49a7dd0e3384cc417, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  forceFeedbackType: 0
+  forceFeedbackType: 2
   forceX: 0
   forceY: 0
   forceZ: 0
@@ -18355,10 +18355,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b077675e5fd53c34d84cbcc71c033353, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_CachedHandedness: 0
-  m_CachedDeviceId: 1166
-  m_CachedDeviceName: Plastic Agogo
-  m_CachedDeviceAddress: COM3
+  m_CachedHandedness: 1
+  m_CachedDeviceId: 1136
+  m_CachedDeviceName: Brass Accordion
+  m_CachedDeviceAddress: COM7
   avatar: {fileID: 3652912357394140782}
   m_TargetFrequency: 1000
   onInitialized:
@@ -18376,9 +18376,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb54fc783d2d3de4bbd3f1e67e2a0bd4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_CachedDeviceId: 61505
+  m_CachedDeviceId: 61485
   m_CachedDeviceName: 
-  m_CachedDeviceAddress: COM4
+  m_CachedDeviceAddress: COM11
   onButtonDown:
     m_PersistentCalls:
       m_Calls: []
