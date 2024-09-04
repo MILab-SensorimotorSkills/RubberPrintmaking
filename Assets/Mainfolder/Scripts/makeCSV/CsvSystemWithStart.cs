@@ -210,7 +210,7 @@ public class CsvSystemWithStart : MonoBehaviour
             if (minDistance != 0)
             {
                 distances0x.Add(minDistance);
-                Debug.Log(minDistance);
+                // Debug.Log(minDistance);
             }
         }
         else
