@@ -1193,7 +1193,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc274a84a8ed5ef49a7dd0e3384cc417, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  forceFeedbackType: 0
+  forceFeedbackType: 2
   forceX: 0
   forceY: 0
   forceZ: 0
@@ -7231,15 +7231,15 @@ MonoBehaviour:
   - 7
   - 6.5
   - 9.6
-  - 9.6
+  - 9.7
   - 6.5
   - 6.5
   - 5.5
   - 5.1
   - 13.5
   - 5.5
-  - 6.5
-  - 4.4
+  - 6.7
+  - 6.4
   - 6
 --- !u!4 &913772349
 Transform:
@@ -8306,7 +8306,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1134759083}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 79663d83521dda644a71fb3079f641e3, type: 3}
   m_Name: 

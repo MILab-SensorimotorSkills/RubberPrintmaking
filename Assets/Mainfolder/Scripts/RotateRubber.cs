@@ -16,7 +16,6 @@
 //     }
 // }
 
-
 using System.Collections;
 using UnityEngine;
 
@@ -28,6 +27,7 @@ public class RotateRubber : MonoBehaviour
 
     private int currentIndex = 0;   // 현재 회전 인덱스
     private bool isRotating = false; // 현재 회전 중인지 확인하는 플래그
+    private bool isManualStart = false; // P키를 눌러 수동으로 회전이 시작되었는지 여부
     private Coroutine rotateCoroutine; // 코루틴을 제어하기 위한 참조
     public OnnxInference onnxInference; // OnnxInference 참조
 
@@ -45,9 +45,11 @@ public class RotateRubber : MonoBehaviour
             if (isRotating)
             {
                 StopRotation(); // 회전 일시정지
+                isManualStart = false; // 수동 시작을 초기화
             }
             else
             {
+                isManualStart = true; // 수동 시작 플래그 활성화
                 StartRotation(); // 회전 시작
             }
         }
@@ -55,14 +57,18 @@ public class RotateRubber : MonoBehaviour
 
     void HandleOnnxOutput(int output)
     {
-        // output이 0이 아닐 경우 회전 일시정지
-        if (output != 0)
+        // 수동으로 시작되었을 때만 output 값에 따라 제어
+        if (isManualStart)
         {
-            StopRotation();
-        }
-        else if (!isRotating)
-        {
-            StartRotation(); // output이 0일 때 회전 재개
+            // output이 0이 아닐 경우 회전 일시정지
+            if (output != 0)
+            {
+                StopRotation();
+            }
+            else if (!isRotating)
+            {
+                StartRotation(); // output이 0일 때 회전 재개
+            }
         }
     }
 
