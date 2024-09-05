@@ -501,9 +501,10 @@ public class VirtualKnife : MonoBehaviour
             }
 
             // MainforceY가 50f를 초과할 경우 경고음을 재생하고 메시지를 표시
-            if (mainForceY > 50f)
+            if (mainForceY > 40f)
             {
                 TriggerWarning();
+                Debug.Log("힘 그만!!!");
             }
             else
             {
