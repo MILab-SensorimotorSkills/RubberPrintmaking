@@ -5,7 +5,7 @@ using Haply.HardwareAPI.Unity;
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
-
+using UnityEditor.ShaderGraph.Internal;
 
 public class AdvancedPhysicsHapticEffector : MonoBehaviour
 {
@@ -13,7 +13,8 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
     {
         Default,
         Disturbance,
-        Guidance
+        Guidance,
+        Hybrid
     }
 
     [Header("Force Feedback Type")]
@@ -60,6 +61,7 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
     public float MainForceX = 0;
     public float MainForceY = 0;
     public float MainForceZ = 0;
+    public Transform sphereTransform; 
 
 
     private ConfigurableJoint m_joint;
@@ -89,11 +91,42 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
     public float randomNoiseIntensity = 1f; // Random noise intensity
 
     private List<CsvData1> csvData = new List<CsvData1>();
-    private int currentIndex = 0;
+    // private int currentIndex = 0;
 
     private Vector3 targetPosition;
-    private OnnxInference onnxInference;
+    public OnnxInference onnxInference;
+    public float distance_2d;
+    
+    private int newoutput ;
+    private List<Vector2> spherePath = new List<Vector2>();  // spherePosition의 x, z 경로를 저장할 리스트
+    private List<Vector2> targetPath = new List<Vector2>();  // targetPosition의 x, z 경로를 저장할 리스트
+    private float matchingAccuracy = 100f;
 
+    void Start()
+    {
+        if (onnxInference != null)
+        {
+            // Subscribe to the OnOutputCalculated event
+            onnxInference.OnOutputCalculated += HandleOutputCalculated;
+        }
+    }
+
+    void OnDestroy()
+    {
+        if (onnxInference != null)
+        {
+            // Unsubscribe to prevent memory leaks
+            onnxInference.OnOutputCalculated -= HandleOutputCalculated;
+        }
+    }
+
+    private void HandleOutputCalculated(int output)
+    {
+        //Debug.Log("Output received in another script: " + output);
+        // Use the output as needed
+        newoutput = output;
+
+    }
 
     private void Awake()
     {
@@ -120,15 +153,6 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
 
         // OnnxInference 객체 초기화
         onnxInference = FindObjectOfType<OnnxInference>();
-        if (onnxInference == null)
-        {
-            Debug.LogError("OnnxInference not found in the scene.");
-        }
-        else
-        {
-            Debug.Log("OnnxInference successfully found.");
-        }
-
     }
 
     private void OnEnable()
@@ -158,9 +182,87 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
                 return CalculateDisturbanceForce(position, velocity, additionalData);
             case ForceFeedbackType.Guidance:
                 return CalculateGuidanceForce(position, velocity, additionalData);
+            case ForceFeedbackType.Hybrid:
+                return CalculateHybridForce(position, velocity, additionalData, newoutput);
             default:
                 return Vector3.zero;
         }
+    }
+
+    private Vector3 NoforceDirection;
+    private Vector3 CalculateHybridForce(Vector3 position, Vector3 velocity, AdditionalData additionalData, int newoutput)
+    {
+        var force = additionalData.physicsCursorPosition - position;
+        force *= stiffness;
+        force -= velocity * damping;
+        force += NoforceDirection * 1.1f;  
+
+        if (pointMover != null)
+        {
+            // Debug.Log("결과"+output);
+            Vector3 guidanceDirection = pointMover.CurrentDirection;
+            // Debug.Log(guidanceDirection);
+
+            // if (pointMover.CurrentDirection == Vector3.zero)
+            // {
+            //     force += NoforceDirection * 1.1f;  
+            // }
+
+            // if (output != 0 && distance_2d < 0.2f) //포인트와의 거리가 xx보다 작으면 disturbance
+            if (distance_2d < 0.3f)
+            {
+                // if (guidanceDirection != Vector3.zero && newoutput != 0)
+                if (guidanceDirection != Vector3.zero)
+                {
+                    float scalingFactor = Mathf.Clamp(-2.0f / (distance_2d + 0.1f), -2.0f, 0);
+                    // Debug.Log(scalingFactor);
+                    force += guidanceDirection.normalized * scalingFactor;
+                    // Debug.Log("disturbance");
+                }
+            }
+            // else if(output != 0 && distance_2d >= 0.2f)
+            else if(distance_2d >= 0.3f)
+            { //포인트와의 거리가 1보다 크면 guidance
+                // if (guidanceDirection != Vector3.zero && newoutput != 0)
+                if (guidanceDirection != Vector3.zero)
+                { 
+                    float scalingFactor = Mathf.Clamp(distance_2d, 0, 5.0f);
+                    force += NoforceDirection * scalingFactor;
+                    // Debug.Log("guidance");
+                }
+                
+                // if (guidanceDirection != Vector3.zero && position != targetPosition)
+                // {
+                //     float scalingFactor = Mathf.Clamp(distance_2d, 0, 5.0f);
+                //     // Debug.Log(scalingFactor);
+                //     float userForceInGuidanceDirection = Vector3.Dot(force, guidanceDirection.normalized);
+
+                //     if (userForceInGuidanceDirection < 0.1f) 
+                //     {
+                //         force += guidanceDirection.normalized * scalingFactor;
+                //     }
+                // }
+            }
+            
+            
+        }
+        if (!forceEnabled || (collisionDetection && !additionalData.isTouching))
+        {
+            // 충돌이 없으면 힘 계산 X
+            force = new Vector3(forceX, forceY, forceZ);
+        }
+        
+        force += Gravitiy();
+        MainForceX = force.x;
+        MainForceY = force.y;
+        MainForceZ = force.z; 
+        MainForce = force.magnitude;
+
+        if (isColliding)
+        {
+            // Debug.Log($"Calculated Force: {MainForce} Newtons");
+        }
+        return force;
     }
 
     private Vector3 CalculateDefaultForce(Vector3 position, Vector3 velocity, AdditionalData additionalData)
@@ -169,6 +271,12 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
         force *= stiffness;
         force -= velocity * damping;
         //Debug.Log(force);
+
+        // if (pointMover.CurrentDirection == Vector3.zero)
+        // {
+        //     force += NoforceDirection * 1.1f;  
+        // }
+
         if (!forceEnabled || (collisionDetection && !additionalData.isTouching))
         {
             // Don't compute forces if there are no collisions which prevents feeling drag/friction while moving through air. 
@@ -197,7 +305,7 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
         force *= stiffness;
         force -= velocity * damping;
 
-        // // Apply a small offset to the position to create disturbance
+        // 랜덤노이즈 넣은 Disturbance
         // Vector3 disturbanceOffset = new Vector3(
         //     (float)(random.NextDouble() * 0.002 - 0.0005), // Small disturbance in X axis
         //     (float)(random.NextDouble() * 0.002 - 0.0005), // Small disturbance in Y axis
@@ -205,13 +313,31 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
         // );
 
         // force += disturbanceOffset * stiffness;
+
+        // 반대 방향대로 미는 disturbance
+        // if (pointMover != null)
+        // {
+        //     Vector3 guidanceDirection = pointMover.CurrentDirection;
+        //     if (guidanceDirection != Vector3.zero)
+        //     {
+        //         // Apply force in the opposite direction of guidanceDirection
+        //         force += -guidanceDirection.normalized * 1.0f; // 반대 방향으로 1N의 힘 추가
+        //     }
+        // }
+
+        if (pointMover.CurrentDirection == Vector3.zero)
+        {
+            force += NoforceDirection * 1.1f;  
+        }
+        // Trajectory와의 거리가 작을수록 disturbance 힘이 강해짐
         if (pointMover != null)
         {
             Vector3 guidanceDirection = pointMover.CurrentDirection;
             if (guidanceDirection != Vector3.zero)
-            {
-                // Apply force in the opposite direction of guidanceDirection
-                force += -guidanceDirection.normalized * 1.0f; // 반대 방향으로 0.5N의 힘 추가
+            {//ScalingFactor가 클수록 깎기 어려워서 1.0f로 낮춤...
+                float scalingFactor = Mathf.Clamp(1.5f / (distance_2d + 0.1f), 0, 1.5f);
+                // force += -guidanceDirection.normalized * scalingFactor;
+                force += -guidanceDirection * scalingFactor;
             }
         }
 
@@ -242,33 +368,36 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
         force *= stiffness;
         force -= velocity * damping;
 
+        if (pointMover.CurrentDirection == Vector3.zero)
+        {
+            force += NoforceDirection * 1.1f;  
+        }
+
         if (pointMover != null)
         {
             Vector3 guidanceDirection = pointMover.CurrentDirection;
-
-            //Debug.Log($"guidanceDirection: {guidanceDirection}, targetPosition: {targetPosition}, current position: {position}");
-
+            // 방향대로 이끌어주는 guidance
             // if (guidanceDirection != Vector3.zero && position != targetPosition)
             // {
-            //     float distanceToTarget = Vector3.Distance(position, targetPosition);
-            //     // Calculate the user's force in the direction of guidanceDirection
             //     float userForceInGuidanceDirection = Vector3.Dot(force, guidanceDirection.normalized);
-
-            //     // Add additional force only if the user's force in the guidance direction is less than 1.0N
-            //     if (userForceInGuidanceDirection < 1.0f)
+            //     if (userForceInGuidanceDirection < 0.1f)
             //     {
-            //         // Calculate the scaling factor for the guidance force based on the distance to the target
-            //         float scalingFactor = Mathf.Clamp01(distanceToTarget / 1.0f); // 1.0f은 최대 거리를 의미합니다. 필요에 따라 조정 가능합니다.
-            //         force += guidanceDirection.normalized * scalingFactor;
+            //         force += guidanceDirection.normalized * 1.0f;
             //     }
             // }
+            
+            // Trajectory와의 거리가 클수록 guidance 힘이 커짐
             if (guidanceDirection != Vector3.zero && position != targetPosition)
             {
-                float userForceInGuidanceDirection = Vector3.Dot(force, guidanceDirection.normalized);
-                if (userForceInGuidanceDirection < 0.1f)
-                {
-                    force += guidanceDirection.normalized * 1.0f;
-                }
+                float scalingFactor = Mathf.Clamp(distance_2d, 1.2f, 5.0f);
+                force += NoforceDirection * scalingFactor;
+                
+                // float userForceInGuidanceDirection = Vector3.Dot(force, guidanceDirection.normalized);
+                // //사용자의 힘방향과 Guidance방향의 각도가 0.1보다 작을 때
+                // if (userForceInGuidanceDirection < 0.1f)
+                // {
+                //     force += guidanceDirection.normalized * scalingFactor;
+                // }
             }
         }
         else
@@ -305,12 +434,74 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (newoutput != 0)
+        {
+           // spherePosition과 targetPosition의 현재 x, z 좌표를 각각 저장
+            Vector2 currentTargetPosition = new Vector2(pointMover.PointToMovePosition.x, pointMover.PointToMovePosition.z);
+            Vector2 currentSpherePosition = new Vector2(sphereTransform.position.x, sphereTransform.position.z);
+            spherePath.Add(currentSpherePosition);
+            targetPath.Add(currentTargetPosition);
+        }
+
         m_hapticThread.SetAdditionalData(GetAdditionalData());
         if (pointMover != null)
         {
-            targetPosition = pointMover.PointToMovePosition;
+            //sphereposition은 툴팁의 sphere위치
+            Vector3 spherePosition = new Vector3(sphereTransform.position.x, sphereTransform.position.y, sphereTransform.position.z);
+            //targetPosition은 PointMover의 sphere위치
+            Vector3 targetPosition = pointMover.PointToMovePosition;
+            // Debug.Log("sphere" + spherePosition);
+            // Debug.Log(targetPosition);
+
+            NoforceDirection = (targetPosition - spherePosition).normalized;
+            // Debug.Log(NoforceDirection);
+
+            // Debug.Log(sphereTransform.position);
+            // Debug.Log(targetPosition);
+
+        
+            // Trajectory Point와 조각칼 끝의 거리 (3d)
+            // float distance = Vector3.Distance(sphereTransform.position, targetPosition);
+            // Debug.Log(distance);
+
+            // Y축 깊이는 고려하지 않은 XZ평면의 2d 거리
+            Vector3 spherePositionXZ = new Vector3(sphereTransform.position.x, 0, sphereTransform.position.z);
+            Vector3 targetPositionXZ = new Vector3(targetPosition.x, 0, targetPosition.z);
+            
+            distance_2d = Vector3.Distance(spherePositionXZ, targetPositionXZ);
+            // Debug.Log(distance_2d);
+        
         }
 
+        // Debug.Log(physicsCursorPosition)
+
+        //Hybrid일때만 상태 추론
+        /*
+        if (forceFeedbackType == ForceFeedbackType.Hybrid)
+        {
+            y_g = MainForceY - g;
+            // 새 Force 데이터를 딕셔너리에 추가
+            // float[] forceData = { MainForceX, MainForceY, MainForceZ };
+            // float[] forceData = { MainForceX, y_g, MainForceZ };
+            float[] forceData = { MainForceZ, MainForceX, -y_g };
+
+
+            if (queue.Count != timeSteps)
+            {
+                // 필요한 경우 forceData를 큐에 추가하거나 다른 작업을 수행합니다.
+                queue.Enqueue(forceData);
+                Debug.Log(queue.Count);
+            }
+            else
+            {
+                queue.Dequeue();
+                queue.Enqueue(forceData);
+                // Debug.Log("forceData: " + string.Join(", ", forceData));
+                int predictedClass = onnxInference.ProcessRealtimeData(queue);
+                
+            }
+        }
+        */
         y_g = MainForceY - g;
         // 새 Force 데이터를 딕셔너리에 추가
         // float[] forceData = { MainForceX, MainForceY, MainForceZ };
@@ -335,6 +526,54 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
 
     }
 
+    private void OnApplicationQuit()
+    {
+        CalculateFinalAccuracy();
+    }
+
+    private void CalculateFinalAccuracy()
+    {
+        int totalPoints = Mathf.Min(spherePath.Count, targetPath.Count);  // 비교할 수 있는 최소 샘플 개수
+        if (totalPoints == 0)
+        {
+            Debug.Log("경로가 기록되지 않았습니다.");
+            return;
+        }
+
+        float totalDistance = 0f;
+
+        for (int i = 0; i < totalPoints; i++)
+        {
+            totalDistance = Vector2.Distance(spherePath[i], targetPath[i]);
+            if (0.2 < totalDistance &&  totalDistance < 1)
+            {
+                //matchingAccuracy = Mathf.Clamp(matchingAccuracy - ((totalDistance - 0.05f) / 1 ) * 100f, 0f, 100f);
+                matchingAccuracy = matchingAccuracy - (Math.Abs((totalDistance - 0.5f) / 100 ));
+            }
+        }
+
+        // // 평균 거리 계산
+        // float averageDistance = totalDistance / totalPoints;
+
+        // // 최대 허용 오차 (예: 5.0)
+        // float maxAllowedDistance = 1.0f;
+
+        // // 평균 거리를 기반으로 정확도 계산
+        // if (averageDistance <= 0.1f)
+        // {
+        //     matchingAccuracy = 100f;
+        // }
+        // else if (averageDistance < maxAllowedDistance)
+        // {
+        //     matchingAccuracy = Mathf.Clamp(100f - ((averageDistance - 0.05f) / (maxAllowedDistance - 0.05f)) * 100f, 0f, 100f);
+        // }
+        // else
+        // {
+        //     matchingAccuracy = 0f;
+        // }
+
+        Debug.Log($"최종 경로 일치 정확도: {matchingAccuracy}%");
+    }
 
     private void Update()
     {

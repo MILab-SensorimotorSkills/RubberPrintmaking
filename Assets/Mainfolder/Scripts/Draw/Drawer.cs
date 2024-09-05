@@ -60,21 +60,30 @@ public class Drawer : MonoBehaviour
 
         Ray ray = new Ray(originPos, originDir);
 
+        Debug.DrawRay(originPos, originDir * maxRayDistance, Color.blue); // Ray의 경로를 시각적으로 표시********
+
         if (Physics.Raycast(ray, out hit, maxRayDistance))
         {
+
+            Debug.Log($"Hit at: {hit.point}, Hit Object: {hit.transform.name}"); //************
+
             Transform hitobj = hit.transform;
             if (hitobj.CompareTag(Drawable.Tag))
             {
                 drawingCanvas = hitobj.GetComponent<Drawable>();
                 if (drawingCanvas != null)
                 {
-                    drawpos = new Vector2Int();
-                    drawpos.x = (int)(hit.textureCoord.x * drawingCanvas.GetTextureSizeX());
-                    drawpos.y = (int)(hit.textureCoord.y * drawingCanvas.GetTextureSizeY());
+                    // drawpos = new Vector2Int();
+                    // drawpos.x = (int)(hit.textureCoord.x * drawingCanvas.GetTextureSizeX());
+                    // drawpos.y = (int)(hit.textureCoord.y * drawingCanvas.GetTextureSizeY());
 
-                    //xz대칭이 일어나는 문제 발생
-                    drawpos.x = drawingCanvas.GetTextureSizeX() - drawpos.x - 1;
-                    drawpos.y = drawingCanvas.GetTextureSizeY() - drawpos.y - 1;
+                    // //xz대칭이 일어나는 문제 발생
+                    // drawpos.x = drawingCanvas.GetTextureSizeX() - drawpos.x - 1;
+                    // drawpos.y = drawingCanvas.GetTextureSizeY() - drawpos.y - 1;
+
+                    Vector2Int drawPos = CalculateDrawPosition(hit);
+                    Debug.Log($"Draw Position: {drawPos}");
+
                     AddDrawPositions(drawpos);
                     setBrushToEraseorDraw(erase);
                     SetPixelsBetweenDrawPoints();
@@ -98,6 +107,31 @@ public class Drawer : MonoBehaviour
             Debug.DrawLine(originPos, endPoint, Color.red);
         }
     }
+
+    Vector2Int CalculateDrawPosition(RaycastHit hit)
+{
+    // 충돌 지점의 월드 좌표를 로컬 좌표계로 변환
+    Vector3 localHitPoint = hit.transform.InverseTransformPoint(hit.point);
+    Debug.Log($"Local Hit Point: {localHitPoint}");
+
+    // 텍스처 크기를 가져옴
+    int textureSizeX = Mathf.RoundToInt(drawingCanvas.GetTextureSizeX());
+    int textureSizeY = Mathf.RoundToInt(drawingCanvas.GetTextureSizeY());
+
+    // 로컬 좌표계를 기준으로 텍스처 좌표를 계산
+    float normalizedX = (localHitPoint.x / hit.transform.lossyScale.x) + 0.5f;
+    float normalizedY = (localHitPoint.y / hit.transform.lossyScale.y) + 0.5f;
+
+    // 텍스처 좌표계에서의 X, Y 위치를 정밀하게 계산
+    int x = Mathf.Clamp(Mathf.RoundToInt(normalizedX * textureSizeX), 0, textureSizeX - 1);
+    int y = Mathf.Clamp(Mathf.RoundToInt(normalizedY * textureSizeY), 0, textureSizeY - 1);
+
+    Debug.Log($"Normalized X: {normalizedX}, Normalized Y: {normalizedY}");
+    Debug.Log($"Calculated Draw Position - X: {x}, Y: {y}");
+
+    return new Vector2Int(x, y);
+}
+
         
     private void SetPixelsBetweenDrawPoints()
     {

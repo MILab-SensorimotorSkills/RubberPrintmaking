@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using TMPro;
 using System.Linq;
 using DiggingTest;
+using Haply.HardwareAPI.Unity.Editor;
 
 public class CsvSystemWithStart : MonoBehaviour
 {
@@ -44,6 +45,7 @@ public class CsvSystemWithStart : MonoBehaviour
     private List<float> depths = new List<float>();
     private List<float> distances0x = new List<float>();
     private List<float> depths0x = new List<float>();
+    public AdvancedPhysicsHapticEffector hapticEffector;
     #endregion
 
     void Start()
@@ -157,6 +159,7 @@ public class CsvSystemWithStart : MonoBehaviour
         }
     }
 
+    /* 기본도형에서 distance 계산: 삼각메쉬의 중점으로 거리 계산함
     void CalculateDistance()
     {
         if (knifeHeight <= -0.141)
@@ -194,6 +197,30 @@ public class CsvSystemWithStart : MonoBehaviour
         }
         distances.Add(minDistance);
     }
+    */
+
+    //AdvancedPhysicsHapticEffector의 FixedUpdate에서 계산된 distance_2d로 데이터 저장
+    void CalculateDistance()
+    {
+        if (knifeHeight <= -0.141)
+        {
+            float distance_2d = hapticEffector.distance_2d;
+            minDistance = distance_2d;  // distance_2d 값을 사용하여 최소 거리를 설정
+
+            if (minDistance != 0)
+            {
+                distances0x.Add(minDistance);
+                // Debug.Log(minDistance);
+            }
+        }
+        else
+        {
+            minDistance = 0;
+        }
+        distances.Add(minDistance);
+    }
+
+
 
     void SaveHitPoint()
     {
