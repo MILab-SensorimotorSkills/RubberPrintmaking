@@ -211,7 +211,7 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
             // if (output != 0 && distance_2d < 0.2f) //포인트와의 거리가 xx보다 작으면 disturbance
             if (distance_2d < 0.3f)
             {
-                // if (newoutput != Vector3.zero)
+                // if (guidanceDirection != Vector3.zero && newoutput != 0)
                 if (guidanceDirection != Vector3.zero)
                 {
                     float scalingFactor = Mathf.Clamp(-2.0f / (distance_2d + 0.1f), -2.0f, 0);
@@ -223,7 +223,8 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
             // else if(output != 0 && distance_2d >= 0.2f)
             else if(distance_2d >= 0.3f)
             { //포인트와의 거리가 1보다 크면 guidance
-                if (guidanceDirection != Vector3.zero && position != targetPosition)
+                // if (guidanceDirection != Vector3.zero && newoutput != 0)
+                if (guidanceDirection != Vector3.zero)
                 { 
                     float scalingFactor = Mathf.Clamp(distance_2d, 0, 5.0f);
                     force += NoforceDirection * scalingFactor;
