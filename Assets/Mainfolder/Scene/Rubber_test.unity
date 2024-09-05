@@ -1193,7 +1193,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc274a84a8ed5ef49a7dd0e3384cc417, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  forceFeedbackType: 3
+  forceFeedbackType: 0
   forceX: 0
   forceY: 0
   forceZ: 0
@@ -2222,7 +2222,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79663d83521dda644a71fb3079f641e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotationSpeed: 100
+  rotationSpeeds: []
+  rotateAngles: []
+  waitTimes: []
+  onnxInference: {fileID: 0}
 --- !u!1 &185699358
 GameObject:
   m_ObjectHideFlags: 0
@@ -6263,7 +6266,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79663d83521dda644a71fb3079f641e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotationSpeed: 100
+  rotationSpeeds: []
+  rotateAngles: []
+  waitTimes: []
+  onnxInference: {fileID: 0}
 --- !u!1 &787892978
 GameObject:
   m_ObjectHideFlags: 0
@@ -8305,7 +8311,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79663d83521dda644a71fb3079f641e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotationSpeed: 40
+  rotationSpeeds:
+  - 50
+  - 50
+  rotateAngles:
+  - 20
+  - -90
+  waitTimes:
+  - 3
+  - 5
+  onnxInference: {fileID: 111692425}
 --- !u!1 &1158762328
 GameObject:
   m_ObjectHideFlags: 0
@@ -17803,10 +17818,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b077675e5fd53c34d84cbcc71c033353, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_CachedHandedness: 0
-  m_CachedDeviceId: 1166
-  m_CachedDeviceName: Plastic Agogo
-  m_CachedDeviceAddress: COM3
+  m_CachedHandedness: 1
+  m_CachedDeviceId: 1136
+  m_CachedDeviceName: Brass Accordion
+  m_CachedDeviceAddress: COM7
   avatar: {fileID: 3652912357394140782}
   m_TargetFrequency: 1000
   onInitialized:
@@ -17824,9 +17839,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb54fc783d2d3de4bbd3f1e67e2a0bd4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_CachedDeviceId: 61505
+  m_CachedDeviceId: 61485
   m_CachedDeviceName: 
-  m_CachedDeviceAddress: COM4
+  m_CachedDeviceAddress: COM11
   onButtonDown:
     m_PersistentCalls:
       m_Calls: []
