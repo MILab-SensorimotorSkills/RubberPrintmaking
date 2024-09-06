@@ -1193,7 +1193,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc274a84a8ed5ef49a7dd0e3384cc417, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  forceFeedbackType: 0
+  forceFeedbackType: 2
   forceX: 0
   forceY: 0
   forceZ: 0
@@ -6522,8 +6522,6 @@ MonoBehaviour:
   - 3
   - 12
   isArc: 0000000000000000000000000000000000000000000100000001
-  isPlaying: 0
-  isPaused: 0
   Direction: {fileID: 171982699}
   onnxInference: {fileID: 0}
 --- !u!4 &770625711
@@ -8836,7 +8834,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1134759083}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 79663d83521dda644a71fb3079f641e3, type: 3}
   m_Name: 
@@ -12759,8 +12757,6 @@ MonoBehaviour:
   - 0
   - 8
   isArc: 00010001
-  isPlaying: 0
-  isPaused: 0
   Direction: {fileID: 0}
   onnxInference: {fileID: 0}
 --- !u!4 &1670580812
@@ -15021,8 +15017,6 @@ MonoBehaviour:
   - 2
   - 2.5
   isArc: 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-  isPlaying: 0
-  isPaused: 0
   Direction: {fileID: 913772347}
   onnxInference: {fileID: 111692425}
 --- !u!4 &2022025939
