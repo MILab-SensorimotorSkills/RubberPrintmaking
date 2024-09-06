@@ -8,7 +8,7 @@ public class PointMover : MonoBehaviour
     public Transform[] pathPoints; // 경로를 구성하는 포인트들
     public float[] durations; // 각 구간별 소요 시간
     public bool[] isArc; // 각 구간이 원호 이동인지 여부를 나타내는 배열
-    public Quaternion[] rotations; // 각 지점에서의 회전 각도 저장
+    public Quaternion[] parentRotations; // 각 지점에서의 부모 오브젝트 회전 각도 저장 (pointToMove.parent.parent에 대한 회전)
 
     private bool isPlaying = false;
     private bool isPaused = false; // 일시정지 상태인지 여부
@@ -43,7 +43,7 @@ public class PointMover : MonoBehaviour
         {
             if (pathPoints.Length != durations.Length || pathPoints.Length != isArc.Length)
             {
-                Debug.LogError("Path points, durations, and isArc arrays must have the same length");
+                Debug.LogError("Path points, durations, isArc arrays must have the same length");
                 return;
             }
             Debug.Log("Starting movement");
@@ -84,14 +84,7 @@ public class PointMover : MonoBehaviour
                 yield return null;
             }
 
-            // 포인트로 이동하기 전에 상위 오브젝트인 Advanced(1)을 회전
-            if (rotations.Length > i && pointToMove.parent.parent != null) 
-            {
-                pointToMove.parent.parent.rotation = Quaternion.Slerp(pointToMove.parent.rotation, rotations[i], Time.deltaTime * 5); // 원하는 각도로 회전
-                Debug.Log("Advanced (1) rotation");
-                Debug.Log(pointToMove.parent.parent);
-            }
-
+            // 포인트 이동
             if (isArc[i])
             {
                 yield return StartCoroutine(MoveAlongArc(pathPoints[i], durations[i]));
@@ -100,6 +93,13 @@ public class PointMover : MonoBehaviour
             {
                 yield return StartCoroutine(MoveToPoint(pathPoints[i], durations[i]));
             }
+
+            // 포인트 이동이 완료된 후 회전 적용
+            if (parentRotations.Length > i && pointToMove.parent.parent != null)
+            {
+                yield return StartCoroutine(RotateParent(parentRotations[i]));
+                Debug.Log("Advanced (1) rotation 완료");
+            }
         }
         isPlaying = false;
         currentDirection = Vector3.zero; // 이동이 끝나면 방향을 초기화
@@ -107,7 +107,7 @@ public class PointMover : MonoBehaviour
 
     IEnumerator MoveToPoint(Transform target, float duration)
     {
-        Vector3 startPosition = pointToMove.position;
+        Vector3 startPosition = pointToMove.position; 
         Vector3 endPosition = target.position;
         currentDirection = (endPosition - startPosition).normalized; // 이동 방향 업데이트
         float elapsedTime = 0;
@@ -176,5 +176,27 @@ public class PointMover : MonoBehaviour
         isClockwiseDirection = !isClockwiseDirection;
         pointToMove.position = endPosition;
         currentDirection = Vector3.zero; // 이동이 끝나면 방향을 초기화
+    }
+
+    // 부모 오브젝트 회전을 담당하는 코루틴
+    IEnumerator RotateParent(Quaternion targetRotation)
+    {
+        Quaternion initialRotation = pointToMove.parent.parent.rotation;
+        float rotationTime = 1f; // 회전하는 데 걸리는 시간
+        float elapsedTime = 0;
+
+        while (elapsedTime < rotationTime)
+        {
+            while (isPaused) // 일시정지 상태면 기다림
+            {
+                yield return null;
+            }
+
+            pointToMove.parent.parent.rotation = Quaternion.Slerp(initialRotation, targetRotation, elapsedTime / rotationTime);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        pointToMove.parent.parent.rotation = targetRotation; // 회전 완료 후 목표 각도에 맞춤
     }
 }
