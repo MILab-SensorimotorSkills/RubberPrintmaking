@@ -101,6 +101,7 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
     private List<Vector2> spherePath = new List<Vector2>();  // spherePosition의 x, z 경로를 저장할 리스트
     private List<Vector2> targetPath = new List<Vector2>();  // targetPosition의 x, z 경로를 저장할 리스트
     private float matchingAccuracy = 100f;
+    
 
     void Start()
     {

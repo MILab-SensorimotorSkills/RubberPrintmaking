@@ -155,6 +155,9 @@ public class PointMover : MonoBehaviour
         // 최종적으로 정확한 목표 회전 각도 설정
         pointToMove.parent.parent.rotation = Quaternion.Euler(rotationAngles);
 
+        // 2초 대기
+        yield return new WaitForSeconds(2.0f);
+
         // 회전이 끝난 후 DirectionUpdater를 재개
         Direction.GetComponent<DirectionUpdater>().PlayDirection(); // 재개
     }
