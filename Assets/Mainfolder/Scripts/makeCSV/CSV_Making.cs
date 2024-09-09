@@ -25,13 +25,21 @@ public class CSV_Making : MonoBehaviour
         }
     }
 
-    public void WriteData(float time, int frame, float? distance, float? depth, float disAvg, float disVar, float depthAvg, float depthVar, float disAvg0x, float disVar0x, float depthAvg0x, float depthVar0x)
+    public void WriteData(float time, int frame, float? distance, float? depth, float disAvg, float disVar, float depthAvg, float depthVar, float disAvg0x, float disVar0x, float depthAvg0x, float depthVar0x, float matchingAccuracy)
     {
         using (StreamWriter sw = new StreamWriter(filePath, true))
         {
-            sw.WriteLine($"{time}, {frame}, {distance}, {depth}, {disAvg}, {disVar}, {depthAvg}, {depthVar}, {disAvg0x}, {disVar0x}, {depthAvg0x}, {depthVar0x}");
+            sw.WriteLine($"{time}, {frame}, {distance}, {depth}, {disAvg}, {disVar}, {depthAvg}, {depthVar}, {disAvg0x}, {disVar0x}, {depthAvg0x}, {depthVar0x}, {matchingAccuracy}");        }
+    }
+
+    public void WriteAccuracy(float matchingAccuracy)
+    {
+        using (StreamWriter sw = new StreamWriter(filePath, true))
+        {
+            sw.WriteLine($"Matching Accuracy: {matchingAccuracy}%");
         }
     }
+
 
     public void CloseAndSave()
     {
