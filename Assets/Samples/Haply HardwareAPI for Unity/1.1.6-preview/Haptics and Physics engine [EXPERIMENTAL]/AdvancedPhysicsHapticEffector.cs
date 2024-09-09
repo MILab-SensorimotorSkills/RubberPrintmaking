@@ -214,7 +214,7 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
                 // if (guidanceDirection != Vector3.zero && newoutput != 0)
                 if (guidanceDirection != Vector3.zero)
                 {
-                    float scalingFactor = Mathf.Clamp(-2.0f / (distance_2d + 0.1f), -2.0f, 0);
+                    float scalingFactor = Mathf.Clamp(-1.5f / (distance_2d + 0.8f), -1.5f, 0);
                     // Debug.Log(scalingFactor);
                     force += guidanceDirection.normalized * scalingFactor;
                     // Debug.Log("disturbance");
@@ -335,7 +335,7 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
             Vector3 guidanceDirection = pointMover.CurrentDirection;
             if (guidanceDirection != Vector3.zero)
             {//ScalingFactor가 클수록 깎기 어려워서 1.0f로 낮춤...
-                float scalingFactor = Mathf.Clamp(1.5f / (distance_2d + 0.1f), 0, 1.5f);
+                float scalingFactor = Mathf.Clamp(1.5f/ (distance_2d + 0.8f), 0, 1.5f);
                 // force += -guidanceDirection.normalized * scalingFactor;
                 force += -guidanceDirection * scalingFactor;
             }

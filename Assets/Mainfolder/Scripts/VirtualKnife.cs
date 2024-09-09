@@ -504,7 +504,7 @@ public class VirtualKnife : MonoBehaviour
             if (mainForceY > 40f)
             {
                 TriggerWarning();
-                Debug.Log("힘 그만!!!");
+                // Debug.Log("힘 그만!!!");
             }
             else
             {
