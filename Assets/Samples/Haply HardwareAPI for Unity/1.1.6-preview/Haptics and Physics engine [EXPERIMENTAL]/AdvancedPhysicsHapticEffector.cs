@@ -437,6 +437,7 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
 
     private void FixedUpdate()
     {
+        Time.fixedDeltaTime = 0.02f;
         if (newoutput != 0)
         {
            // spherePosition과 targetPosition의 현재 x, z 좌표를 각각 저장
