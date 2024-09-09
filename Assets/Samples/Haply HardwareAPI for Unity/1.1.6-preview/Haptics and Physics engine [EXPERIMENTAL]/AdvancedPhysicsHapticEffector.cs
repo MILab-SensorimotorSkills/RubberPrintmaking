@@ -100,10 +100,13 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
     private int newoutput ;
     private List<Vector2> spherePath = new List<Vector2>();  // spherePosition의 x, z 경로를 저장할 리스트
     private List<Vector2> targetPath = new List<Vector2>();  // targetPosition의 x, z 경로를 저장할 리스트
-    private float matchingAccuracy = 100f;
+    public float matchingAccuracy = 100f;
+    private CSV_Making csvMaking;
 
     void Start()
     {
+        csvMaking = FindObjectOfType<CSV_Making>();      
+
         if (onnxInference != null)
         {
             // Subscribe to the OnOutputCalculated event
@@ -434,6 +437,7 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
 
     private void FixedUpdate()
     {
+        Time.fixedDeltaTime = 0.02f;
         if (newoutput != 0)
         {
            // spherePosition과 targetPosition의 현재 x, z 좌표를 각각 저장
@@ -529,6 +533,7 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
     private void OnApplicationQuit()
     {
         CalculateFinalAccuracy();
+        csvMaking.WriteAccuracy(matchingAccuracy); // 정확도 저장
     }
 
     private void CalculateFinalAccuracy()
