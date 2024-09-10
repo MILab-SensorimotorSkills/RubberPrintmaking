@@ -100,7 +100,7 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
     private int newoutput;
     private List<Vector2> spherePath = new List<Vector2>();  // spherePosition의 x, z 경로를 저장할 리스트
     private List<Vector2> targetPath = new List<Vector2>();  // targetPosition의 x, z 경로를 저장할 리스트
-    public float matchingAccuracy = 0f;
+    public float matchingAccuracy = 100f;
     private CSV_Making csvMaking;
 
     void Start()
@@ -550,10 +550,10 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
         for (int i = 0; i < totalPoints; i++)
         {
             totalDistance = Vector2.Distance(spherePath[i], targetPath[i]);
-            if (0.2 > totalDistance)
+            if (0.2 < totalDistance && totalDistance < 1)
             {
                 //matchingAccuracy = Mathf.Clamp(matchingAccuracy - ((totalDistance - 0.05f) / 1 ) * 100f, 0f, 100f);
-                matchingAccuracy = matchingAccuracy + (Math.Abs((totalDistance - 0.5f) / 100));
+                matchingAccuracy = matchingAccuracy - (Math.Abs((totalDistance - 0.5f) / 100));
             }
         }
 
