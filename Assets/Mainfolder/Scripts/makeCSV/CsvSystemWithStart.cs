@@ -46,7 +46,7 @@ public class CsvSystemWithStart : MonoBehaviour
     private List<float> distances0x = new List<float>();
     private List<float> depths0x = new List<float>();
     public AdvancedPhysicsHapticEffector hapticEffector;
-     
+
     #endregion
 
     void Start()
@@ -58,7 +58,7 @@ public class CsvSystemWithStart : MonoBehaviour
 
     void Update()
     {
-        float matchingAccuracy = hapticEffector.matchingAccuracy;   
+        // float matchingAccuracy = hapticEffector.matchingAccuracy;   
         if (Input.GetKeyDown(KeyCode.S) && !WriteData)
         {
             //변수 초기화
@@ -103,7 +103,7 @@ public class CsvSystemWithStart : MonoBehaviour
             depthVar0x = CalculateVar(depths0x, depthAvg0x);
 
             // 데이터를 기록
-            csv.WriteData(playTime, frameCount, minDistance, depth, disAvg, disVar, depthAvg, depthVar, disAvg0x, disVar0x, depthAvg0x, depthVar0x, matchingAccuracy);
+            csv.WriteData(playTime, frameCount, minDistance, depth, disAvg, disVar, depthAvg, depthVar, disAvg0x, disVar0x, depthAvg0x, depthVar0x);
         }
     }
 
@@ -230,7 +230,8 @@ public class CsvSystemWithStart : MonoBehaviour
         knifeHeight = knife.transform.position.y;
     }
 
-    float CalculateMean(List<float> values){
+    float CalculateMean(List<float> values)
+    {
         float sum = 0f;
 
         foreach (float value in values)
@@ -241,7 +242,8 @@ public class CsvSystemWithStart : MonoBehaviour
         return values.Count > 0 ? sum / values.Count : 0;
     }
 
-    float CalculateVar(List<float> values, float mean){
+    float CalculateVar(List<float> values, float mean)
+    {
         float sumOfSquares = 0f;
 
         foreach (float value in values)
