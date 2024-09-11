@@ -541,7 +541,7 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
         int totalPoints = Mathf.Min(spherePath.Count, targetPath.Count);  // 비교할 수 있는 최소 샘플 개수
         if (totalPoints == 0)
         {
-            Debug.Log("경로가 기록되지 않았습니다.");
+            // Debug.Log("경로가 기록되지 않았습니다.");
             return;
         }
 
@@ -577,7 +577,7 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
         //     matchingAccuracy = 0f;
         // }
 
-        Debug.Log($"최종 경로 일치 정확도: {matchingAccuracy}%");
+        // Debug.Log($"최종 경로 일치 정확도: {matchingAccuracy}%");
     }
 
     private void Update()

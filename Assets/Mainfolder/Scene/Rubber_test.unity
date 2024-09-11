@@ -1715,6 +1715,7 @@ MonoBehaviour:
   randomNoiseIntensity: 0.0001
   onnxInference: {fileID: 0}
   distance_2d: 0
+  matchingAccuracy: 100
 --- !u!114 &111692413
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6074,6 +6075,7 @@ MonoBehaviour:
   randomNoiseIntensity: 1
   onnxInference: {fileID: 0}
   distance_2d: 0
+  matchingAccuracy: 100
 --- !u!114 &381377624
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -30912,6 +30914,7 @@ MonoBehaviour:
   randomNoiseIntensity: 1
   onnxInference: {fileID: 0}
   distance_2d: 0
+  matchingAccuracy: 100
 --- !u!114 &7085651383547373104
 MonoBehaviour:
   m_ObjectHideFlags: 0
