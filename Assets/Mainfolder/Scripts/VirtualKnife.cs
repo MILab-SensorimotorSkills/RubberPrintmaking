@@ -484,7 +484,7 @@ public class VirtualKnife : MonoBehaviour
                 virtualObjectRb.MovePosition(targetPosition);
             }
             // MainforceY가 50f를 초과할 경우 경고음을 재생하고 메시지를 표시
-            if (mainForceY > 40f)
+            if (mainForceY > 25f)
             {
                 TriggerWarning();
                 // Debug.Log("힘 그만!!!");

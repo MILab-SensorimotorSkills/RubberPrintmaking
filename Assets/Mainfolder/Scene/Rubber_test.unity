@@ -1690,7 +1690,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc274a84a8ed5ef49a7dd0e3384cc417, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  forceFeedbackType: 0
+  forceFeedbackType: 2
   forceX: 0
   forceY: 0
   forceZ: 0
@@ -1715,6 +1715,7 @@ MonoBehaviour:
   randomNoiseIntensity: 0.0001
   onnxInference: {fileID: 0}
   distance_2d: 0
+  matchingAccuracy: 100
 --- !u!114 &111692413
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6074,6 +6075,7 @@ MonoBehaviour:
   randomNoiseIntensity: 1
   onnxInference: {fileID: 0}
   distance_2d: 0
+  matchingAccuracy: 100
 --- !u!114 &381377624
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -30912,6 +30914,7 @@ MonoBehaviour:
   randomNoiseIntensity: 1
   onnxInference: {fileID: 0}
   distance_2d: 0
+  matchingAccuracy: 100
 --- !u!114 &7085651383547373104
 MonoBehaviour:
   m_ObjectHideFlags: 0
