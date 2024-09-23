@@ -46,6 +46,7 @@ public class CsvSystemWithStart : MonoBehaviour
     private List<float> distances0x = new List<float>();
     private List<float> depths0x = new List<float>();
     public AdvancedPhysicsHapticEffector hapticEffector;
+
     #endregion
 
     void Start()
@@ -57,6 +58,7 @@ public class CsvSystemWithStart : MonoBehaviour
 
     void Update()
     {
+        // float matchingAccuracy = hapticEffector.matchingAccuracy;   
         if (Input.GetKeyDown(KeyCode.S) && !WriteData)
         {
             //변수 초기화
@@ -228,7 +230,8 @@ public class CsvSystemWithStart : MonoBehaviour
         knifeHeight = knife.transform.position.y;
     }
 
-    float CalculateMean(List<float> values){
+    float CalculateMean(List<float> values)
+    {
         float sum = 0f;
 
         foreach (float value in values)
@@ -239,7 +242,8 @@ public class CsvSystemWithStart : MonoBehaviour
         return values.Count > 0 ? sum / values.Count : 0;
     }
 
-    float CalculateVar(List<float> values, float mean){
+    float CalculateVar(List<float> values, float mean)
+    {
         float sumOfSquares = 0f;
 
         foreach (float value in values)

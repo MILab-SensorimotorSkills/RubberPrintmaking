@@ -33,6 +33,15 @@ public class CSV_Making : MonoBehaviour
         }
     }
 
+    public void WriteAccuracy(float matchingAccuracy)
+    {
+        using (StreamWriter sw = new StreamWriter(filePath, true))
+        {
+            sw.WriteLine($"Matching Accuracy: {matchingAccuracy}%");
+        }
+    }
+
+
     public void CloseAndSave()
     {
         Debug.Log("CSV file saved to: " + filePath);

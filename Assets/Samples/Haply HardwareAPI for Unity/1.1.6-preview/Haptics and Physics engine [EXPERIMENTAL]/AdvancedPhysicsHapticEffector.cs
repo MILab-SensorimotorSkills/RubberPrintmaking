@@ -61,7 +61,7 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
     public float MainForceX = 0;
     public float MainForceY = 0;
     public float MainForceZ = 0;
-    public Transform sphereTransform; 
+    public Transform sphereTransform;
 
 
     private ConfigurableJoint m_joint;
@@ -96,14 +96,17 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
     private Vector3 targetPosition;
     public OnnxInference onnxInference;
     public float distance_2d;
-    
-    private int newoutput ;
+
+    private int newoutput;
     private List<Vector2> spherePath = new List<Vector2>();  // spherePosition의 x, z 경로를 저장할 리스트
     private List<Vector2> targetPath = new List<Vector2>();  // targetPosition의 x, z 경로를 저장할 리스트
-    private float matchingAccuracy = 100f;
+    public float matchingAccuracy = 100f;
+    private CSV_Making csvMaking;
 
     void Start()
     {
+        csvMaking = FindObjectOfType<CSV_Making>();
+
         if (onnxInference != null)
         {
             // Subscribe to the OnOutputCalculated event
@@ -195,7 +198,7 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
         var force = additionalData.physicsCursorPosition - position;
         force *= stiffness;
         force -= velocity * damping;
-        force += NoforceDirection * 1.1f;  
+        force += NoforceDirection * 1.1f;
 
         if (pointMover != null)
         {
@@ -214,23 +217,23 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
                 // if (guidanceDirection != Vector3.zero && newoutput != 0)
                 if (guidanceDirection != Vector3.zero)
                 {
-                    float scalingFactor = Mathf.Clamp(-2.0f / (distance_2d + 0.1f), -2.0f, 0);
+                    float scalingFactor = Mathf.Clamp(-1.5f / (distance_2d + 0.8f), -1.5f, 0);
                     // Debug.Log(scalingFactor);
                     force += guidanceDirection.normalized * scalingFactor;
                     // Debug.Log("disturbance");
                 }
             }
             // else if(output != 0 && distance_2d >= 0.2f)
-            else if(distance_2d >= 0.3f)
+            else if (distance_2d >= 0.3f)
             { //포인트와의 거리가 1보다 크면 guidance
                 // if (guidanceDirection != Vector3.zero && newoutput != 0)
                 if (guidanceDirection != Vector3.zero)
-                { 
+                {
                     float scalingFactor = Mathf.Clamp(distance_2d, 0, 5.0f);
                     force += NoforceDirection * scalingFactor;
                     // Debug.Log("guidance");
                 }
-                
+
                 // if (guidanceDirection != Vector3.zero && position != targetPosition)
                 // {
                 //     float scalingFactor = Mathf.Clamp(distance_2d, 0, 5.0f);
@@ -243,19 +246,19 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
                 //     }
                 // }
             }
-            
-            
+
+
         }
         if (!forceEnabled || (collisionDetection && !additionalData.isTouching))
         {
             // 충돌이 없으면 힘 계산 X
             force = new Vector3(forceX, forceY, forceZ);
         }
-        
+
         force += Gravitiy();
         MainForceX = force.x;
         MainForceY = force.y;
-        MainForceZ = force.z; 
+        MainForceZ = force.z;
         MainForce = force.magnitude;
 
         if (isColliding)
@@ -282,11 +285,11 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
             // Don't compute forces if there are no collisions which prevents feeling drag/friction while moving through air. 
             force = new Vector3(forceX, forceY, forceZ);
         }
-        
+
         force += Gravitiy();
         MainForceX = force.x;
         MainForceY = force.y;
-        MainForceZ = force.z; 
+        MainForceZ = force.z;
         MainForce = force.magnitude;
 
         //Debug.Log($"DefaultForce Y: {force.y}");
@@ -327,7 +330,7 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
 
         if (pointMover.CurrentDirection == Vector3.zero)
         {
-            force += NoforceDirection * 1.1f;  
+            force += NoforceDirection * 1.1f;
         }
         // Trajectory와의 거리가 작을수록 disturbance 힘이 강해짐
         if (pointMover != null)
@@ -335,7 +338,7 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
             Vector3 guidanceDirection = pointMover.CurrentDirection;
             if (guidanceDirection != Vector3.zero)
             {//ScalingFactor가 클수록 깎기 어려워서 1.0f로 낮춤...
-                float scalingFactor = Mathf.Clamp(1.5f / (distance_2d + 0.1f), 0, 1.5f);
+                float scalingFactor = Mathf.Clamp(1.5f / (distance_2d + 0.8f), 0, 1.5f);
                 // force += -guidanceDirection.normalized * scalingFactor;
                 force += -guidanceDirection * scalingFactor;
             }
@@ -346,11 +349,11 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
             // Don't compute additional forces if there are no collisions which prevents feeling drag/friction while moving through air. 
             force = new Vector3(forceX, forceY, forceZ);
         }
-        
+
         force += Gravitiy();
         MainForceX = force.x;
         MainForceY = force.y;
-        MainForceZ = force.z; 
+        MainForceZ = force.z;
         MainForce = force.magnitude;
 
         if (isColliding)
@@ -360,7 +363,7 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
         return force;
     }
 
-    
+
 
     private Vector3 CalculateGuidanceForce(Vector3 position, Vector3 velocity, AdditionalData additionalData)
     {
@@ -370,7 +373,7 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
 
         if (pointMover.CurrentDirection == Vector3.zero)
         {
-            force += NoforceDirection * 1.1f;  
+            force += NoforceDirection * 1.1f;
         }
 
         if (pointMover != null)
@@ -385,13 +388,13 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
             //         force += guidanceDirection.normalized * 1.0f;
             //     }
             // }
-            
+
             // Trajectory와의 거리가 클수록 guidance 힘이 커짐
             if (guidanceDirection != Vector3.zero && position != targetPosition)
             {
                 float scalingFactor = Mathf.Clamp(distance_2d, 1.2f, 5.0f);
                 force += NoforceDirection * scalingFactor;
-                
+
                 // float userForceInGuidanceDirection = Vector3.Dot(force, guidanceDirection.normalized);
                 // //사용자의 힘방향과 Guidance방향의 각도가 0.1보다 작을 때
                 // if (userForceInGuidanceDirection < 0.1f)
@@ -424,7 +427,7 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
     }
 
     // private Queue<Dictionary<string, float>> queue = new Queue<Dictionary<string, float>>();
-    
+
     Queue<float[]> queue = new Queue<float[]>();
     private int timeSteps = 10;
 
@@ -434,9 +437,10 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
 
     private void FixedUpdate()
     {
+        Time.fixedDeltaTime = 0.02f;
         if (newoutput != 0)
         {
-           // spherePosition과 targetPosition의 현재 x, z 좌표를 각각 저장
+            // spherePosition과 targetPosition의 현재 x, z 좌표를 각각 저장
             Vector2 currentTargetPosition = new Vector2(pointMover.PointToMovePosition.x, pointMover.PointToMovePosition.z);
             Vector2 currentSpherePosition = new Vector2(sphereTransform.position.x, sphereTransform.position.z);
             spherePath.Add(currentSpherePosition);
@@ -459,7 +463,7 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
             // Debug.Log(sphereTransform.position);
             // Debug.Log(targetPosition);
 
-        
+
             // Trajectory Point와 조각칼 끝의 거리 (3d)
             // float distance = Vector3.Distance(sphereTransform.position, targetPosition);
             // Debug.Log(distance);
@@ -467,10 +471,10 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
             // Y축 깊이는 고려하지 않은 XZ평면의 2d 거리
             Vector3 spherePositionXZ = new Vector3(sphereTransform.position.x, 0, sphereTransform.position.z);
             Vector3 targetPositionXZ = new Vector3(targetPosition.x, 0, targetPosition.z);
-            
+
             distance_2d = Vector3.Distance(spherePositionXZ, targetPositionXZ);
             // Debug.Log(distance_2d);
-        
+
         }
 
         // Debug.Log(physicsCursorPosition)
@@ -521,7 +525,7 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
             queue.Enqueue(forceData);
             // Debug.Log("forceData: " + string.Join(", ", forceData));
             int predictedClass = onnxInference.ProcessRealtimeData(queue);
-            
+
         }
 
     }
@@ -529,6 +533,7 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
     private void OnApplicationQuit()
     {
         CalculateFinalAccuracy();
+        csvMaking.WriteAccuracy(matchingAccuracy); // 정확도 저장
     }
 
     private void CalculateFinalAccuracy()
@@ -536,7 +541,7 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
         int totalPoints = Mathf.Min(spherePath.Count, targetPath.Count);  // 비교할 수 있는 최소 샘플 개수
         if (totalPoints == 0)
         {
-            Debug.Log("경로가 기록되지 않았습니다.");
+            // Debug.Log("경로가 기록되지 않았습니다.");
             return;
         }
 
@@ -545,10 +550,10 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
         for (int i = 0; i < totalPoints; i++)
         {
             totalDistance = Vector2.Distance(spherePath[i], targetPath[i]);
-            if (0.2 < totalDistance &&  totalDistance < 1)
+            if (0.2 < totalDistance && totalDistance < 1)
             {
                 //matchingAccuracy = Mathf.Clamp(matchingAccuracy - ((totalDistance - 0.05f) / 1 ) * 100f, 0f, 100f);
-                matchingAccuracy = matchingAccuracy - (Math.Abs((totalDistance - 0.5f) / 100 ));
+                matchingAccuracy = matchingAccuracy - (Math.Abs((totalDistance - 0.5f) / 100));
             }
         }
 
@@ -572,7 +577,7 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
         //     matchingAccuracy = 0f;
         // }
 
-        Debug.Log($"최종 경로 일치 정확도: {matchingAccuracy}%");
+        // Debug.Log($"최종 경로 일치 정확도: {matchingAccuracy}%");
     }
 
     private void Update()
@@ -591,12 +596,12 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
                 RemoveCollider(touched[i]);
             }
         }
-    #if UNITY_EDITOR
+#if UNITY_EDITOR
         if (needConfigure)
         {
             ConfigureJoint();
         }
-    #endif
+#endif
     }
 
 
@@ -628,7 +633,7 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
             m_rigidbody.isKinematic = false;
             m_rigidbody.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
 
-            m_rigidbody.constraints = 
+            m_rigidbody.constraints =
                           RigidbodyConstraints.FreezeRotationX |
                           RigidbodyConstraints.FreezeRotationY |
                           RigidbodyConstraints.FreezeRotationZ;
@@ -727,50 +732,50 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
     /// Called when effector touch other game object
     /// </summary>
     /// <param name="collision">collision information</param>
-        // Collision detection
-        private void OnCollisionEnter(Collision collision)
+    // Collision detection
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (forceEnabled && collisionDetection && !touched.Contains(collision.collider))
         {
-            if (forceEnabled && collisionDetection && !touched.Contains(collision.collider))
-            {
-                // 충돌한 오브젝트 추가
-                touched.Add(collision.collider);
-                isColliding = true;
-                collidingTag = collision.collider.tag;
+            // 충돌한 오브젝트 추가
+            touched.Add(collision.collider);
+            isColliding = true;
+            collidingTag = collision.collider.tag;
 
-                // 파괴될 때 콜라이더 제거 리스너 추가
-                OnDestroyListener listener = collision.collider.gameObject.GetComponent<OnDestroyListener>();
-                if (listener == null)
-                {
-                    listener = collision.collider.gameObject.AddComponent<OnDestroyListener>();
-                }
-                listener.OnDestroyEvent += () => RemoveCollider(collision.collider);
+            // 파괴될 때 콜라이더 제거 리스너 추가
+            OnDestroyListener listener = collision.collider.gameObject.GetComponent<OnDestroyListener>();
+            if (listener == null)
+            {
+                listener = collision.collider.gameObject.AddComponent<OnDestroyListener>();
             }
+            listener.OnDestroyEvent += () => RemoveCollider(collision.collider);
         }
+    }
 
     /// <summary>
     /// Called when effector move away from another game object 
     /// </summary>
     /// <param name="collision">collision information</param>
-        private void OnCollisionExit(Collision collision)
+    private void OnCollisionExit(Collision collision)
+    {
+        if (forceEnabled && collisionDetection && touched.Contains(collision.collider))
         {
-            if (forceEnabled && collisionDetection && touched.Contains(collision.collider))
-            {
-                RemoveCollider(collision.collider);
-            }
+            RemoveCollider(collision.collider);
         }
+    }
 
-        private void RemoveCollider(Collider collider)
+    private void RemoveCollider(Collider collider)
+    {
+        if (touched.Contains(collider))
         {
-            if (touched.Contains(collider))
+            touched.Remove(collider);
+            if (touched.Count == 0)
             {
-                touched.Remove(collider);
-                if (touched.Count == 0)
-                {
-                    collidingTag = string.Empty;
-                    isColliding = false;
-                }
+                collidingTag = string.Empty;
+                isColliding = false;
             }
         }
+    }
 
     #endregion
 
