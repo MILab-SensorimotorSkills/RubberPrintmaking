@@ -1,0 +1,42 @@
+{
+    "name": "root",
+    "metadata": {
+        "timer_format_version": "0.1.0",
+        "start_time_seconds": "1731937906",
+        "python_version": "3.8.13 (default, Oct 19 2022, 22:38:03) [MSC v.1916 64 bit (AMD64)]",
+        "command_line_arguments": "C:\\Users\\qkrwl\\anaconda3\\envs\\RubberAgents\\Scripts\\mlagents-learn --run-id=test --train --force",
+        "mlagents_version": "0.30.0",
+        "mlagents_envs_version": "0.30.0",
+        "communication_protocol_version": "1.5.0",
+        "pytorch_version": "2.3.1",
+        "numpy_version": "1.21.2",
+        "end_time_seconds": "1731937967"
+    },
+    "total": 61.178603800000005,
+    "count": 1,
+    "self": 0.006456500000012966,
+    "children": {
+        "run_training.setup": {
+            "total": 0.01477649999999997,
+            "count": 1,
+            "self": 0.01477649999999997
+        },
+        "TrainerController.start_learning": {
+            "total": 61.157370799999995,
+            "count": 1,
+            "self": 0.0001735999999965543,
+            "children": {
+                "TrainerController._reset_env": {
+                    "total": 61.1571219,
+                    "count": 1,
+                    "self": 61.1571219
+                },
+                "TrainerController._save_models": {
+                    "total": 7.529999999889014e-05,
+                    "count": 1,
+                    "self": 7.529999999889014e-05
+                }
+            }
+        }
+    }
+}
