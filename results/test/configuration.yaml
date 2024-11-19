@@ -1,6 +1,6 @@
 default_settings: null
 behaviors:
-  My Behavior:
+  MyBehavior:
     trainer_type: ppo
     hyperparameters:
       batch_size: 1024
@@ -37,9 +37,9 @@ behaviors:
     init_path: null
     keep_checkpoints: 5
     checkpoint_interval: 500000
-    max_steps: 500000
+    max_steps: 50000
     time_horizon: 64
-    summary_freq: 50000
+    summary_freq: 1000
     threaded: false
     self_play: null
     behavioral_cloning: null
@@ -68,7 +68,7 @@ checkpoint_settings:
   load_model: false
   resume: false
   force: true
-  train_model: false
+  train_model: true
   inference: false
   results_dir: results
 torch_settings:
