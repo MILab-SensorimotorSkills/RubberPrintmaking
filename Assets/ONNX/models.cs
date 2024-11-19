@@ -13,11 +13,14 @@ public class Models : IDisposable
     {
     private readonly InferenceSession _session;
     private NNModel modelAsset;
+    private int gpuDeviceId = 0;
 
     // 생성자: 모델 초기화
     public Models(string modelPath)
     {
         _session = new InferenceSession(modelPath);
+        // using var gpuSessionOptions = SessionOptions.MakeSessionOptionWithCudaProvider(gpuDeviceId);
+        // _session = new InferenceSession(modelPath, gpuSessionOptions);
     }
 
     public Models(NNModel modelAsset)

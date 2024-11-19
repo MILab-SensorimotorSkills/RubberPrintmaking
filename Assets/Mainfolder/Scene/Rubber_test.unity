@@ -1609,6 +1609,7 @@ Transform:
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 344967356}
+  - {fileID: 1366265579}
   m_Father: {fileID: 3652912357177991350}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!135 &111692407
@@ -1694,7 +1695,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc274a84a8ed5ef49a7dd0e3384cc417, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  forceFeedbackType: 0
+  forceFeedbackType: 2
   forceX: 0
   forceY: 0
   forceZ: 0
@@ -1984,7 +1985,6 @@ MonoBehaviour:
   TeamId: 0
   m_UseChildSensors: 1
   m_UseChildActuators: 1
-  m_DeterministicInference: 0
   m_ObservableAttributeHandling: 0
 --- !u!114 &111692428
 MonoBehaviour:
@@ -17261,6 +17261,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1135984720}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1366265578
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1366265579}
+  m_Layer: 0
+  m_Name: Academy
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1366265579
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1366265578}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 111692405}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1375931741
 GameObject:
   m_ObjectHideFlags: 0
@@ -28688,7 +28719,7 @@ MonoBehaviour:
   m_CachedHandedness: 1
   m_CachedDeviceId: 1136
   m_CachedDeviceName: Brass Accordion
-  m_CachedDeviceAddress: COM7
+  m_CachedDeviceAddress: COM3
   avatar: {fileID: 3652912357394140782}
   m_TargetFrequency: 1000
   onInitialized:
@@ -28708,7 +28739,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_CachedDeviceId: 61485
   m_CachedDeviceName: 
-  m_CachedDeviceAddress: COM8
+  m_CachedDeviceAddress: COM4
   onButtonDown:
     m_PersistentCalls:
       m_Calls: []
