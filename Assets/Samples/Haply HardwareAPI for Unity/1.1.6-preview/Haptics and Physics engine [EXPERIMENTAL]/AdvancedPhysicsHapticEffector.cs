@@ -532,8 +532,8 @@ public class AdvancedPhysicsHapticEffector : MonoBehaviour
 
     private void OnApplicationQuit()
     {
-        CalculateFinalAccuracy();
-        csvMaking.WriteAccuracy(matchingAccuracy); // 정확도 저장
+        // CalculateFinalAccuracy();
+        // csvMaking.WriteAccuracy(matchingAccuracy); // 정확도 저장
     }
 
     private void CalculateFinalAccuracy()

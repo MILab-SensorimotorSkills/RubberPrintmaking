@@ -1,0 +1,29 @@
+{
+    "Feedback Agent": {
+        "checkpoints": [
+            {
+                "steps": 8699,
+                "file_path": "results\\Test1\\Feedback Agent\\Feedback Agent-8699.onnx",
+                "reward": -1.8492772108843538,
+                "creation_time": 1732190000.8663094,
+                "auxillary_file_paths": [
+                    "results\\Test1\\Feedback Agent\\Feedback Agent-8699.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 8699,
+            "file_path": "results\\Test1\\Feedback Agent.onnx",
+            "reward": -1.8492772108843538,
+            "creation_time": 1732190000.8663094,
+            "auxillary_file_paths": [
+                "results\\Test1\\Feedback Agent\\Feedback Agent-8699.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "0.30.0",
+        "torch_version": "1.13.1+cpu"
+    }
+}
