@@ -1585,7 +1585,6 @@ GameObject:
   - component: {fileID: 111692422}
   - component: {fileID: 111692424}
   - component: {fileID: 111692427}
-  - component: {fileID: 111692426}
   - component: {fileID: 111692429}
   - component: {fileID: 111692428}
   m_Layer: 0
@@ -1695,7 +1694,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc274a84a8ed5ef49a7dd0e3384cc417, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  forceFeedbackType: 2
+  forceFeedbackType: 0
   forceX: 0
   forceY: 0
   forceZ: 0
@@ -1940,22 +1939,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   modelPath: Assets/ONNX/lstm_denorm1.onnx
   modelAsset: 
---- !u!114 &111692426
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 111692404}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 88b6042bc9a5d4aa58d931eae49442e5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  agentParameters:
-    maxStep: 0
-  hasUpgradedFromAgentParameters: 1
-  MaxStep: 0
 --- !u!114 &111692427
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1969,7 +1952,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BrainParameters:
-    VectorObservationSize: 1
+    VectorObservationSize: 2
     NumStackedVectorObservations: 1
     m_ActionSpec:
       m_NumContinuousActions: 0
@@ -1978,10 +1961,10 @@ MonoBehaviour:
     VectorActionDescriptions: []
     VectorActionSpaceType: 0
     hasUpgradedBrainParametersWithActionSpec: 1
-  m_Model: {fileID: 5022602860645237092, guid: f9dfd1e0e081bba4f897aa5cedfda92b, type: 3}
+  m_Model: {fileID: 0}
   m_InferenceDevice: 1
   m_BehaviorType: 0
-  m_BehaviorName: MyBehavior
+  m_BehaviorName: Feedback Agent
   TeamId: 0
   m_UseChildSensors: 1
   m_UseChildActuators: 1
@@ -2017,6 +2000,10 @@ MonoBehaviour:
   hasUpgradedFromAgentParameters: 1
   MaxStep: 0
   hapticEffector: {fileID: 111692410}
+  Sphere: {fileID: 111692407}
+  performanceThresholdMainForceMin: 8
+  performanceThresholdMainForceMax: 20
+  performanceThresholdDistance: 0.3
 --- !u!1 &122357371
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,5 +1,5 @@
 behaviors:
-  MyBehavior:
+  Feedback Agent:
     trainer_type: ppo
     hyperparameters:
       batch_size: 1024
@@ -35,7 +35,7 @@ behaviors:
           deterministic: False
     init_path: null
     keep_checkpoints: 5
-    checkpoint_interval: 500000
+    checkpoint_interval: 10000
     max_steps: 50000
     time_horizon: 64
     summary_freq: 1000
