@@ -103,13 +103,14 @@ public class FeedbackAgent : Agent
     public override void OnActionReceived(ActionBuffers actionBuffers)
     {
         // 성능 평가
-        bool performanceIsGood = hapticEffector.MainForce >= performanceThresholdMainForceMin && hapticEffector.MainForce <= performanceThresholdMainForceMax && hapticEffector.distance_2d < performanceThresholdDistance;
+        // bool performanceIsGood =  performanceThresholdMainForceMax >= hapticEffector.MainForce && hapticEffector.MainForce >= performanceThresholdMainForceMin && hapticEffector.distance_2d < performanceThresholdDistance;
+        bool performanceIsGood =  hapticEffector.distance_2d < performanceThresholdDistance;
 
 
         // 행동 값 설정
         int action = actionBuffers.DiscreteActions[0];
-        Debug.Log(performanceIsGood);
-        Debug.Log(action);
+        // Debug.Log(performanceIsGood);
+        // Debug.Log(action);
         bool isCorrectAction = false;
 
         if (performanceIsGood)
@@ -118,11 +119,17 @@ public class FeedbackAgent : Agent
             {
                 hapticEffector.forceFeedbackType = AdvancedPhysicsHapticEffector.ForceFeedbackType.Disturbance;
                 isCorrectAction = true;
+                Debug.Log("성능이 좋아 Disturbance로 전환합니다.");
+                Debug.Log($"PerformanceIsGood: {performanceIsGood}, Action: {action}, CorrectAction: {isCorrectAction}");
+
             }
             else
             {
                 hapticEffector.forceFeedbackType = AdvancedPhysicsHapticEffector.ForceFeedbackType.Guidance; // 잘못된 행동
                 // isCorrectAction = false;
+                Debug.Log("성능이 좋은데, Guidance로 잘못 전환하였습니다.");
+                Debug.Log($"PerformanceIsGood: {performanceIsGood}, Action: {action}, CorrectAction: {isCorrectAction}");
+
             }
         }
         else
@@ -131,22 +138,28 @@ public class FeedbackAgent : Agent
             {
                 hapticEffector.forceFeedbackType = AdvancedPhysicsHapticEffector.ForceFeedbackType.Guidance;
                 isCorrectAction = true;
+                Debug.Log("성능이 좋지 않아 Guidance로 전환합니다.");
+                Debug.Log($"PerformanceIsGood: {performanceIsGood}, Action: {action}, CorrectAction: {isCorrectAction}");
+
             }
             else
             {
                 hapticEffector.forceFeedbackType = AdvancedPhysicsHapticEffector.ForceFeedbackType.Disturbance; // 잘못된 행동
                 // isCorrectAction = false;
+                Debug.Log("성능이 좋지 않은데, Disturbance로 잘못 전환하였습니다.");
+                Debug.Log($"PerformanceIsGood: {performanceIsGood}, Action: {action}, CorrectAction: {isCorrectAction}");
+
             }
         }
 
         // 보상 및 패널티 부여
         if (isCorrectAction)
         {
-            SetReward(1.0f); // 올바른 행동에 대한 보상
+            SetReward(10.0f); // 올바른 행동에 대한 보상
         }
         else
         {
-            SetReward(-0.5f); // 잘못된 행동에 대한 패널티
+            SetReward(-10.0f); // 잘못된 행동에 대한 패널티
         }
 
         // 에피소드 종료 조건

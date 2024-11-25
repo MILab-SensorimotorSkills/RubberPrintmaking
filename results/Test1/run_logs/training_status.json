@@ -2,22 +2,40 @@
     "Feedback Agent": {
         "checkpoints": [
             {
-                "steps": 8699,
-                "file_path": "results\\Test1\\Feedback Agent\\Feedback Agent-8699.onnx",
-                "reward": -1.8492772108843538,
-                "creation_time": 1732190000.8663094,
+                "steps": 9980,
+                "file_path": "results\\Test1\\Feedback Agent\\Feedback Agent-9980.onnx",
+                "reward": -90.80745341614907,
+                "creation_time": 1732540257.3064966,
                 "auxillary_file_paths": [
-                    "results\\Test1\\Feedback Agent\\Feedback Agent-8699.pt"
+                    "results\\Test1\\Feedback Agent\\Feedback Agent-9980.pt"
+                ]
+            },
+            {
+                "steps": 19996,
+                "file_path": "results\\Test1\\Feedback Agent\\Feedback Agent-19996.onnx",
+                "reward": -47.739251040221916,
+                "creation_time": 1732542354.8798406,
+                "auxillary_file_paths": [
+                    "results\\Test1\\Feedback Agent\\Feedback Agent-19996.pt"
+                ]
+            },
+            {
+                "steps": 20913,
+                "file_path": "results\\Test1\\Feedback Agent\\Feedback Agent-20913.onnx",
+                "reward": -20.66176470588235,
+                "creation_time": 1732542430.966783,
+                "auxillary_file_paths": [
+                    "results\\Test1\\Feedback Agent\\Feedback Agent-20913.pt"
                 ]
             }
         ],
         "final_checkpoint": {
-            "steps": 8699,
+            "steps": 20913,
             "file_path": "results\\Test1\\Feedback Agent.onnx",
-            "reward": -1.8492772108843538,
-            "creation_time": 1732190000.8663094,
+            "reward": -20.66176470588235,
+            "creation_time": 1732542430.966783,
             "auxillary_file_paths": [
-                "results\\Test1\\Feedback Agent\\Feedback Agent-8699.pt"
+                "results\\Test1\\Feedback Agent\\Feedback Agent-20913.pt"
             ]
         }
     },
