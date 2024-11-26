@@ -1952,7 +1952,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BrainParameters:
-    VectorObservationSize: 1
+    VectorObservationSize: 2
     NumStackedVectorObservations: 1
     m_ActionSpec:
       m_NumContinuousActions: 0
@@ -1963,7 +1963,7 @@ MonoBehaviour:
     hasUpgradedBrainParametersWithActionSpec: 1
   m_Model: {fileID: 0}
   m_InferenceDevice: 1
-  m_BehaviorType: 0
+  m_BehaviorType: 1
   m_BehaviorName: Feedback Agent
   TeamId: 0
   m_UseChildSensors: 1
@@ -2002,7 +2002,7 @@ MonoBehaviour:
   hapticEffector: {fileID: 111692410}
   Sphere: {fileID: 111692407}
   performanceThresholdMainForceMin: 8
-  performanceThresholdMainForceMax: 20
+  performanceThresholdMainForceMax: 30
   performanceThresholdDistance: 0.3
 --- !u!1 &122357371
 GameObject:
