@@ -133,8 +133,8 @@ public class FeedbackAgent : Agent
     public override void OnEpisodeBegin()
     {
         // 랜덤 값으로 MainForce와 distance_2d 초기화
-        hapticEffector.MainForce = Random.Range(0.2391f, 30.0f);  // 0.2391~30 사이의 랜덤 값
-        hapticEffector.distance_2d = Random.Range(0.01f, 2.0f); // 0.01~2.0 사이의 랜덤 값
+        // hapticEffector.MainForce = Random.Range(0.2391f, 30.0f);  // 0.2391~30 사이의 랜덤 값
+        // hapticEffector.distance_2d = Random.Range(0.01f, 2.0f); // 0.01~2.0 사이의 랜덤 값
         // Debug.Log("Mainforce: " + hapticEffector.MainForce + "distance error: " + hapticEffector.distance_2d);
 
         // hapticEffector.forceFeedbackType = AdvancedPhysicsHapticEffector.ForceFeedbackType.Default;
@@ -169,10 +169,19 @@ public class FeedbackAgent : Agent
         //     hapticEffector.forceFeedbackType = AdvancedPhysicsHapticEffector.ForceFeedbackType.Default;
         // }
 
+        if (isCorrectAction)
+        {
+            if (action == 0) SetReward(10.0f); // Disturbance 보상 증가
+            else if (action == 1) SetReward(5.0f); // Guidance 보상 기본 유지
+        }
+        else
+        {
+            SetReward(-2.0f); // 실패에 대한 패널티 유지
+        }
+        // SetReward(isCorrectAction ? 5.0f : -2.0f);
 
-        SetReward(isCorrectAction ? 5.0f : -2.0f);
-
-        if (hapticEffector.MainForce < 1.0f && hapticEffector.distance_2d > 0.8f)
+        // if (hapticEffector.MainForce < 1.0f && hapticEffector.distance_2d > 0.8f)
+        if (hapticEffector.MainForce < 1.0f)
         {
             EndEpisode();
         }
