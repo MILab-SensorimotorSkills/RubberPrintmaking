@@ -135,9 +135,9 @@ public class FeedbackAgent : Agent
         // 랜덤 값으로 MainForce와 distance_2d 초기화
         hapticEffector.MainForce = Random.Range(0.2391f, 30.0f);  // 0.2391~30 사이의 랜덤 값
         hapticEffector.distance_2d = Random.Range(0.01f, 2.0f); // 0.01~2.0 사이의 랜덤 값
-        Debug.Log("Mainforce: " + hapticEffector.MainForce + "distance error: " + hapticEffector.distance_2d);
+        // Debug.Log("Mainforce: " + hapticEffector.MainForce + "distance error: " + hapticEffector.distance_2d);
 
-        hapticEffector.forceFeedbackType = AdvancedPhysicsHapticEffector.ForceFeedbackType.Default;
+        // hapticEffector.forceFeedbackType = AdvancedPhysicsHapticEffector.ForceFeedbackType.Default;
     }
 
 
@@ -154,23 +154,23 @@ public class FeedbackAgent : Agent
         int action = actionBuffers.DiscreteActions[0];
         bool isCorrectAction = false;
 
-        if (performanceIsGood && action == 1)
+        if (performanceIsGood && action == 0)
         {
             hapticEffector.forceFeedbackType = AdvancedPhysicsHapticEffector.ForceFeedbackType.Disturbance;
             isCorrectAction = true;
         }
-        else if (!performanceIsGood && action == 2)
+        else if (!performanceIsGood && action == 1)
         {
             hapticEffector.forceFeedbackType = AdvancedPhysicsHapticEffector.ForceFeedbackType.Guidance;
             isCorrectAction = true;
         }
-        else if (action == 0)
-        {
-            hapticEffector.forceFeedbackType = AdvancedPhysicsHapticEffector.ForceFeedbackType.Default;
-        }
+        // else if (action == 0)
+        // {
+        //     hapticEffector.forceFeedbackType = AdvancedPhysicsHapticEffector.ForceFeedbackType.Default;
+        // }
 
 
-        SetReward(isCorrectAction ? 5.0f : -5.0f);
+        SetReward(isCorrectAction ? 5.0f : -2.0f);
 
         if (hapticEffector.MainForce < 1.0f && hapticEffector.distance_2d > 0.8f)
         {
@@ -188,15 +188,114 @@ public class FeedbackAgent : Agent
         var discreteActions = actionsOut.DiscreteActions;
         if (Input.GetKey(KeyCode.D))
         {
-            discreteActions[0] = 1; // Disturbance
+            discreteActions[0] = 0; // Disturbance
         }
         else if (Input.GetKey(KeyCode.G))
         {
-            discreteActions[0] = 2; // Guidance
+            discreteActions[0] = 1; // Guidance
         }
-        else
-        {
-            discreteActions[0] = 0; // Default
-        }
+        // else
+        // {
+        //     discreteActions[0] = 0; // Default
+        // }
     }
 }
+
+// timestamp 10으로 고정
+// using Unity.MLAgents;
+// using Unity.MLAgents.Actuators;
+// using Unity.MLAgents.Sensors;
+// using UnityEngine;
+
+// public class FeedbackAgent : Agent
+// {
+//     [SerializeField] private AdvancedPhysicsHapticEffector hapticEffector;
+
+//     [SerializeField] private float performanceThresholdMainForceMin = 8.0f;
+//     [SerializeField] private float performanceThresholdMainForceMax = 30.0f;
+//     [SerializeField] private float performanceThresholdDistance = 0.3f;
+
+//     private int frameCounter = 0; // 프레임 카운터
+//     private int frameInterval = 10; // 전환 간격 (프레임 단위)
+
+//     public override void Initialize()
+//     {
+//         performanceThresholdDistance = 0.3f;
+//     }
+
+//     public override void CollectObservations(VectorSensor sensor)
+//     {
+//         // 랜덤 값으로 설정된 MainForce와 distance_2d를 관측
+//         sensor.AddObservation(hapticEffector.MainForce);
+//         sensor.AddObservation(hapticEffector.distance_2d);
+//     }
+
+//     public override void OnEpisodeBegin()
+//     {
+//         // 랜덤 값으로 MainForce와 distance_2d 초기화
+//         hapticEffector.MainForce = Random.Range(0.2391f, 30.0f);
+//         hapticEffector.distance_2d = Random.Range(0.01f, 2.0f);
+
+//         hapticEffector.forceFeedbackType = AdvancedPhysicsHapticEffector.ForceFeedbackType.Default;
+//         frameCounter = 0; // 카운터 초기화
+//     }
+
+//     private bool EvaluatePerformance()
+//     {
+//         // 랜덤 값에 기반한 성능 평가
+//         return performanceThresholdMainForceMax >= hapticEffector.MainForce &&
+//                hapticEffector.MainForce >= performanceThresholdMainForceMin &&
+//                hapticEffector.distance_2d < performanceThresholdDistance;
+//     }
+
+//     public override void OnActionReceived(ActionBuffers actionBuffers)
+//     {
+//         frameCounter++; // 프레임 카운터 증가
+
+//         // 일정 프레임 간격으로만 동작
+//         if (frameCounter < frameInterval) return;
+
+//         frameCounter = 0; // 카운터 초기화
+
+//         bool performanceIsGood = EvaluatePerformance();
+//         int action = actionBuffers.DiscreteActions[0];
+//         bool isCorrectAction = false;
+
+//         // 행동에 따라 hapticEffector 설정
+//         if (performanceIsGood && action == 1)
+//         {
+//             hapticEffector.forceFeedbackType = AdvancedPhysicsHapticEffector.ForceFeedbackType.Disturbance;
+//             isCorrectAction = true;
+//         }
+//         else if (!performanceIsGood && action == 2)
+//         {
+//             hapticEffector.forceFeedbackType = AdvancedPhysicsHapticEffector.ForceFeedbackType.Guidance;
+//             isCorrectAction = true;
+//         }
+//         else if (action == 0)
+//         {
+//             hapticEffector.forceFeedbackType = AdvancedPhysicsHapticEffector.ForceFeedbackType.Default;
+//         }
+
+//         // 보상 부여
+//         SetReward(isCorrectAction ? 2.0f : -2.0f);
+
+//         // 종료 조건
+//         if (hapticEffector.MainForce < 1.0f && hapticEffector.distance_2d > 0.8f)
+//         {
+//             EndEpisode();
+//         }
+
+//         if (Application.isEditor)
+//         {
+//             Debug.Log($"PerformanceIsGood: {performanceIsGood}, Action: {action}, CorrectAction: {isCorrectAction}");
+//         }
+//     }
+
+//     public override void Heuristic(in ActionBuffers actionsOut)
+//     {
+//         // 랜덤한 행동 선택 (테스트 목적)
+//         var discreteActions = actionsOut.DiscreteActions;
+//         discreteActions[0] = Random.Range(0, 3); // 0(Default), 1(Disturbance), 2(Guidance) 중 랜덤
+//     }
+// }

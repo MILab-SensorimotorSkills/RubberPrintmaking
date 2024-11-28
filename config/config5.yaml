@@ -5,14 +5,15 @@ behaviors:
       batch_size: 1024
       buffer_size: 10240
       learning_rate: 0.0003
-      beta: 0.005
-      epsilon: 0.2
+      beta: 0.01
+      epsilon: 0.3
       lambd: 0.95
-      num_epoch: 3
+      num_epoch: 5
       shared_critic: False
       learning_rate_schedule: linear
       beta_schedule: linear
       epsilon_schedule: linear
+      entropy_coefficient: 0.02
     network_settings:
       normalize: False
       hidden_units: 128
@@ -36,7 +37,7 @@ behaviors:
     init_path: null
     keep_checkpoints: 5
     checkpoint_interval: 10000
-    max_steps: 50000
+    max_steps: 100000
     time_horizon: 64
     summary_freq: 1000
     threaded: False
