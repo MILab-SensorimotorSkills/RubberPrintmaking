@@ -54,7 +54,7 @@ public class OnnxInference : MonoBehaviour
         float[] a = arrayOfArrays.SelectMany(x => x).ToArray();
 
         int output = models.Predict(a, timeSteps, inputSize);
-        Debug.Log("결과 : "+ output);
+        // Debug.Log("결과 : "+ output);
         // Debug.Log("결과 : "+ Utils.myDictionary[output]);
         // Debug.Log(output);
 
