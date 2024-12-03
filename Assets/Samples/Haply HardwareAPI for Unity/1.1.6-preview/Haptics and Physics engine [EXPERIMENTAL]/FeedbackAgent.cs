@@ -1,114 +1,8 @@
-// using Unity.MLAgents;
-// using Unity.MLAgents.Actuators;
-// using Unity.MLAgents.Sensors;
-// using UnityEngine;
-
-// public class FeedbackAgent : Agent
-// {
-//     [SerializeField] private AdvancedPhysicsHapticEffector hapticEffector;
-//     [SerializeField] private SphereCollider Sphere;
-
-//     [SerializeField] private float performanceThresholdMainForceMin = 8.0f;
-//     [SerializeField] private float performanceThresholdMainForceMax = 20.0f;
-
-//     [SerializeField] private float performanceThresholdDistance = 0.3f; // 성능 기준 distance_2d 초기값
-
-//     public override void Initialize()
-//     {
-//         // 초기화 코드
-//         // performanceThresholdMainForce = 5.0f;
-//         performanceThresholdDistance = 0.3f;
-//     }
-
-//     public override void CollectObservations(VectorSensor sensor)
-//     {
-//         // MainForce와 distance_2d를 관측값으로 추가
-//         sensor.AddObservation(hapticEffector.MainForce);
-//         sensor.AddObservation(hapticEffector.distance_2d);
-//     }
-
-//     public override void OnActionReceived(ActionBuffers actionBuffers)
-//     {
-//         // 성능 평가
-//         bool performanceIsGood =  performanceThresholdMainForceMax >= hapticEffector.MainForce && hapticEffector.MainForce >= performanceThresholdMainForceMin && hapticEffector.distance_2d < performanceThresholdDistance;
-//         // bool performanceIsGood =  hapticEffector.distance_2d < performanceThresholdDistance;
-
-
-//         // 행동 값 설정
-//         int action = actionBuffers.DiscreteActions[0];
-//         // Debug.Log(performanceIsGood);
-//         // Debug.Log(action);
-//         bool isCorrectAction = false;
-
-//         if (performanceIsGood)
-//         {
-//             if (action == 1) // Disturbance 선택
-//             {
-//                 hapticEffector.forceFeedbackType = AdvancedPhysicsHapticEffector.ForceFeedbackType.Disturbance;
-//                 isCorrectAction = true;
-//                 Debug.Log("성능이 좋아 Disturbance로 전환합니다.");
-//                 Debug.Log($"PerformanceIsGood: {performanceIsGood}, Action: {action}, CorrectAction: {isCorrectAction}");
-
-//             }
-//             else
-//             {
-//                 hapticEffector.forceFeedbackType = AdvancedPhysicsHapticEffector.ForceFeedbackType.Guidance; // 잘못된 행동
-//                 // isCorrectAction = false;
-//                 Debug.Log("성능이 좋은데, Guidance로 잘못 전환하였습니다.");
-//                 Debug.Log($"PerformanceIsGood: {performanceIsGood}, Action: {action}, CorrectAction: {isCorrectAction}");
-
-//             }
-//         }
-//         else
-//         {
-//             if (action == 2) // Guidance 선택
-//             {
-//                 hapticEffector.forceFeedbackType = AdvancedPhysicsHapticEffector.ForceFeedbackType.Guidance;
-//                 isCorrectAction = true;
-//                 Debug.Log("성능이 좋지 않아 Guidance로 전환합니다.");
-//                 Debug.Log($"PerformanceIsGood: {performanceIsGood}, Action: {action}, CorrectAction: {isCorrectAction}");
-
-//             }
-//             else
-//             {
-//                 hapticEffector.forceFeedbackType = AdvancedPhysicsHapticEffector.ForceFeedbackType.Disturbance; // 잘못된 행동
-//                 // isCorrectAction = false;
-//                 Debug.Log("성능이 좋지 않은데, Disturbance로 잘못 전환하였습니다.");
-//                 Debug.Log($"PerformanceIsGood: {performanceIsGood}, Action: {action}, CorrectAction: {isCorrectAction}");
-
-//             }
-//         }
-
-//         // 보상 및 패널티 부여
-//         if (isCorrectAction)
-//         {
-//             SetReward(10.0f); // 올바른 행동에 대한 보상
-//         }
-//         else
-//         {
-//             SetReward(-10.0f); // 잘못된 행동에 대한 패널티
-//         }
-
-//         // 에피소드 종료 조건
-//         if (hapticEffector.MainForce < 1.0f && hapticEffector.distance_2d > 0.8f)
-//         {
-//             Debug.Log("에피소드 종료");
-//             EndEpisode();
-//         }
-//     }
-
-//     public override void Heuristic(in ActionBuffers actionsOut)
-//     {
-//         // 사용자 입력을 수동으로 처리하지 않음 (사용자가 직접 움직임 확인)
-//     }
-// }
-
-
-
 using Unity.MLAgents;
 using Unity.MLAgents.Actuators;
 using Unity.MLAgents.Sensors;
 using UnityEngine;
+using Unity.MLAgents.Policies;
 
 public class FeedbackAgent : Agent
 {
@@ -126,36 +20,61 @@ public class FeedbackAgent : Agent
         performanceThresholdDistance = 0.3f;
     }
 
+    private bool IsInferenceMode()
+    {
+        // Behavior Parameters의 Behavior Type이 Inference Only인지 확인
+        BehaviorParameters behaviorParameters = GetComponent<BehaviorParameters>();
+        return behaviorParameters.BehaviorType == BehaviorType.InferenceOnly;
+    }
+
     public override void CollectObservations(VectorSensor sensor)
     {
-        sensor.AddObservation(fixedMainforce);
-        sensor.AddObservation(fixedMainforce);
+        if (IsInferenceMode())
+        {
+            sensor.AddObservation(hapticEffector.MainForce);
+            sensor.AddObservation(hapticEffector.distance_2d);
+            Debug.Log("Inference Mode: Using hapticEffector values.");
+        }
+        else
+        {
+            sensor.AddObservation(fixedMainforce);
+            sensor.AddObservation(fixedDistance2D);
+            Debug.Log("Training Mode: Using random values.");
+        }
     }
 
     public override void OnEpisodeBegin()
     {
-        // 성능이 좋은 상태가 더 자주 나오도록 가중치를 적용한 랜덤 값 생성
-        float randomValue = Random.value; // 0.0 ~ 1.0 사이의 난수 생성
-
-        if (randomValue < 0.7f) // 70% 확률로 성능이 좋은 상태 생성
+        if (!IsInferenceMode())
         {
-            fixedMainforce = Random.Range(performanceThresholdMainForceMin, performanceThresholdMainForceMax); // 성능이 좋은 MainForce 범위
-            fixedDistance2D = Random.Range(0.01f, performanceThresholdDistance); // 성능이 좋은 거리 범위
-        }
-        else // 30% 확률로 성능이 나쁜 상태 생성
-        {
-            fixedMainforce = Random.Range(0.2391f, performanceThresholdMainForceMin); // 성능이 나쁜 MainForce 범위
-            fixedMainforce = Random.Range(performanceThresholdDistance, 1.0f); // 성능이 나쁜 거리 범위
-        }
 
-        Debug.Log($"[OnEpisodeBegin] MainForce: {fixedMainforce}, Distance: {fixedDistance2D}");
-        
+            // 성능이 좋은 상태가 더 자주 나오도록 가중치를 적용한 랜덤 값 생성
+            float randomValue = Random.value; // 0.0 ~ 1.0 사이의 난수 생성
+
+            if (randomValue < 0.7f) // 70% 확률로 성능이 좋은 상태 생성
+            {
+                fixedMainforce = Random.Range(performanceThresholdMainForceMin, performanceThresholdMainForceMax); // 성능이 좋은 MainForce 범위
+                fixedDistance2D = Random.Range(0.01f, performanceThresholdDistance); // 성능이 좋은 거리 범위
+            }
+            else // 30% 확률로 성능이 나쁜 상태 생성
+            {
+                fixedMainforce = Random.Range(0.2391f, performanceThresholdMainForceMin); // 성능이 나쁜 MainForce 범위
+                fixedDistance2D = Random.Range(performanceThresholdDistance, 1.0f); // 성능이 나쁜 거리 범위
+            }
+
+            Debug.Log($"[Training Mode - OnEpisodeBegin] MainForce: {fixedMainforce}, Distance: {fixedDistance2D}");
+
         // 랜덤 값으로 MainForce와 distance_2d 초기화
         // hapticEffector.MainForce = Random.Range(0.2391f, 30.0f);  // 0.2391~30 사이의 랜덤 값
         // hapticEffector.distance_2d = Random.Range(0.01f, 1.0f); // 0.01~2.0 사이의 랜덤 값
         // Debug.Log("Mainforce: " + hapticEffector.MainForce + "distance error: " + hapticEffector.distance_2d);
 
         // hapticEffector.forceFeedbackType = AdvancedPhysicsHapticEffector.ForceFeedbackType.Default;
+
+        } 
+        else {
+            Debug.Log($"[Inference Mode - OnEpisodeBegin] MainForce: {hapticEffector.MainForce}, Distance: {hapticEffector.distance_2d}");
+        }
     }
 
 
@@ -177,15 +96,18 @@ public class FeedbackAgent : Agent
 
     public override void OnActionReceived(ActionBuffers actionBuffers)
     {
+        float mainForce = IsInferenceMode() ? hapticEffector.MainForce : fixedMainforce;
+        float distance2D = IsInferenceMode() ? hapticEffector.distance_2d : fixedDistance2D;
+
         fixedMainforce = Random.Range(0.2391f, 30.0f);
         fixedDistance2D = Random.Range(0.01f, 1.0f);
 
         // 성능 판단 로직
-        bool isMainForceInRange = performanceThresholdMainForceMax >= fixedMainforce &&
-                                  fixedMainforce >= performanceThresholdMainForceMin;
-        bool isDistanceInRange = fixedDistance2D < performanceThresholdDistance;
+        bool isMainForceInRange = performanceThresholdMainForceMax >= mainForce &&
+                                  mainForce >= performanceThresholdMainForceMin;
+        bool isDistanceInRange = distance2D < performanceThresholdDistance;
         bool performanceIsGood = isMainForceInRange && isDistanceInRange;
-        
+
         int action = actionBuffers.DiscreteActions[0];
         bool isCorrectAction = false;
 
@@ -223,6 +145,8 @@ public class FeedbackAgent : Agent
         {
             EndEpisode();
         }
+
+        Debug.Log($"MainForce: {mainForce}, Distance: {distance2D}, PerformanceIsGood: {performanceIsGood}, Action: {action}, CorrectAction: {isCorrectAction}");
 
         if (Application.isEditor)  // 에디터 환경에서만 출력
         {
