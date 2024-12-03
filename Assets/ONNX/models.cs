@@ -14,10 +14,27 @@ public class Models : IDisposable
     private readonly InferenceSession _session;
     private NNModel modelAsset;
 
+
     // 생성자: 모델 초기화
     public Models(string modelPath)
     {
         _session = new InferenceSession(modelPath);
+        // int gpuDeviceId = 0;
+        // var gpuSessionOptions = SessionOptions.MakeSessionOptionWithCudaProvider(gpuDeviceId);
+        // using var gpuSessionOptions = SessionOptions.MakeSessionOptionWithCudaProvider();
+        // UnityEngine.Debug.Log(gpuSessionOptions);
+
+        // var cudaProviderOptions = new OrtCUDAProviderOptions(); // Dispose this finally
+        // var providerOptionsDict = new Dictionary<string, string>();
+        // providerOptionsDict["cudnn_conv_use_max_workspace"] = "1";
+
+        // cudaProviderOptions.UpdateOptions(providerOptionsDict);
+
+        // SessionOptions options = SessionOptions.MakeSessionOptionWithCudaProvider(cudaProviderOptions);  // Dispose this finally
+
+        // UnityEngine.Debug.Log(options);
+        
+        // _session = new InferenceSession(modelPath, options);
     }
 
     public Models(NNModel modelAsset)
