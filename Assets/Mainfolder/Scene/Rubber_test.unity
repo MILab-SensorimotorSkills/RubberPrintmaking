@@ -1587,6 +1587,7 @@ GameObject:
   - component: {fileID: 111692427}
   - component: {fileID: 111692429}
   - component: {fileID: 111692428}
+  - component: {fileID: 111692430}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -2004,6 +2005,23 @@ MonoBehaviour:
   performanceThresholdMainForceMin: 2
   performanceThresholdMainForceMax: 30
   performanceThresholdDistance: 0.3
+--- !u!114 &111692430
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 111692404}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d85f3e28c360e10469c92cb431eb1d31, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  behaviorParameters: {fileID: 0}
+  goodPerformanceModel: {fileID: 0}
+  badPerformanceModel: {fileID: 0}
+  hapticEffector: {fileID: 0}
+  distanceThreshold: 0.3
 --- !u!1 &122357371
 GameObject:
   m_ObjectHideFlags: 0
