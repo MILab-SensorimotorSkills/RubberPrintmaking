@@ -15,6 +15,10 @@ public class FeedbackAgent : Agent
     private float fixedDistance2D;
     private float fixedMainforce;
 
+    private int correctActions = 0;  // 올바른 행동의 수
+    private int totalActions = 0;   // 총 행동의 수
+    private float cumulativeReward = 0f; // 누적 보상
+
     public override void Initialize()
     {
         performanceThresholdDistance = 0.3f;
@@ -75,6 +79,11 @@ public class FeedbackAgent : Agent
         else {
             Debug.Log($"[Inference Mode - OnEpisodeBegin] MainForce: {hapticEffector.MainForce}, Distance: {hapticEffector.distance_2d}");
         }
+
+        // correctActions = 0;
+        // totalActions = 0;
+        // cumulativeReward = 0f;
+
     }
 
 
@@ -140,6 +149,10 @@ public class FeedbackAgent : Agent
 
         SetReward(isCorrectAction ? 1.0f : -1.0f);
 
+        totalActions++;
+        if (isCorrectAction) correctActions++;
+        cumulativeReward += GetCumulativeReward();
+
         // if (hapticEffector.MainForce < 1.0f && hapticEffector.distance_2d > 0.8f)
         if (fixedMainforce < 0.3f)
         {
@@ -170,6 +183,22 @@ public class FeedbackAgent : Agent
         //     discreteActions[0] = 0; // Default
         // }
     }
+
+    public void LogPerformanceMetrics()
+    {
+        float accuracy = totalActions > 0 ? (float)correctActions / totalActions : 0f;
+        Debug.Log($"[Performance Metrics] Total Actions: {totalActions}, Correct Actions: {correctActions}, Accuracy: {accuracy * 100f}%, Cumulative Reward: {cumulativeReward}");
+    }
+
+    private void FixedUpdate()
+    {
+        // 학습이 종료되거나 에피소드 종료 시 성능 평가 출력
+        if (IsInferenceMode() && totalActions > 0)
+        {
+            // LogPerformanceMetrics();
+        }
+    }
+
 }
 
 // timestamp 10으로 고정
