@@ -11,7 +11,7 @@ public class FeedbackAgent : Agent
 
     [SerializeField] private float performanceThresholdMainForceMin = 2.0f;
     [SerializeField] private float performanceThresholdMainForceMax = 30.0f;
-    [SerializeField] private float performanceThresholdDistance = 0.1f;
+    [SerializeField] private float performanceThresholdDistance = 0.01f;
     private float fixedDistance2D;
     private float fixedMainforce;
 
@@ -21,7 +21,7 @@ public class FeedbackAgent : Agent
 
     public override void Initialize()
     {
-        performanceThresholdDistance = 0.1f;
+        performanceThresholdDistance = 0.5f;
     }
 
     private bool IsInferenceMode()
@@ -77,7 +77,7 @@ public class FeedbackAgent : Agent
 
         } 
         else {
-            Debug.Log($"[Inference Mode - OnEpisodeBegin] MainForce: {hapticEffector.MainForce}, Distance: {hapticEffector.distance_2d}");
+            // Debug.Log($"[Inference Mode - OnEpisodeBegin] MainForce: {hapticEffector.MainForce}, Distance: {hapticEffector.distance_2d}");
         }
 
         // correctActions = 0;
@@ -159,7 +159,7 @@ public class FeedbackAgent : Agent
             EndEpisode();
         }
 
-        Debug.Log($"MainForce: {mainForce}, Distance: {distance2D}, PerformanceIsGood: {performanceIsGood}, Action: {action}, CorrectAction: {isCorrectAction}");
+        // Debug.Log($"MainForce: {mainForce}, Distance: {distance2D}, PerformanceIsGood: {performanceIsGood}, Action: {action}, CorrectAction: {isCorrectAction}");
 
         if (Application.isEditor)  // 에디터 환경에서만 출력
         {
