@@ -21,7 +21,7 @@ public class FeedbackAgent : Agent
 
     public override void Initialize()
     {
-        performanceThresholdDistance = 0.5f;
+        // performanceThresholdDistance = 0.01f;
     }
 
     private bool IsInferenceMode()
@@ -154,7 +154,8 @@ public class FeedbackAgent : Agent
         cumulativeReward += GetCumulativeReward();
 
         // if (hapticEffector.MainForce < 1.0f && hapticEffector.distance_2d > 0.8f)
-        if (fixedMainforce < 0.3f)
+        // if (fixedMainforce < 0.3f)
+        if (fixedMainforce > 0.5f)
         {
             EndEpisode();
         }
