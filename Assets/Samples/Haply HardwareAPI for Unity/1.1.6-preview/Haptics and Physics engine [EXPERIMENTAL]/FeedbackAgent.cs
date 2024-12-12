@@ -52,19 +52,22 @@ public class FeedbackAgent : Agent
         if (!IsInferenceMode())
         {
 
-            // 성능이 좋은 상태가 더 자주 나오도록 가중치를 적용한 랜덤 값 생성
-            float randomValue = Random.value; // 0.0 ~ 1.0 사이의 난수 생성
+            fixedMainforce = Random.Range(0.2391f, performanceThresholdMainForceMax); // 성능이 좋은 MainForce 범위
+            fixedDistance2D = Random.Range(0.00001f, 1.0f); // 성능이 좋은 거리 범위
 
-            if (randomValue < 0.7f) // 70% 확률로 성능이 좋은 상태 생성
-            {
-                fixedMainforce = Random.Range(performanceThresholdMainForceMin, performanceThresholdMainForceMax); // 성능이 좋은 MainForce 범위
-                fixedDistance2D = Random.Range(0.01f, performanceThresholdDistance); // 성능이 좋은 거리 범위
-            }
-            else // 30% 확률로 성능이 나쁜 상태 생성
-            {
-                fixedMainforce = Random.Range(0.2391f, performanceThresholdMainForceMin); // 성능이 나쁜 MainForce 범위
-                fixedDistance2D = Random.Range(performanceThresholdDistance, 1.0f); // 성능이 나쁜 거리 범위
-            }
+
+            // 성능이 좋은 상태가 더 자주 나오도록 가중치를 적용한 랜덤 값 생성
+            // float randomValue = Random.value;
+            // if (randomValue < 0.7f) // 70% 확률로 성능이 좋은 상태 생성
+            // {
+            //     fixedMainforce = Random.Range(performanceThresholdMainForceMin, performanceThresholdMainForceMax); // 성능이 좋은 MainForce 범위
+            //     fixedDistance2D = Random.Range(0.00001f, performanceThresholdDistance); // 성능이 좋은 거리 범위
+            // }
+            // else // 30% 확률로 성능이 나쁜 상태 생성
+            // {
+            //     fixedMainforce = Random.Range(0.2391f, performanceThresholdMainForceMin); // 성능이 나쁜 MainForce 범위
+            //     fixedDistance2D = Random.Range(performanceThresholdDistance, 1.0f); // 성능이 나쁜 거리 범위
+            // }
 
             Debug.Log($"[Training Mode - OnEpisodeBegin] MainForce: {fixedMainforce}, Distance: {fixedDistance2D}");
 
@@ -109,7 +112,7 @@ public class FeedbackAgent : Agent
         float distance2D = IsInferenceMode() ? hapticEffector.distance_2d : fixedDistance2D;
 
         fixedMainforce = Random.Range(0.2391f, 30.0f);
-        fixedDistance2D = Random.Range(0.01f, 1.0f);
+        fixedDistance2D = Random.Range(0.00001f, 1.0f);
 
         // 성능 판단 로직
         bool isMainForceInRange = performanceThresholdMainForceMax >= mainForce &&
@@ -155,7 +158,7 @@ public class FeedbackAgent : Agent
 
         // if (hapticEffector.MainForce < 1.0f && hapticEffector.distance_2d > 0.8f)
         // if (fixedMainforce < 0.3f)
-        if (fixedMainforce > 0.5f)
+        if (fixedMainforce < 0.5f)
         {
             EndEpisode();
         }
