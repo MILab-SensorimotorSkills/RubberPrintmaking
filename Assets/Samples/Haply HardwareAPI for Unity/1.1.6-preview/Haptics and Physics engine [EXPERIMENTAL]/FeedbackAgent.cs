@@ -11,7 +11,7 @@ public class FeedbackAgent : Agent
 
     [SerializeField] private float performanceThresholdMainForceMin = 2.0f;
     [SerializeField] private float performanceThresholdMainForceMax = 30.0f;
-    [SerializeField] private float performanceThresholdDistance = 0.01f;
+    [SerializeField] private float performanceThresholdDistance = 0.3f;
     private float fixedDistance2D;
     private float fixedMainforce;
 

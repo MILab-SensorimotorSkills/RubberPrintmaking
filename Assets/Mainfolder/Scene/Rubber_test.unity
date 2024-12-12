@@ -2004,7 +2004,7 @@ MonoBehaviour:
   Sphere: {fileID: 111692407}
   performanceThresholdMainForceMin: 2
   performanceThresholdMainForceMax: 30
-  performanceThresholdDistance: 0.01
+  performanceThresholdDistance: 0.3
 --- !u!114 &111692430
 MonoBehaviour:
   m_ObjectHideFlags: 0
