@@ -15,9 +15,13 @@ public class FeedbackAgent : Agent
     private float fixedDistance2D;
     private float fixedMainforce;
 
+    private int correctActions = 0;  // 올바른 행동의 수
+    private int totalActions = 0;   // 총 행동의 수
+    private float cumulativeReward = 0f; // 누적 보상
+
     public override void Initialize()
     {
-        performanceThresholdDistance = 0.3f;
+        // performanceThresholdDistance = 0.01f;
     }
 
     private bool IsInferenceMode()
@@ -48,19 +52,22 @@ public class FeedbackAgent : Agent
         if (!IsInferenceMode())
         {
 
-            // 성능이 좋은 상태가 더 자주 나오도록 가중치를 적용한 랜덤 값 생성
-            float randomValue = Random.value; // 0.0 ~ 1.0 사이의 난수 생성
+            fixedMainforce = Random.Range(0.2391f, performanceThresholdMainForceMax); // 성능이 좋은 MainForce 범위
+            fixedDistance2D = Random.Range(0.00001f, 1.0f); // 성능이 좋은 거리 범위
 
-            if (randomValue < 0.7f) // 70% 확률로 성능이 좋은 상태 생성
-            {
-                fixedMainforce = Random.Range(performanceThresholdMainForceMin, performanceThresholdMainForceMax); // 성능이 좋은 MainForce 범위
-                fixedDistance2D = Random.Range(0.01f, performanceThresholdDistance); // 성능이 좋은 거리 범위
-            }
-            else // 30% 확률로 성능이 나쁜 상태 생성
-            {
-                fixedMainforce = Random.Range(0.2391f, performanceThresholdMainForceMin); // 성능이 나쁜 MainForce 범위
-                fixedDistance2D = Random.Range(performanceThresholdDistance, 1.0f); // 성능이 나쁜 거리 범위
-            }
+
+            // 성능이 좋은 상태가 더 자주 나오도록 가중치를 적용한 랜덤 값 생성
+            // float randomValue = Random.value;
+            // if (randomValue < 0.7f) // 70% 확률로 성능이 좋은 상태 생성
+            // {
+            //     fixedMainforce = Random.Range(performanceThresholdMainForceMin, performanceThresholdMainForceMax); // 성능이 좋은 MainForce 범위
+            //     fixedDistance2D = Random.Range(0.00001f, performanceThresholdDistance); // 성능이 좋은 거리 범위
+            // }
+            // else // 30% 확률로 성능이 나쁜 상태 생성
+            // {
+            //     fixedMainforce = Random.Range(0.2391f, performanceThresholdMainForceMin); // 성능이 나쁜 MainForce 범위
+            //     fixedDistance2D = Random.Range(performanceThresholdDistance, 1.0f); // 성능이 나쁜 거리 범위
+            // }
 
             Debug.Log($"[Training Mode - OnEpisodeBegin] MainForce: {fixedMainforce}, Distance: {fixedDistance2D}");
 
@@ -73,8 +80,13 @@ public class FeedbackAgent : Agent
 
         } 
         else {
-            Debug.Log($"[Inference Mode - OnEpisodeBegin] MainForce: {hapticEffector.MainForce}, Distance: {hapticEffector.distance_2d}");
+            // Debug.Log($"[Inference Mode - OnEpisodeBegin] MainForce: {hapticEffector.MainForce}, Distance: {hapticEffector.distance_2d}");
         }
+
+        // correctActions = 0;
+        // totalActions = 0;
+        // cumulativeReward = 0f;
+
     }
 
 
@@ -100,7 +112,7 @@ public class FeedbackAgent : Agent
         float distance2D = IsInferenceMode() ? hapticEffector.distance_2d : fixedDistance2D;
 
         fixedMainforce = Random.Range(0.2391f, 30.0f);
-        fixedDistance2D = Random.Range(0.01f, 1.0f);
+        fixedDistance2D = Random.Range(0.00001f, 1.0f);
 
         // 성능 판단 로직
         bool isMainForceInRange = performanceThresholdMainForceMax >= mainForce &&
@@ -140,13 +152,18 @@ public class FeedbackAgent : Agent
 
         SetReward(isCorrectAction ? 1.0f : -1.0f);
 
+        totalActions++;
+        if (isCorrectAction) correctActions++;
+        cumulativeReward += GetCumulativeReward();
+
         // if (hapticEffector.MainForce < 1.0f && hapticEffector.distance_2d > 0.8f)
-        if (fixedMainforce < 0.3f)
+        // if (fixedMainforce < 0.3f)
+        if (fixedMainforce < 0.5f)
         {
             EndEpisode();
         }
 
-        Debug.Log($"MainForce: {mainForce}, Distance: {distance2D}, PerformanceIsGood: {performanceIsGood}, Action: {action}, CorrectAction: {isCorrectAction}");
+        // Debug.Log($"MainForce: {mainForce}, Distance: {distance2D}, PerformanceIsGood: {performanceIsGood}, Action: {action}, CorrectAction: {isCorrectAction}");
 
         if (Application.isEditor)  // 에디터 환경에서만 출력
         {
@@ -170,6 +187,22 @@ public class FeedbackAgent : Agent
         //     discreteActions[0] = 0; // Default
         // }
     }
+
+    public void LogPerformanceMetrics()
+    {
+        float accuracy = totalActions > 0 ? (float)correctActions / totalActions : 0f;
+        Debug.Log($"[Performance Metrics] Total Actions: {totalActions}, Correct Actions: {correctActions}, Accuracy: {accuracy * 100f}%, Cumulative Reward: {cumulativeReward}");
+    }
+
+    private void FixedUpdate()
+    {
+        // 학습이 종료되거나 에피소드 종료 시 성능 평가 출력
+        if (IsInferenceMode() && totalActions > 0)
+        {
+            // LogPerformanceMetrics();
+        }
+    }
+
 }
 
 // timestamp 10으로 고정
