@@ -1,0 +1,65 @@
+{
+    "Feedback Agent": {
+        "checkpoints": [
+            {
+                "steps": 69936,
+                "file_path": "results\\Test11\\Feedback Agent\\Feedback Agent-69936.onnx",
+                "reward": 12.879781420765028,
+                "creation_time": 1733288104.5244458,
+                "auxillary_file_paths": [
+                    "results\\Test11\\Feedback Agent\\Feedback Agent-69936.pt"
+                ]
+            },
+            {
+                "steps": 79972,
+                "file_path": "results\\Test11\\Feedback Agent\\Feedback Agent-79972.onnx",
+                "reward": 17.53846153846154,
+                "creation_time": 1733288221.4494665,
+                "auxillary_file_paths": [
+                    "results\\Test11\\Feedback Agent\\Feedback Agent-79972.pt"
+                ]
+            },
+            {
+                "steps": 89952,
+                "file_path": "results\\Test11\\Feedback Agent\\Feedback Agent-89952.onnx",
+                "reward": 16.141935483870967,
+                "creation_time": 1733288337.9671948,
+                "auxillary_file_paths": [
+                    "results\\Test11\\Feedback Agent\\Feedback Agent-89952.pt"
+                ]
+            },
+            {
+                "steps": 99970,
+                "file_path": "results\\Test11\\Feedback Agent\\Feedback Agent-99970.onnx",
+                "reward": 17.38562091503268,
+                "creation_time": 1733288455.7528102,
+                "auxillary_file_paths": [
+                    "results\\Test11\\Feedback Agent\\Feedback Agent-99970.pt"
+                ]
+            },
+            {
+                "steps": 100034,
+                "file_path": "results\\Test11\\Feedback Agent\\Feedback Agent-100034.onnx",
+                "reward": 17.38562091503268,
+                "creation_time": 1733288455.7924082,
+                "auxillary_file_paths": [
+                    "results\\Test11\\Feedback Agent\\Feedback Agent-100034.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 100034,
+            "file_path": "results\\Test11\\Feedback Agent.onnx",
+            "reward": 17.38562091503268,
+            "creation_time": 1733288455.7924082,
+            "auxillary_file_paths": [
+                "results\\Test11\\Feedback Agent\\Feedback Agent-100034.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "0.30.0",
+        "torch_version": "2.4.1+cu121"
+    }
+}
