@@ -52,5 +52,5 @@
         "Temp/": true
     },
     "dotnet.preferCSharpExtension": true,
-    "dotnet.defaultSolution": "RubberPrintmaking.sln"
+    "dotnet.defaultSolution": "RubberPrintmaking-backup260107.sln"
 }
