@@ -278,7 +278,8 @@ namespace Samples.Haply.HapticsAndPhysicsEngine
 
         public HapticThread hapticThread;
         //public SimplePhysicsHapticEffector simpleEffector;
-        public List<AdvancedPhysicsHapticEffector> advancedEffectors;
+        // public List<AdvancedPhysicsHapticEffector> advancedEffectors;
+        public List<AdvancedPhysicsHapticEffector_NewSDK> advancedEffectors;
         private int currentEffectorIndex = 0; 
         private bool forceState = false;
         public GameObject Tutorial;
@@ -333,9 +334,14 @@ namespace Samples.Haply.HapticsAndPhysicsEngine
         {
             Time.fixedDeltaTime = 1f / physicsFrequency;
 
-            if (hapticThread.isInitialized)
+            // if (hapticThread.isInitialized)
+            //     hapticsFrequencyText.text = $"haptics : {hapticThread.actualFrequency}Hz";
+            // physicsFrequencyText.text = $"physics : {physicsFrequency}Hz";
+            if (hapticThread != null && hapticThread.isInitialized)
                 hapticsFrequencyText.text = $"haptics : {hapticThread.actualFrequency}Hz";
-            physicsFrequencyText.text = $"physics : {physicsFrequency}Hz";
+            else
+                hapticsFrequencyText.text = "haptics : (New SDK)";
+
 
             if (Input.GetKeyDown(KeyCode.Escape))
             {
@@ -394,51 +400,98 @@ namespace Samples.Haply.HapticsAndPhysicsEngine
             }
         }
 
+        // private void OnGUI()
+        // {
+        //     Color textColor = Color.green;
+
+        //     if (advancedEffectors[currentEffectorIndex].gameObject.activeSelf &&
+        //         advancedEffectors[currentEffectorIndex].touched.Count > 0)
+        //     {
+        //         textColor = Color.gray * 0.75f;
+
+        //         var touchedObject = advancedEffectors[currentEffectorIndex].touched[0];
+
+        //         if (touchedObject != null)
+        //         {
+        //             var collider = touchedObject.GetComponent<Collider>();
+        //             if (collider != null)
+        //             {
+        //                 var physicMaterial = collider.material;
+        //                 var rb = touchedObject.GetComponent<Rigidbody>();
+
+        //                 string text = $"PhysicsMaterial: {physicMaterial.name.Replace("(Instance)", "")}\n" +
+        //                               $"dynamic friction: {physicMaterial.dynamicFriction}, static friction: {physicMaterial.staticFriction}\n";
+
+        //                 if (rb != null)
+        //                 {
+        //                     text += $"mass: {rb.mass}, drag: {rb.drag}, angular drag: {rb.angularDrag}\n";
+        //                 }
+
+        //                 GUI.Label(new Rect(20, 40, 800, 200), text);
+        //             }
+        //         }
+        //         else
+        //         {
+        //             advancedEffectors[currentEffectorIndex].touched.RemoveAt(0);
+        //         }
+        //     }
+
+        //     GUI.color = textColor;
+
+        //     GUIStyle myStyle = new GUIStyle(GUI.skin.label);
+        //     myStyle.fontSize = 24;
+
+        //     GUI.Label(new Rect(Screen.width - 220, 20, 200, 30), "Changeable", myStyle);
+
+        //     GUI.color = Color.white;
+        // }
         private void OnGUI()
         {
+            if (advancedEffectors == null || advancedEffectors.Count == 0) return;
+            if (currentEffectorIndex < 0 || currentEffectorIndex >= advancedEffectors.Count) return;
+
+            var eff = advancedEffectors[currentEffectorIndex];
+            if (eff == null) return;
+
             Color textColor = Color.green;
 
-            if (advancedEffectors[currentEffectorIndex].gameObject.activeSelf &&
-                advancedEffectors[currentEffectorIndex].touched.Count > 0)
+            if (eff.gameObject.activeSelf && eff.touched != null && eff.touched.Count > 0)
             {
                 textColor = Color.gray * 0.75f;
 
-                var touchedObject = advancedEffectors[currentEffectorIndex].touched[0];
-
+                var touchedObject = eff.touched[0];
                 if (touchedObject != null)
                 {
-                    var collider = touchedObject.GetComponent<Collider>();
-                    if (collider != null)
+                    var col = touchedObject.GetComponent<Collider>();
+                    if (col != null)
                     {
-                        var physicMaterial = collider.material;
+                        var pm = col.material; // col.material이 null일 수도 있음(드물지만)
                         var rb = touchedObject.GetComponent<Rigidbody>();
 
-                        string text = $"PhysicsMaterial: {physicMaterial.name.Replace("(Instance)", "")}\n" +
-                                      $"dynamic friction: {physicMaterial.dynamicFriction}, static friction: {physicMaterial.staticFriction}\n";
-
-                        if (rb != null)
+                        string text = $"Collider: {col.name}\n";
+                        if (pm != null)
                         {
-                            text += $"mass: {rb.mass}, drag: {rb.drag}, angular drag: {rb.angularDrag}\n";
+                            text += $"PhysicsMaterial: {pm.name.Replace("(Instance)", "")}\n" +
+                                    $"dynamic friction: {pm.dynamicFriction}, static friction: {pm.staticFriction}\n";
                         }
+                        if (rb != null)
+                            text += $"mass: {rb.mass}, drag: {rb.drag}, angular drag: {rb.angularDrag}\n";
 
                         GUI.Label(new Rect(20, 40, 800, 200), text);
                     }
                 }
                 else
                 {
-                    advancedEffectors[currentEffectorIndex].touched.RemoveAt(0);
+                    eff.touched.RemoveAt(0);
                 }
             }
 
             GUI.color = textColor;
-
-            GUIStyle myStyle = new GUIStyle(GUI.skin.label);
-            myStyle.fontSize = 24;
-
+            var myStyle = new GUIStyle(GUI.skin.label) { fontSize = 24 };
             GUI.Label(new Rect(Screen.width - 220, 20, 200, 30), "Changeable", myStyle);
-
             GUI.color = Color.white;
         }
+
 
         private void UpdateImageColors()
         {
@@ -460,16 +513,39 @@ namespace Samples.Haply.HapticsAndPhysicsEngine
             }
         }
 
+        // public void ToggleForceFeedback()
+        // {
+        //     AdvancedPhysicsHapticEffector_NewSDK effector = advancedEffectors[currentEffectorIndex];
+        //     effector.forceEnabled = !effector.forceEnabled;
+        //     effector.gameObject.GetComponent<MeshRenderer>().enabled = effector.forceEnabled;
+        //     hapticThread.avatar.gameObject.GetComponent<MeshRenderer>().material =
+        //     effector.forceEnabled ? enabledForceMaterial : disabledForceMaterial;
+        //     helpText.text = effector.forceEnabled ? collisionMessage : enableForceMessage;
+        //     UpdateImageColors();
+        // }
         public void ToggleForceFeedback()
         {
-            AdvancedPhysicsHapticEffector effector = advancedEffectors[currentEffectorIndex];
+            var effector = advancedEffectors[currentEffectorIndex];
+            if (effector == null) return;
+
             effector.forceEnabled = !effector.forceEnabled;
-            effector.gameObject.GetComponent<MeshRenderer>().enabled = effector.forceEnabled;
-            hapticThread.avatar.gameObject.GetComponent<MeshRenderer>().material =
-            effector.forceEnabled ? enabledForceMaterial : disabledForceMaterial;
+
+            var mr = effector.gameObject.GetComponent<MeshRenderer>();
+            if (mr != null) mr.enabled = effector.forceEnabled;
+
+            // hapticThread가 없으면 여기 스킵
+            if (hapticThread != null && hapticThread.avatar != null)
+            {
+                var avatarMr = hapticThread.avatar.gameObject.GetComponent<MeshRenderer>();
+                if (avatarMr != null)
+                    avatarMr.material = effector.forceEnabled ? enabledForceMaterial : disabledForceMaterial;
+            }
+
             helpText.text = effector.forceEnabled ? collisionMessage : enableForceMessage;
             UpdateImageColors();
         }
+
+
 
         private void ActivateTutorial()
         {
