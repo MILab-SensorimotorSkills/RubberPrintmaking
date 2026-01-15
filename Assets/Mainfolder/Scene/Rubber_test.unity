@@ -1590,7 +1590,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &111692405
 Transform:
   m_ObjectHideFlags: 0
@@ -1782,7 +1782,7 @@ MonoBehaviour:
   drawingCanvas: {fileID: 1419477603}
   smoothingFactor: 0.1
   drawInterval: 0.1
-  targetObj: {fileID: 111692404}
+  targetObj: {fileID: 1068319792}
 --- !u!114 &111692419
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11411,7 +11411,7 @@ Transform:
   m_GameObject: {fileID: 750155061}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.482, y: 0.16, z: -1.522}
+  m_LocalPosition: {x: 0.482, y: 0.036, z: -1.1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -14465,6 +14465,7 @@ GameObject:
   - component: {fileID: 1068319806}
   - component: {fileID: 1068319805}
   - component: {fileID: 1068319804}
+  - component: {fileID: 1068319807}
   - component: {fileID: 1068319802}
   - component: {fileID: 1068319801}
   - component: {fileID: 1068319800}
@@ -14474,7 +14475,6 @@ GameObject:
   - component: {fileID: 1068319796}
   - component: {fileID: 1068319795}
   - component: {fileID: 1068319794}
-  - component: {fileID: 1068319807}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -14816,7 +14816,7 @@ MonoBehaviour:
   touched: []
   sphereTransform: {fileID: 1068319793}
   pointMover: {fileID: 0}
-  onnxInference: {fileID: 0}
+  onnxInference: {fileID: 1068319802}
   MainForce: 0
   MainForceX: 0
   MainForceY: 0
@@ -23056,16 +23056,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfb28500de1c940449cecb64622e19a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inverse3: {fileID: 0}
+  verseGrip: {fileID: 2014137096}
   physicsFrequency: 1000
   hapticThread: {fileID: 3652912357177991352}
   advancedEffectors:
-  - {fileID: 111692410}
+  - {fileID: 1068319807}
   Tutorial: {fileID: 1419477596}
   advance: {fileID: 1134759083}
   default1: {fileID: 989848515}
   enabledForceMaterial: {fileID: 10301, guid: 0000000000000000f000000000000000, type: 0}
   disabledForceMaterial: {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
-  Knife: {fileID: 111692404}
+  Knife: {fileID: 1068319792}
   helpText: {fileID: 854650937771514230}
   frequenciesPanel: {fileID: 2094392255}
   physicsFrequencyText: {fileID: 555192163}
@@ -25508,7 +25510,7 @@ MonoBehaviour:
   - {fileID: 1765353810}
   - {fileID: 41720017}
   - {fileID: 304992122}
-  hapticEffector: {fileID: 111692410}
+  hapticEffector: {fileID: 0}
 --- !u!114 &1854924538
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -25961,7 +25963,7 @@ MonoBehaviour:
   modelPrefab: {fileID: 0}
   modelParent: {fileID: 0}
   model: {fileID: 385080673}
-  useDeviceLocalSpace: 0
+  useDeviceLocalSpace: 1
   rotationSmoothness: 0
 --- !u!114 &1903846016
 MonoBehaviour:
@@ -31911,7 +31913,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7740600748151393636}
   m_Layer: 0
-  m_Name: --Objects
+  m_Name: --Objects-Table
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -32057,7 +32059,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &3652912357177991352
 MonoBehaviour:
   m_ObjectHideFlags: 0
