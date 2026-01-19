@@ -245,8 +245,11 @@ public class AdvancedPhysicsHapticEffector_NewSDK : MonoBehaviour
     private Vector3 BaseSpringDamper(Vector3 position, Vector3 velocity, AdditionalData data)
     {
         var force = data.physicsCursorLocalPosition - position;
+        // Debug.Log($"[Effector] physicsCursorLocalPosition: {data.physicsCursorLocalPosition}");
+        // Debug.Log($"[Effector] Cursor Local Position: {position}");
         force *= stiffness;
         force -= velocity * damping;
+        // Debug.Log($"[Effector] SpringDamper Force: {force}");
         return force;
     }
 
@@ -438,6 +441,7 @@ public class AdvancedPhysicsHapticEffector_NewSDK : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
+        // Debug.Log($"[Effector] CollisionEnter with {collision.collider.name}, tag={collision.collider.tag}");
         if (forceEnabled && collisionDetection && !touched.Contains(collision.collider))
         {
             touched.Add(collision.collider);

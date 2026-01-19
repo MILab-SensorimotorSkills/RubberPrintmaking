@@ -1685,7 +1685,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 111692404}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dc274a84a8ed5ef49a7dd0e3384cc417, type: 3}
   m_Name: 
@@ -6459,7 +6459,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.05, y: 0.05, z: 0.05}
+  m_LocalScale: {x: 0.050000004, y: 0.050000004, z: 0.050000004}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 418521502}
@@ -11400,7 +11400,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6baa9bd232f241b99b7fbf0ebb6bc9dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  uniformScale: 1
+  uniformScale: 5
   lockGizmos: 0
 --- !u!4 &750155063
 Transform:
@@ -11412,7 +11412,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.482, y: 0.036, z: -1.1}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 5, y: 5, z: 5}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2014137095}
@@ -14491,8 +14491,8 @@ Transform:
   m_GameObject: {fileID: 1068319792}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.001, y: 0.001, z: 0.001}
+  m_LocalPosition: {x: 0, y: -0.0389, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 1201504255}
@@ -14815,7 +14815,7 @@ MonoBehaviour:
   collisionDetection: 1
   touched: []
   sphereTransform: {fileID: 1068319793}
-  pointMover: {fileID: 0}
+  pointMover: {fileID: 2022025938}
   onnxInference: {fileID: 1068319802}
   MainForce: 0
   MainForceX: 0
@@ -15990,8 +15990,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1140946486}
-  - component: {fileID: 1140946487}
-  - component: {fileID: 1140946488}
   m_Layer: 0
   m_Name: PhysicsEffector
   m_TagString: Untagged
@@ -16009,69 +16007,13 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_LocalScale: {x: 0.005, y: 0.005, z: 0.005}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1068319793}
   - {fileID: 542908949}
   m_Father: {fileID: 2014137095}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1140946487
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1140946485}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4b2425e8de2f1e149a03abbbe7512cc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  forceEnabled: 0
-  stiffness: 400
-  damping: 1
-  drag: 20
-  linearLimit: 0.001
-  limitSpring: 500000
-  limitDamper: 10000
-  collisionDetection: 0
-  touched: []
---- !u!114 &1140946488
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1140946485}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fb0aed3bb9e60eb48a737e08149f3a0f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  forceFeedbackType: 0
-  forceX: 0
-  forceY: 0
-  forceZ: 0
-  forceEnabled: 1
-  stiffness: 400
-  damping: 1
-  complexJoint: 1
-  drag: 20
-  linearLimit: 0.001
-  limitSpring: 500000
-  limitDamper: 10000
-  collisionDetection: 1
-  touched: []
-  sphereTransform: {fileID: 0}
-  pointMover: {fileID: 0}
-  onnxInference: {fileID: 0}
-  MainForce: 0
-  MainForceX: 0
-  MainForceY: 0
-  MainForceZ: 0
-  distance_2d: 0
-  collidingTag: 
 --- !u!1 &1141344221
 GameObject:
   m_ObjectHideFlags: 0
@@ -16879,7 +16821,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: -0.44}
-  m_LocalScale: {x: 2500, y: 2500, z: 2500}
+  m_LocalScale: {x: 50, y: 50, z: 50}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1655133019}
@@ -22544,175 +22486,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df95e5f213764a89bc2e1414f5adf2c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inputPayload:
-    session_id: 96
-    inverse3:
-    - device_id: 0470
-      config:
-        handedness: right
-        port: COM5
-        type: inverse3
-        gravity_compensation:
-          enabled: 1
-          scaling_factor: 0.5
-        torque_scaling:
-          enabled: 1
-        cursor_offset: {x: 0, y: 0, z: 0}
-        coordinate_origin: device_base
-        basis:
-          permutation: XYZ
-      state:
-        cursor_position: {x: -0.11504429, y: -0.03416571, z: -0.045276523}
-        cursor_velocity: {x: 0, y: 0, z: 0}
-        current_cursor_force: {x: 0, y: 0, z: 0}
-        current_cursor_position: {x: 0, y: 0, z: 0}
-        angular_position:
-          a0: 0
-          a1: 0
-          a2: 0
-        angular_velocity:
-          a0: 0
-          a1: 0
-          a2: 0
-        body_orientation: {x: 0.031799316, y: 0.697937, z: 0.000061035156, w: 0.7154541}
-        transform:
-          position: {x: 0, y: 0, z: 0}
-          rotation: {x: 0, y: 0, z: 0, w: 1}
-          scale: {x: 1, y: 1, z: 1}
-        mode: idle
-        control_mode: idle
-        control_domain: undefined
-        sent_cursor_force: {x: 0, y: 0, z: 0}
-        sent_cursor_position: {x: 0, y: 0, z: 0}
-        sent_angular_torques:
-          a0: 0
-          a1: 0
-          a2: 0
-        sent_angular_position:
-          a0: 0
-          a1: 0
-          a2: 0
-      status:
-        calibrated: 1
-        in_use: 0
-        power_supply: 1
-        ready: 1
-        started: 1
-    verse_grip: []
-    wireless_verse_grip:
-    - device_id: 1264
-      state:
-        battery_level: 0.5916668
-        button: 0
-        buttons:
-          a: 0
-          b: 0
-          c: 0
-        hall: 19
-        orientation: {x: 0.6559448, y: -0.24957275, z: -0.24862671, w: 0.664917}
-      status:
-        error: 0
-        ready: 1
-      config:
-        port: COM6
-        type: wireless_verse_grip
-  outputPayload:
-    session_id: 0
-    session:
-      force_render_full_state:
-        execute: 0
-      set_coordinate_origin:
-        execute: 0
-        coordinate_origin: device_base
-      set_basis:
-        execute: 0
-        basis:
-          permutation: XZY
-      set_transform:
-        execute: 0
-        transform:
-          position: {x: 0, y: 0, z: 0}
-          rotation: {x: 0, y: 0, z: 0, w: 1}
-          scale: {x: 1, y: 1, z: 1}
-    inverse3:
-    - device_id: 0470
-      commands:
-        set_basis:
-          execute: 0
-          basis:
-            permutation: XZY
-        set_coordinate_origin:
-          execute: 0
-          coordinate_origin: device_base
-        set_transform:
-          execute: 0
-          transform:
-            position: {x: 0, y: 0, z: 0}
-            rotation: {x: 0, y: 0, z: 0, w: 1}
-            scale: {x: 1, y: 1, z: 1}
-        set_angular_position:
-          values:
-            a0: 0
-            a1: 0
-            a2: 0
-          execute: 0
-        set_angular_torques:
-          values:
-            a0: 0
-            a1: 0
-            a2: 0
-          execute: 0
-        set_cursor_force:
-          values: {x: 0, y: 0, z: 0}
-          execute: 0
-        set_cursor_position:
-          values: {x: 0, y: 0, z: 0}
-          execute: 0
-        probe_position:
-          execute: 0
-        set_bubble_navigation:
-          execute: 0
-          parameters:
-            velocity_zone_inner_radius: 0.05
-            velocity_zone_outer_radius: 0.08
-            velocity_zone_max_velocity: 1
-            reset_velocity_on_entry: 1
-            velocity_zone_bump_region_width: 0.003
-            velocity_zone_bump_stiffness: 400
-            spring_coef_at_center: 4
-            spring_coef_at_inner_radius: 7
-            spring_coef_at_outer_radius: 8
-            wall_spring_stiffness: 700
-            damping_coef_at_center: 0.2
-            damping_coef_at_inner_radius: 1
-            damping_coef_at_outer_radius: 3
-        stop_bubble_navigation:
-          execute: 0
-        set_oscillator:
-          execute: 0
-          oscillator: 0
-          amplitude: 0
-          frequency: 0
-          shape: sine_wave
-        set_oscillators: []
-        set_sdf: []
-        remove_sdf: []
-    verse_grip: []
-    wireless_verse_grip:
-    - device_id: 1264
-      commands:
-        set_basis:
-          execute: 0
-          basis:
-            permutation: XZY
-        set_transform:
-          execute: 0
-          transform:
-            position: {x: 0, y: 0, z: 0}
-            rotation: {x: 0, y: 0, z: 0, w: 1}
-            scale: {x: 1, y: 1, z: 1}
-        probe_orientation:
-          execute: 0
 --- !u!114 &1660072576
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22725,7 +22498,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e50340550ed4f12936712b2b084660b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  autoConnect: 1
   Ready:
     m_PersistentCalls:
       m_Calls: []
@@ -22733,6 +22505,8 @@ MonoBehaviour:
   deviceListUri: http://localhost:10000/3.1/devices
   fetchRetryDelay: 5
   autoAssign: 1
+  autoConnect: 1
+  serverUri: ws://localhost:10001
 --- !u!4 &1660072577
 Transform:
   m_ObjectHideFlags: 0
@@ -23036,7 +22810,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1680554366}
-  - component: {fileID: 1680554365}
+  - component: {fileID: 1680554367}
   m_Layer: 0
   m_Name: Game Manager
   m_TagString: Untagged
@@ -23044,45 +22818,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1680554365
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1680554364}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dfb28500de1c940449cecb64622e19a5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  inverse3: {fileID: 0}
-  verseGrip: {fileID: 2014137096}
-  physicsFrequency: 1000
-  hapticThread: {fileID: 3652912357177991352}
-  advancedEffectors:
-  - {fileID: 1068319807}
-  Tutorial: {fileID: 1419477596}
-  advance: {fileID: 1134759083}
-  default1: {fileID: 989848515}
-  enabledForceMaterial: {fileID: 10301, guid: 0000000000000000f000000000000000, type: 0}
-  disabledForceMaterial: {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
-  Knife: {fileID: 1068319792}
-  helpText: {fileID: 854650937771514230}
-  frequenciesPanel: {fileID: 2094392255}
-  physicsFrequencyText: {fileID: 555192163}
-  Normal: {fileID: 823784220}
-  Narrow: {fileID: 1941869094}
-  Triangle: {fileID: 340254757}
-  hapticsFrequencyText: {fileID: 1528992167}
-  chooseModeMessage: 
-  enableForceMessage: "\uC870\uAC01\uB3C4\uAC00 \uC544\uBB34 \uAC83\uC5D0\uB3C4 \uB2FF\uC9C0
-    \uC54A\uAC8C \uC774\uB3D9\uC2DC\uD0A4\uACE0 SPACE \uD0A4\uB97C \uB204\uB974\uBA74
-    \uD798\uC774 \uC801\uC6A9\uB429\uB2C8\uB2E4."
-  collisionMessage: "1\uC744 \uB20C\uB7EC \uD29C\uD1A0\uB9AC\uC5BC \uC9C4\uD589. 
-    2\uB97C \uB20C\uB7EC \uACE0\uAE09 \uBAA8\uB4DC."
-  advanceTexture: {fileID: 2800000, guid: cf2afb3ce9bf90149bb7c1ba3b42890d, type: 3}
-  thirdTexture: {fileID: 2800000, guid: 5f38354c96098c6478d36c469367cce7, type: 3}
 --- !u!4 &1680554366
 Transform:
   m_ObjectHideFlags: 0
@@ -23098,6 +22833,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1680554367
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1680554364}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5468ba7056d0a1468227b0916f14c40, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1685664966
 GameObject:
   m_ObjectHideFlags: 0
@@ -25941,7 +25688,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0.0149, y: 0.1267, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 385080673}
@@ -27336,12 +27083,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd08af922dda8564e80f398f91da75b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  axes: 3
-  invert:
-    x: 0
-    y: 0
-    z: 0
-  origin: 1
 --- !u!114 &2014137098
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -27356,8 +27097,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   deviceHandle: 1
   ledIndicator: 1
-  forceVector: 1
-  forceScale: 0.1
 --- !u!114 &2014137099
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -27408,7 +27147,7 @@ MonoBehaviour:
       m_Calls: []
   cursor: {fileID: 1903846016}
   body: {fileID: 0}
-  selectedHandedness: 0
+  selectedHandedness: 2
   PowerSupplyStatusChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -32102,7 +31841,7 @@ MonoBehaviour:
   onButtonUp:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1680554365}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: Samples.Haply.HapticsAndPhysicsEngine.GameManager,
           Assembly-CSharp
         m_MethodName: CycleEffectors

@@ -10,12 +10,10 @@
       "url": "https://unitypackages.haply.co"
     },
     "co.haply.inverse": {
-      "version": "3.6.0-touchapi.13",
+      "version": "3.2.0",
       "depth": 0,
       "source": "registry",
       "dependencies": {
-        "com.unity.ugui": "1.0.0",
-        "com.unity.modules.unitywebrequest": "1.0.0",
         "com.unity.xr.core-utils": "2.3.0"
       },
       "url": "https://unitypackages.haply.co"
