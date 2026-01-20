@@ -164,6 +164,7 @@ namespace Samples.Haply.HapticsAndPhysicsEngine
             {
                 ToggleForceFeedback();
                 forceState = true;
+                // Debug.Log("Force state activated");
                 return;
             }
 
@@ -286,6 +287,7 @@ namespace Samples.Haply.HapticsAndPhysicsEngine
             if (advancedEffectors == null || advancedEffectors.Count == 0) return false;
             if (currentEffectorIndex < 0 || currentEffectorIndex >= advancedEffectors.Count) return false;
             eff = advancedEffectors[currentEffectorIndex];
+            // Debug.Log("Current Effector: " + eff.name);
             return eff != null;
         }
 
@@ -332,12 +334,14 @@ namespace Samples.Haply.HapticsAndPhysicsEngine
 
             // New SDK: cursor material 변경
             ApplyCursorMaterial(effector.forceEnabled);
+            // Debug.Log($"Force feedback toggled: {effector.forceEnabled}");
 
             // UI
             if (helpText != null)
                 helpText.text = effector.forceEnabled ? collisionMessage : enableForceMessage;
 
             UpdateImageColorsSafe();
+            // Debug.Log("Force feedback toggled");
         }
 
         private void ApplyCursorMaterial(bool enabled)

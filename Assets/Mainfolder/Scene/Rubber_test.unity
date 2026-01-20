@@ -7879,6 +7879,21 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1135984720}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!115 &493968618
+MonoScript:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  serializedVersion: 7
+  m_DefaultReferences: {}
+  m_Icon: {fileID: 0}
+  m_Type: 0
+  m_ExecutionOrder: 0
+  m_ClassName: DevicesCache
+  m_Namespace: Haply.Inverse
+  m_AssemblyName: Haply.Inverse
 --- !u!1 &502596729
 GameObject:
   m_ObjectHideFlags: 0
@@ -14804,7 +14819,7 @@ MonoBehaviour:
   forceX: 0
   forceY: 0
   forceZ: 0
-  forceEnabled: 1
+  forceEnabled: 0
   stiffness: 400
   damping: 1
   complexJoint: 1
@@ -22455,6 +22470,7 @@ GameObject:
   - component: {fileID: 1660072576}
   - component: {fileID: 1660072575}
   - component: {fileID: 1660072574}
+  - component: {fileID: 1660072578}
   m_Layer: 0
   m_Name: Haptic Device Mapper
   m_TagString: Untagged
@@ -22486,6 +22502,175 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df95e5f213764a89bc2e1414f5adf2c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inputPayload:
+    session_id: 176
+    inverse3:
+    - device_id: 0470
+      config:
+        handedness: right
+        port: COM5
+        type: inverse3
+        gravity_compensation:
+          enabled: 1
+          scaling_factor: 0.5
+        torque_scaling:
+          enabled: 1
+        cursor_offset: {x: 0, y: 0, z: 0}
+        coordinate_origin: device_base
+        basis:
+          permutation: XYZ
+      state:
+        cursor_position: {x: -0.047875036, y: -0.13677993, z: 0.23301612}
+        cursor_velocity: {x: 0.022936987, y: 0.02565267, z: -0.0131176645}
+        current_cursor_force: {x: 0, y: 0, z: 0}
+        current_cursor_position: {x: 0, y: 0, z: 0}
+        angular_position:
+          a0: -174.70096
+          a1: 126.06229
+          a2: 30.337704
+        angular_velocity:
+          a0: 0
+          a1: 0
+          a2: 0
+        body_orientation: {x: 0.03668213, y: 0.6989136, z: -0.0007324219, w: 0.71429443}
+        transform:
+          position: {x: 0, y: 0, z: 0}
+          rotation: {x: 0, y: 0, z: 0, w: 1}
+          scale: {x: 1, y: 1, z: 1}
+        mode: idle
+        control_mode: idle
+        control_domain: undefined
+        sent_cursor_force: {x: 0, y: 0, z: 0}
+        sent_cursor_position: {x: 0, y: 0, z: 0}
+        sent_angular_torques:
+          a0: 0
+          a1: 0
+          a2: 0
+        sent_angular_position:
+          a0: 0
+          a1: 0
+          a2: 0
+      status:
+        calibrated: 1
+        in_use: 0
+        power_supply: 1
+        ready: 1
+        started: 1
+    verse_grip: []
+    wireless_verse_grip:
+    - device_id: 1264
+      state:
+        battery_level: 0.6583334
+        button: 0
+        buttons:
+          a: 0
+          b: 0
+          c: 0
+        hall: 19
+        orientation: {x: 0.6835022, y: 0.10870361, z: 0.023895264, w: 0.71899414}
+      status:
+        error: 0
+        ready: 1
+      config:
+        port: COM6
+        type: wireless_verse_grip
+  outputPayload:
+    session_id: 0
+    session:
+      force_render_full_state:
+        execute: 0
+      set_coordinate_origin:
+        execute: 0
+        coordinate_origin: device_base
+      set_basis:
+        execute: 0
+        basis:
+          permutation: XZY
+      set_transform:
+        execute: 0
+        transform:
+          position: {x: 0, y: 0, z: 0}
+          rotation: {x: 0, y: 0, z: 0, w: 1}
+          scale: {x: 1, y: 1, z: 1}
+    inverse3:
+    - device_id: 0470
+      commands:
+        set_basis:
+          execute: 0
+          basis:
+            permutation: XZY
+        set_coordinate_origin:
+          execute: 0
+          coordinate_origin: device_base
+        set_transform:
+          execute: 0
+          transform:
+            position: {x: 0, y: 0, z: 0}
+            rotation: {x: 0, y: 0, z: 0, w: 1}
+            scale: {x: 1, y: 1, z: 1}
+        set_angular_position:
+          values:
+            a0: 0
+            a1: 0
+            a2: 0
+          execute: 0
+        set_angular_torques:
+          values:
+            a0: 0
+            a1: 0
+            a2: 0
+          execute: 0
+        set_cursor_force:
+          values: {x: 0, y: 0, z: 0}
+          execute: 0
+        set_cursor_position:
+          values: {x: 0, y: 0, z: 0}
+          execute: 0
+        probe_position:
+          execute: 0
+        set_bubble_navigation:
+          execute: 0
+          parameters:
+            velocity_zone_inner_radius: 0.05
+            velocity_zone_outer_radius: 0.08
+            velocity_zone_max_velocity: 1
+            reset_velocity_on_entry: 1
+            velocity_zone_bump_region_width: 0.003
+            velocity_zone_bump_stiffness: 400
+            spring_coef_at_center: 4
+            spring_coef_at_inner_radius: 7
+            spring_coef_at_outer_radius: 8
+            wall_spring_stiffness: 700
+            damping_coef_at_center: 0.2
+            damping_coef_at_inner_radius: 1
+            damping_coef_at_outer_radius: 3
+        stop_bubble_navigation:
+          execute: 0
+        set_oscillator:
+          execute: 0
+          oscillator: 0
+          amplitude: 0
+          frequency: 0
+          shape: sine_wave
+        set_oscillators: []
+        set_sdf: []
+        remove_sdf: []
+    verse_grip: []
+    wireless_verse_grip:
+    - device_id: 1264
+      commands:
+        set_basis:
+          execute: 0
+          basis:
+            permutation: XZY
+        set_transform:
+          execute: 0
+          transform:
+            position: {x: 0, y: 0, z: 0}
+            rotation: {x: 0, y: 0, z: 0, w: 1}
+            scale: {x: 1, y: 1, z: 1}
+        probe_orientation:
+          execute: 0
 --- !u!114 &1660072576
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22498,6 +22683,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e50340550ed4f12936712b2b084660b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  autoConnect: 1
   Ready:
     m_PersistentCalls:
       m_Calls: []
@@ -22505,8 +22691,6 @@ MonoBehaviour:
   deviceListUri: http://localhost:10000/3.1/devices
   fetchRetryDelay: 5
   autoAssign: 1
-  autoConnect: 1
-  serverUri: ws://localhost:10001
 --- !u!4 &1660072577
 Transform:
   m_ObjectHideFlags: 0
@@ -22522,6 +22706,44 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1660072578
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1660072573}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 493968618}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inputPayload:
+    session_id: 0
+    inverse3: []
+    verse_grip: []
+    wireless_verse_grip: []
+  outputPayload:
+    session_id: 0
+    session:
+      force_render_full_state:
+        execute: 0
+      set_coordinate_origin:
+        execute: 0
+        coordinate_origin: device_base
+      set_basis:
+        execute: 0
+        basis:
+          permutation: XZY
+      set_transform:
+        execute: 0
+        transform:
+          position: {x: 0, y: 0, z: 0}
+          rotation: {x: 0, y: 0, z: 0, w: 1}
+          scale: {x: 1, y: 1, z: 1}
+    inverse3: []
+    verse_grip: []
+    wireless_verse_grip: []
 --- !u!1 &1666926641
 GameObject:
   m_ObjectHideFlags: 0
@@ -22845,6 +23067,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5468ba7056d0a1468227b0916f14c40, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inverse3: {fileID: 2014137099}
+  verseGrip: {fileID: 2014137096}
+  offsetController: {fileID: 0}
+  scaleController: {fileID: 0}
+  bounds: {fileID: 0}
+  physicsFrequency: 1000
+  advancedEffectors: []
+  Tutorial: {fileID: 1419477596}
+  advance: {fileID: 1134759083}
+  default1: {fileID: 989848515}
+  enabledForceMaterial: {fileID: 10301, guid: 0000000000000000f000000000000000, type: 0}
+  disabledForceMaterial: {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
+  Knife: {fileID: 1068319792}
+  helpText: {fileID: 854650937771514230}
+  frequenciesPanel: {fileID: 2094392255}
+  physicsFrequencyText: {fileID: 555192163}
+  Normal: {fileID: 823784220}
+  Narrow: {fileID: 1941869094}
+  Triangle: {fileID: 340254757}
+  hapticsFrequencyText: {fileID: 1528992167}
+  enableForceMessage: "\uC870\uAC01\uB3C4\uAC00 \uC544\uBB34 \uAC83\uC5D0\uB3C4 \uB2FF\uC9C0
+    \uC54A\uAC8C \uC774\uB3D9\uC2DC\uD0A4\uACE0 SPACE \uD0A4\uB97C \uB204\uB974\uBA74
+    \uD798\uC774 \uC801\uC6A9\uB429\uB2C8\uB2E4."
+  collisionMessage: Press C to enable/disable collision detection
+  backMessage: "T\uD0A4\uB97C \uB204\uB974\uBA74 \uBAA8\uB4DC \uC120\uD0DD\uC73C\uB85C
+    \uB3CC\uC544\uAC11\uB2C8\uB2E4."
+  advanceTexture: {fileID: 2800000, guid: 5f38354c96098c6478d36c469367cce7, type: 3}
+  thirdTexture: {fileID: 2800000, guid: cf2afb3ce9bf90149bb7c1ba3b42890d, type: 3}
 --- !u!1 &1685664966
 GameObject:
   m_ObjectHideFlags: 0
@@ -25709,8 +25959,8 @@ MonoBehaviour:
   device: {fileID: 0}
   modelPrefab: {fileID: 0}
   modelParent: {fileID: 0}
-  model: {fileID: 385080673}
-  useDeviceLocalSpace: 1
+  model: {fileID: 1903846014}
+  useDeviceLocalSpace: 0
   rotationSmoothness: 0
 --- !u!114 &1903846016
 MonoBehaviour:
@@ -27041,7 +27291,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc7847c5155948a78e48cc886a43ab8b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectedDeviceId: 
+  selectedDeviceId: 1264
   verseGripTypeFilter: 0
   coordinateConverter:
     m_UseConstant: 0
@@ -27083,6 +27333,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd08af922dda8564e80f398f91da75b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  axes: 3
+  invert:
+    x: 0
+    y: 0
+    z: 0
+  origin: 1
 --- !u!114 &2014137098
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -27097,6 +27353,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   deviceHandle: 1
   ledIndicator: 1
+  forceVector: 1
+  forceScale: 0.1
 --- !u!114 &2014137099
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -27109,7 +27367,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b822b74c1d7443fae50e4d64166622e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectedDeviceId: 
+  selectedDeviceId: 0470
   coordinateConverter:
     m_UseConstant: 0
     m_ConstantValue:
@@ -27147,7 +27405,7 @@ MonoBehaviour:
       m_Calls: []
   cursor: {fileID: 1903846016}
   body: {fileID: 0}
-  selectedHandedness: 2
+  selectedHandedness: 0
   PowerSupplyStatusChanged:
     m_PersistentCalls:
       m_Calls: []
