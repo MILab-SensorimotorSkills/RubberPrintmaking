@@ -393,7 +393,7 @@ public class VirtualKnife : MonoBehaviour
 {
     public GameObject virtualObject;
     public GameObject Cube;
-    private AdvancedPhysicsHapticEffector advancedHapticEffector;
+    private AdvancedPhysicsHapticEffector_NewSDK advancedHapticEffector;
     private Rigidbody virtualObjectRb;
     public Vector3 initialPosition;
     private Shovel knifeShovel;
@@ -406,7 +406,7 @@ public class VirtualKnife : MonoBehaviour
     public TextMeshProUGUI warningText; // 경고 메시지를 표시할 TextMeshProUGUI
     void Start()
     {
-        advancedHapticEffector = GetComponent<AdvancedPhysicsHapticEffector>();
+        advancedHapticEffector = GetComponent<AdvancedPhysicsHapticEffector_NewSDK>();
         knifeShovel = GetComponent<Shovel>();
         if (virtualObject != null)
         {

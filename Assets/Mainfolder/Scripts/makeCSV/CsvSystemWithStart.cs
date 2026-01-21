@@ -45,7 +45,7 @@ public class CsvSystemWithStart : MonoBehaviour
     private List<float> depths = new List<float>();
     private List<float> distances0x = new List<float>();
     private List<float> depths0x = new List<float>();
-    public AdvancedPhysicsHapticEffector hapticEffector;
+    public AdvancedPhysicsHapticEffector_NewSDK hapticEffector;
 
     #endregion
 

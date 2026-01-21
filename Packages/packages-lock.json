@@ -8,6 +8,15 @@
         "com.unity.nuget.newtonsoft-json": "3.0.2"
       }
     },
+    "co.haply.inverse": {
+      "version": "3.2.0",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.xr.core-utils": "2.3.0"
+      },
+      "url": "https://unitypackages.haply.co"
+    },
     "com.autodesk.fbx": {
       "version": "4.2.1",
       "depth": 1,
@@ -267,7 +276,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.xr.core-utils": {
-      "version": "2.2.2",
+      "version": "2.3.0",
       "depth": 1,
       "source": "registry",
       "dependencies": {
