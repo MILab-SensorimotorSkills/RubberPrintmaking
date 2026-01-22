@@ -65,7 +65,7 @@ public class Drawer : MonoBehaviour
         if (Physics.Raycast(ray, out hit, maxRayDistance))
         {
 
-            Debug.Log($"Hit at: {hit.point}, Hit Object: {hit.transform.name}"); //************
+            // Debug.Log($"Hit at: {hit.point}, Hit Object: {hit.transform.name}"); //************
 
             Transform hitobj = hit.transform;
             if (hitobj.CompareTag(Drawable.Tag))

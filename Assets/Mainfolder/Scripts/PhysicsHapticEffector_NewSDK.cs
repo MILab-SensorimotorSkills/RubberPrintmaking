@@ -141,6 +141,8 @@ public class AdvancedPhysicsHapticEffector_NewSDK : MonoBehaviour
         SetupCollisionDetection();
     }
 
+    private volatile bool _allowForce; // thread-safe enough for bool
+
     private void OnEnable()
     {
         _inverse3.DeviceStateChanged += OnDeviceStateChanged;
@@ -196,13 +198,17 @@ public class AdvancedPhysicsHapticEffector_NewSDK : MonoBehaviour
     private void OnDeviceStateChanged(object sender, Inverse3EventArgs args)
     {
         var inverse3 = args.DeviceController;
+        
+        if (inverse3 == null || inverse3.Cursor == null) return;
+        if (!inverse3.IsReady) return;
+
 
         // Read cached scene data (thread-safe)
         var data = GetCached();
 
         if (!forceEnabled || (collisionDetection && !data.isTouching))
         {
-            Debug.Log("No force applied (disabled or no collision)");
+            // Debug.Log("No force applied (disabled or no collision)");
             inverse3.SetCursorLocalForce(Vector3.zero);
             return;
         }
@@ -217,7 +223,7 @@ public class AdvancedPhysicsHapticEffector_NewSDK : MonoBehaviour
         // Debug.Log($"Applied Force: {force}");
 
         inverse3.SetCursorLocalForce(force);
-        Debug.Log("Force applied");
+        // Debug.Log("Force applied");
     }
 
     private Vector3 ForceCalculation(in Vector3 position, in Vector3 velocity, in AdditionalData data)
