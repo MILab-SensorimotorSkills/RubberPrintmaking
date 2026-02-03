@@ -18,7 +18,8 @@ public class AdvancedPhysicsHapticEffector_NewSDK : MonoBehaviour
         Default,
         Disturbance,
         Guidance,
-        Hybrid
+        Hybrid,
+        Adaptive
     }
 
     [Header("Force Feedback Type")]
@@ -162,6 +163,13 @@ public class AdvancedPhysicsHapticEffector_NewSDK : MonoBehaviour
 
     private void FixedUpdate()
     {
+        Vector3 cursorLocal = _inverse3.CursorLocalPosition;
+        Vector3 effectorLocal = transform.localPosition;
+
+        Vector3 diff = cursorLocal - effectorLocal;
+        // Debug.Log($"CursorLocal: {cursorLocal}, EffectorLocal: {effectorLocal}, Diff: {diff}");
+
+        // Time.fixedDeltaTime = 0.02f;
         // Cache unity scene data for the haptic thread
         SaveCached();
 
@@ -209,7 +217,8 @@ public class AdvancedPhysicsHapticEffector_NewSDK : MonoBehaviour
         if (!forceEnabled || (collisionDetection && !data.isTouching))
         {
             // Debug.Log("No force applied (disabled or no collision)");
-            inverse3.SetCursorLocalForce(Vector3.zero);
+            // inverse3.SetCursorLocalForce(Vector3.zero);
+            inverse3.SetCursorLocalForce(new Vector3(forceX, forceY, forceZ));
             return;
         }
 
