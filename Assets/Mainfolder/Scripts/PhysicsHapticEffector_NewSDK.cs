@@ -97,6 +97,52 @@ public class AdvancedPhysicsHapticEffector_NewSDK : MonoBehaviour
     public float MainForceZ;
     public float distance_2d;
 
+    [Header("Progressive Mixture (Adaptive)")]
+    public int level = 0;
+    public int levelMax = 4;
+
+    public float emaTau = 0.5f;          // 성능 EMA 시간상수(초)
+    public float stableVarTh = 0.002f;   // 안정 판정 분산 임계
+    public float goodHoldSec = 2.0f;     // good 유지시간
+    public float badHoldSec = 1.0f;      // bad 유지시간
+
+    public float goodTh0 = 0.40f;        // level0 good threshold
+    public float goodThStep = 0.05f;     // level당 감소량
+    public float badMargin = 0.20f;      // badTh = goodTh + margin
+
+    public float alphaMax0 = 0.20f;
+    public float alphaMaxStep = 0.15f;
+
+    private float _eEma = 999f;
+    private float _eVarEma = 999f;
+    private float _goodTimer = 0f;
+    private float _badTimer = 0f;
+
+    [Header("Adaptive Debug Logging")]
+    public bool enableAdaptiveLog = true;
+    [Range(0.05f, 2f)] public float logIntervalSec = 0.2f;
+
+    private float _logTimer = 0f;
+
+    // 최근 Adaptive 계산 내부 값 저장용 (Update/FixedUpdate에서 출력)
+    private float _dbg_goodTh;
+    private float _dbg_badTh;
+    private float _dbg_alphaMax;
+    private float _dbg_alpha;
+    private float _dbg_x;
+    private float _dbg_t;
+    private float _dbg_sd;
+    private float _dbg_e = -1f; // distance_2d snapshot
+    private float _dbg_eEma;
+    private float _dbg_eVarEma;
+
+    private Vector3 _dbg_gDir;
+    private Vector3 _dbg_Fbase;
+    private Vector3 _dbg_Fg;
+    private Vector3 _dbg_Fd;
+    private Vector3 _dbg_Ffinal;
+
+
     // -----------------------------
     // Internal states
     // -----------------------------
@@ -176,12 +222,70 @@ public class AdvancedPhysicsHapticEffector_NewSDK : MonoBehaviour
         // Your original logic that updates guidance direction & distance
         UpdateGuidanceTerms();
 
+        // ✅ 성능 측정은 "유효한 task 중"에만(예: collision 중, 또는 onnx output이 Deforming일 때)
+        bool valid = collisionDetection && touched.Count > 0; // + (newoutput==DEFORMING) 같은 조건 추천
+        if (valid) UpdatePerformanceAndLevel(Time.fixedDeltaTime);
+
+        // Adaptive 모드 Debugging
+        if (enableAdaptiveLog && forceFeedbackType == ForceFeedbackType.Adaptive)
+        {
+            _logTimer += Time.fixedDeltaTime;
+            if (_logTimer >= logIntervalSec)
+            {
+                _logTimer = 0f;
+                float goodTh = goodTh0 - goodThStep * level;
+                float badTh = goodTh + badMargin;
+
+                Debug.Log(
+                    $"[Adaptive] L={level}/{levelMax} " +
+                    $"e={_dbg_e:F3} eEMA={_dbg_eEma:F3} var={_dbg_eVarEma:E3} " +
+                    $"goodTh={_dbg_goodTh:F3} badTh={badTh:F3} " +
+                    $"alpha={_dbg_alpha:F3} alphaMax={_dbg_alphaMax:F3} x={_dbg_x:F3} " +
+                    $"sd={_dbg_sd:F3} " +
+                    $"|F|={_dbg_Ffinal.magnitude:F3} " +
+                    $"Fg={_dbg_Fg.magnitude:F3} Fd={_dbg_Fd.magnitude:F3} Fbase={_dbg_Fbase.magnitude:F3} " +
+                    $"touching={(collisionDetection && touched.Count > 0)}"
+                );
+            }
+        }
+
+
         // SaveSceneData();
 
         // (Optional) joint hot-reconfigure in editor (kept behavior)
 #if UNITY_EDITOR
         if (needConfigure) ConfigureJoint();
 #endif
+    }
+
+    private string AdaptiveStateLabel()
+    {
+        if (level <= 1) return "Assist";
+        if (level <= 3) return "Mixed";
+        return "Challenge";
+    }
+
+
+    private void UpdatePerformanceAndLevel(float dt)
+    {
+        float e = distance_2d;
+
+        float k = 1f - Mathf.Exp(-dt / Mathf.Max(0.001f, emaTau));
+        float prev = _eEma;
+        _eEma = Mathf.Lerp(_eEma, e, k);
+        float diff = e - _eEma;
+        _eVarEma = Mathf.Lerp(_eVarEma, diff * diff, k);
+
+        float goodTh = goodTh0 - goodThStep * level;
+        float badTh = goodTh + badMargin;
+
+        // timers
+        if (_eEma < goodTh && _eVarEma < stableVarTh) { _goodTimer += dt; _badTimer = 0f; }
+        else if (_eEma > badTh) { _badTimer += dt; _goodTimer = 0f; }
+        else { _goodTimer = Mathf.Max(0f, _goodTimer - dt); _badTimer = Mathf.Max(0f, _badTimer - dt); }
+
+        if (_goodTimer > goodHoldSec) { level = Mathf.Min(levelMax, level + 1); _goodTimer = 0f; }
+        if (_badTimer  > badHoldSec)  { level = Mathf.Max(0, level - 1); _badTimer = 0f; }
     }
 
     private void Update()
@@ -247,6 +351,8 @@ public class AdvancedPhysicsHapticEffector_NewSDK : MonoBehaviour
                 return CalculateGuidanceForce(position, velocity, data);
             case ForceFeedbackType.Hybrid:
                 return CalculateHybridForce(position, velocity, data, newoutput);
+            case ForceFeedbackType.Adaptive:
+                return CalculateAdaptiveForce(position, velocity, data, newoutput);
             default:
                 return Vector3.zero;
         }
@@ -316,6 +422,7 @@ public class AdvancedPhysicsHapticEffector_NewSDK : MonoBehaviour
     private Vector3 CalculateDefaultForce(Vector3 position, Vector3 velocity, AdditionalData data)
     {
         var force = BaseSpringDamper(position, velocity, data);
+        var baseforce = force;
 
         // You were outputting (forceX,Y,Z) when "no collision".
         // In NEW flow, this method only runs when collision exists.
@@ -394,6 +501,59 @@ public class AdvancedPhysicsHapticEffector_NewSDK : MonoBehaviour
         UpdateForceDebug(force);
         return force;
     }
+    
+    private Vector3 CalculateAdaptiveForce(Vector3 position, Vector3 velocity, AdditionalData data, int output)
+    {
+        var force = BaseSpringDamper(position, velocity, data);
+
+        // 방향 벡터 확보(너 코드 그대로)
+        Vector3 gDir = (pointMover != null && pointMover.CurrentDirection != Vector3.zero)
+            ? pointMover.CurrentDirection.normalized
+            : NoforceDirection.normalized;
+
+        float goodTh = goodTh0 - goodThStep * level;
+        goodTh = Mathf.Max(0.05f, goodTh);
+
+        float alphaMax = alphaMax0 + alphaMaxStep * level;
+
+        // e가 작을수록 disturbance 비중↑ (0~alphaMax)
+        float x = Mathf.Clamp01(_eEma / goodTh);
+        float alpha = alphaMax * (1f - x) * (1f - x) * (3f - 2f * (1f - x)); // SmoothStep(1-x)
+
+        // guidance: error 커질수록 선형 증가
+        Vector3 Fg = gDir * Mathf.Clamp(distance_2d, 0f, 5f);
+
+        // disturbance: error 작을수록 비선형 강해짐, 방향은 -gDir 쪽(논문은 minus):contentReference[oaicite:8]{index=8}
+        float sd = Mathf.Clamp(1.5f / (distance_2d + 0.8f), 0f, 1.5f);
+        Vector3 Fd = -gDir * sd;
+
+        force += (1f - alpha) * Fg + alpha * Fd;
+        force += Gravity();
+
+        UpdateForceDebug(force);
+
+        // ---- debug snapshot (no logging here) ----
+        _dbg_goodTh = goodTh;
+        _dbg_alphaMax = alphaMax;
+        _dbg_x = x;
+        _dbg_t = 1f - x;
+        _dbg_alpha = alpha;
+
+        _dbg_e = distance_2d;
+        _dbg_eEma = _eEma;
+        _dbg_eVarEma = _eVarEma;
+
+        _dbg_gDir = gDir;
+        _dbg_sd = sd;
+
+        _dbg_Fbase = force - ((1f - alpha) * Fg + alpha * Fd) - Gravity(); // 또는 아래처럼 따로 저장 추천
+        _dbg_Fg = Fg;
+        _dbg_Fd = Fd;
+        _dbg_Ffinal = force;
+
+        return force;
+    }
+
 
     private void UpdateForceDebug(Vector3 force)
     {
@@ -526,5 +686,12 @@ public class AdvancedPhysicsHapticEffector_NewSDK : MonoBehaviour
             collidingTag = string.Empty;
             isColliding = false;
         }
+    }
+
+    public struct CsvData1
+    {
+        public float forceX;
+        public float forceY;
+        public float forceZ;
     }
 }
