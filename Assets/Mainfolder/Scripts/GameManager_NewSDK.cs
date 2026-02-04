@@ -16,7 +16,7 @@ using Haply.Inverse.DeviceData;
 using Haply.Inverse;
 
 #if UNITY_EDITOR
-using UnityEditor;
+
 #endif
 
 // 아래 두 컨트롤러는 New SDK VerseGripNavigation 샘플에 있던 것
