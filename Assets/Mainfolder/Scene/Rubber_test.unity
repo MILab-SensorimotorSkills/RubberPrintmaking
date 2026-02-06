@@ -1326,7 +1326,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: -0.44}
-  m_LocalScale: {x: 30, y: 30, z: 30}
+  m_LocalScale: {x: 50, y: 50, z: 50}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 748796286}
@@ -7457,7 +7457,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.008888891, y: 0.008888891, z: 0.008888891}
+  m_LocalScale: {x: 0.01, y: 0.01, z: 0.01}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 139910802}
@@ -16252,7 +16252,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.002, y: 0.002, z: 0.002}
+  m_LocalScale: {x: 0.0012, y: 0.0012, z: 0.0012}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 66221030}
@@ -22073,8 +22073,8 @@ Transform:
   m_GameObject: {fileID: 1641843534}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0.000071}
-  m_LocalScale: {x: 0.22, y: 0.22, z: 0.22}
+  m_LocalPosition: {x: 0, y: 0.15, z: 0}
+  m_LocalScale: {x: 0.12, y: 0.12, z: 0.12}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 442115650}
@@ -24820,12 +24820,12 @@ MonoBehaviour:
   startTime: {fileID: 1957055514}
   textBox: {fileID: 1957055512}
   rubber: {fileID: 1134759083}
-  knife: {fileID: 111692404}
+  knife: {fileID: 1192648995}
   targetObjects:
   - {fileID: 1765353810}
   - {fileID: 41720017}
   - {fileID: 304992122}
-  hapticEffector: {fileID: 0}
+  hapticEffector: {fileID: 1192649006}
 --- !u!114 &1854924538
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -47,16 +47,42 @@ public class AngleUpdater : MonoBehaviour
 
     }
 
-    void ChangeCube(){
+    // void ChangeCube(){
     
-        if(((rotation >= 0 && rotation <= 50) || (rotation >= 310 && rotation <=360)) && (angle >= 5 && angle<=20)){
+    //     if(((rotation >= 0 && rotation <= 50) || (rotation >= 310 && rotation <=360)) && (angle >= 5 && angle<=20)){
+    //         renderer.material.color = Color.green;
+    //     }else if(((rotation > 0 && rotation <= 80) || (rotation >= 280 && rotation < 360)) && (angle >=5 && angle <= 50)){
+    //         renderer.material.color = Color.blue;
+    //     }else if(((rotation > 0 && rotation <= 100) || (rotation >= 240 && rotation < 360)) && (angle >=5 && angle <= 70)){
+    //         renderer.material.color = orange;
+    //     }else{
+    //         renderer.material.color = Color.red;
+    //     }
+    // }
+    void ChangeCube()
+    {
+        // GREEN (wider)
+        if (((rotation >= 0 && rotation <= 80) || (rotation >= 280 && rotation <= 360))
+            && (angle >= 0 && angle <= 40))
+        {
             renderer.material.color = Color.green;
-        }else if(((rotation > 0 && rotation <= 80) || (rotation >= 280 && rotation < 360)) && (angle >=5 && angle <= 50)){
+        }
+        // BLUE
+        else if (((rotation > 0 && rotation <= 100) || (rotation >= 260 && rotation < 360))
+            && (angle >= 0 && angle <= 55))
+        {
             renderer.material.color = Color.blue;
-        }else if(((rotation > 0 && rotation <= 100) || (rotation >= 240 && rotation < 360)) && (angle >=5 && angle <= 70)){
+        }
+        // ORANGE
+        else if (((rotation > 0 && rotation <= 120) || (rotation >= 240 && rotation < 360))
+            && (angle >= 0 && angle <= 75))
+        {
             renderer.material.color = orange;
-        }else{
+        }
+        else
+        {
             renderer.material.color = Color.red;
         }
     }
+
 }

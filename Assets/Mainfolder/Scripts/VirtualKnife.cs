@@ -434,24 +434,25 @@ public class VirtualKnife : MonoBehaviour
             float mainForceZ = advancedHapticEffector.MainForceZ;
             float yPosition = initialPosition.y;
             CheckObjectColor();
-            if (transform.position.y >= initialPosition.y + 0.5f)
+            if (transform.position.y >= initialPosition.y + 0.08f)
             {
                 yPosition = initialPosition.y;
                 minimumY = initialPosition.y;
+                // Debug.Log("위치 초기화 - initial" + initialPosition.y + "transform" + transform.position.y);
             }
             else
             {
                 float previousLowestY = GetPreviousLowestY(transform.position);
                 yPosition = Mathf.Min(previousLowestY, minimumY);
                 // if ((mainForce > 7f && mainForce <= 8f) || angle_Condition == 0f)
-                if (( mainForce <= 8f) || angle_Condition == 0f)
+                if ((mainForce <= 7f) || angle_Condition == 0f)
                 {
                     yPosition = Mathf.Min(yPosition, previousLowestY);
-                    Debug.Log("8 아래, 또는 각도 조건 0f 충족");
+                    Debug.Log("7 아래, 또는 각도 조건 0f 충족");
                 }
-                else if (mainForce > 8f && angle_Condition != 0f)
+                else if (mainForce > 7f && angle_Condition != 0f)
                 {
-                    Debug.Log("8 초과 및 각도 조건 충족");
+                    Debug.Log("7 초과 및 각도 조건 충족");
                     float depthAdjustment = 0f;
                     if (mainForceY >= 100f)
                     {
@@ -490,8 +491,8 @@ public class VirtualKnife : MonoBehaviour
                 );
                 virtualObjectRb.MovePosition(targetPosition);
             }
-            // MainforceY가 50f를 초과할 경우 경고음을 재생하고 메시지를 표시
-            if (mainForceY > 25f)
+            // MainforceY가 15f를 초과할 경우 경고음을 재생하고 메시지를 표시
+            if (mainForceY > 15f)
             {
                 TriggerWarning();
                 Debug.Log("힘 그만!!!");
