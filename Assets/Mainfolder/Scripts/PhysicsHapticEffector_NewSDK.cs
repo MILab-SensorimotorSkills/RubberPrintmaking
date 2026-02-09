@@ -504,7 +504,9 @@ public class AdvancedPhysicsHapticEffector_NewSDK : MonoBehaviour
     
     private Vector3 CalculateAdaptiveForce(Vector3 position, Vector3 velocity, AdditionalData data, int output)
     {
-        var force = BaseSpringDamper(position, velocity, data);
+        // var force = BaseSpringDamper(position, velocity, data);
+        Vector3 baseForce = BaseSpringDamper(position, velocity, data);
+        Vector3 force = baseForce;
 
         // 방향 벡터 확보(너 코드 그대로)
         Vector3 gDir = (pointMover != null && pointMover.CurrentDirection != Vector3.zero)
@@ -550,6 +552,25 @@ public class AdvancedPhysicsHapticEffector_NewSDK : MonoBehaviour
         _dbg_Fg = Fg;
         _dbg_Fd = Fd;
         _dbg_Ffinal = force;
+
+        LastAdaptive = new AdaptiveSnapshot
+        {
+            level = level,
+            e = distance_2d,
+            eEma = _eEma,
+            eVar = _eVarEma,
+            goodTh = goodTh,
+            badTh = goodTh + badMargin,
+            alpha = alpha,
+            alphaMax = alphaMax,
+            x = x,
+            sd = sd,
+            Fmag = force.magnitude,
+            FbaseMag = baseForce.magnitude,
+            FgMag = Fg.magnitude,
+            FdMag = Fd.magnitude
+        };
+
 
         return force;
     }
@@ -694,4 +715,25 @@ public class AdvancedPhysicsHapticEffector_NewSDK : MonoBehaviour
         public float forceY;
         public float forceZ;
     }
+
+    public struct AdaptiveSnapshot
+    {
+        public int level;
+        public float e;        // distance_2d
+        public float eEma;
+        public float eVar;
+        public float goodTh;
+        public float badTh;
+        public float alpha;
+        public float alphaMax;
+        public float x;
+        public float sd;
+        public float Fmag;
+        public float FbaseMag;
+        public float FgMag;
+        public float FdMag;
+    }
+
+    public AdaptiveSnapshot LastAdaptive;
+
 }

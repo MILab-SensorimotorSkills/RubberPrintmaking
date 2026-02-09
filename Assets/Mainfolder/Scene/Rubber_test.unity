@@ -16490,7 +16490,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57005f96ebd10ba4a9e2e8a315c59f0c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  forceFeedbackType: 0
+  forceFeedbackType: 4
   forceX: 0
   forceY: 0
   forceZ: 0
@@ -16516,7 +16516,7 @@ MonoBehaviour:
   levelMax: 4
   emaTau: 0.5
   stableVarTh: 0.002
-  goodHoldSec: 2
+  goodHoldSec: 2.5
   badHoldSec: 1
   goodTh0: 0.4
   goodThStep: 0.05

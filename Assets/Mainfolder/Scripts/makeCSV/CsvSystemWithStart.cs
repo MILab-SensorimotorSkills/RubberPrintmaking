@@ -47,6 +47,7 @@ public class CsvSystemWithStart : MonoBehaviour
     private List<float> depths0x = new List<float>();
     public AdvancedPhysicsHapticEffector_NewSDK hapticEffector;
 
+
     #endregion
 
     void Start()
@@ -56,8 +57,12 @@ public class CsvSystemWithStart : MonoBehaviour
         rubberHeight = rubber.transform.position.y;
     }
 
+
+
     void Update()
     {
+        string feedbackType = hapticEffector.forceFeedbackType.ToString();
+
         // float matchingAccuracy = hapticEffector.matchingAccuracy;   
         if (Input.GetKeyDown(KeyCode.S) && !WriteData)
         {
@@ -83,6 +88,26 @@ public class CsvSystemWithStart : MonoBehaviour
 
         }
 
+        var ad = hapticEffector.LastAdaptive;
+
+        if (hapticEffector.forceFeedbackType != AdvancedPhysicsHapticEffector_NewSDK.ForceFeedbackType.Adaptive)
+        {
+            ad.level = -1;
+            ad.alpha = float.NaN;
+            ad.alphaMax = float.NaN;
+            ad.goodTh = float.NaN;
+            ad.badTh = float.NaN;
+            ad.eEma = float.NaN;
+            ad.eVar = float.NaN;
+            ad.x = float.NaN;
+            ad.sd = float.NaN;
+            ad.Fmag = float.NaN;
+            ad.FbaseMag = float.NaN;
+            ad.FgMag = float.NaN;
+            ad.FdMag = float.NaN;
+        }
+
+
         if (WriteData)
         {
             CalculatePlayTime();
@@ -103,7 +128,17 @@ public class CsvSystemWithStart : MonoBehaviour
             depthVar0x = CalculateVar(depths0x, depthAvg0x);
 
             // 데이터를 기록
-            csv.WriteData(playTime, frameCount, minDistance, depth, disAvg, disVar, depthAvg, depthVar, disAvg0x, disVar0x, depthAvg0x, depthVar0x);
+            // csv.WriteData(playTime, frameCount, minDistance, depth, disAvg, disVar, depthAvg, depthVar, disAvg0x, disVar0x, depthAvg0x, depthVar0x);
+        csv.WriteData(
+            playTime, frameCount, feedbackType, minDistance, depth,
+            disAvg, disVar, depthAvg, depthVar,
+            disAvg0x, disVar0x, depthAvg0x, depthVar0x,
+
+            ad.level, ad.alpha, ad.alphaMax, ad.goodTh, ad.badTh,
+            ad.eEma, ad.eVar, ad.x, ad.sd,
+            ad.Fmag, ad.FbaseMag, ad.FgMag, ad.FdMag
+        );
+
         }
     }
 
