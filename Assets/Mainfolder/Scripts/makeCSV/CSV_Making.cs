@@ -16,22 +16,56 @@ public class CSV_Making : MonoBehaviour
         filePath = Path.Combine(Application.dataPath, "Mainfolder/CSV/Data_" + Tester + ".csv");
     }
 
+    // public void WriteCol()
+    // {
+    //     using (StreamWriter sw = new StreamWriter(filePath, true))
+    //     {
+    //         sw.WriteLine("Time, Frame, Distance, Depth, DisAvg, DisVar, DepthAvg, DepthVar, DisAvg0x, DisVar0x, DepthAvg0x, DepthVar0x");
+    //         sw.WriteLine("");
+    //     }
+    // }
     public void WriteCol()
     {
         using (StreamWriter sw = new StreamWriter(filePath, true))
         {
-            sw.WriteLine("Time, Frame, Distance, Depth, DisAvg, DisVar, DepthAvg, DepthVar, DisAvg0x, DisVar0x, DepthAvg0x, DepthVar0x");
+            sw.WriteLine(
+                "Time,Frame,FeedbackType,Distance,Depth,DisAvg,DisVar,DepthAvg,DepthVar,DisAvg0x,DisVar0x,DepthAvg0x,DepthVar0x," +
+                "Level,Alpha,AlphaMax,GoodTh,BadTh,eEMA,eVar,x,sd,Fmag,FbaseMag,FgMag,FdMag"
+            );
             sw.WriteLine("");
         }
     }
 
-    public void WriteData(float time, int frame, float? distance, float? depth, float disAvg, float disVar, float depthAvg, float depthVar, float disAvg0x, float disVar0x, float depthAvg0x, float depthVar0x)
+
+    // public void WriteData(float time, int frame, float? distance, float? depth, float disAvg, float disVar, float depthAvg, float depthVar, float disAvg0x, float disVar0x, float depthAvg0x, float depthVar0x)
+    // {
+    //     using (StreamWriter sw = new StreamWriter(filePath, true))
+    //     {
+    //         sw.WriteLine($"{time}, {frame}, {distance}, {depth}, {disAvg}, {disVar}, {depthAvg}, {depthVar}, {disAvg0x}, {disVar0x}, {depthAvg0x}, {depthVar0x}");
+    //     }
+    // }
+    public void WriteData(
+        float time, int frame, string feedbackType, float? distance, float? depth,
+        float disAvg, float disVar, float depthAvg, float depthVar,
+        float disAvg0x, float disVar0x, float depthAvg0x, float depthVar0x,
+
+        int level, float alpha, float alphaMax, float goodTh, float badTh,
+        float eEma, float eVar, float x, float sd,
+        float Fmag, float FbaseMag, float FgMag, float FdMag
+    )
     {
         using (StreamWriter sw = new StreamWriter(filePath, true))
         {
-            sw.WriteLine($"{time}, {frame}, {distance}, {depth}, {disAvg}, {disVar}, {depthAvg}, {depthVar}, {disAvg0x}, {disVar0x}, {depthAvg0x}, {depthVar0x}");
+            sw.WriteLine(
+                $"{time},{frame},{feedbackType},{distance},{depth}," +
+                $"{disAvg},{disVar},{depthAvg},{depthVar}," +
+                $"{disAvg0x},{disVar0x},{depthAvg0x},{depthVar0x}," +
+                $"{level},{alpha},{alphaMax},{goodTh},{badTh}," +
+                $"{eEma},{eVar},{x},{sd},{Fmag},{FbaseMag},{FgMag},{FdMag}"
+            );
         }
     }
+
 
     public void WriteAccuracy(float matchingAccuracy)
     {

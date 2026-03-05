@@ -7,7 +7,7 @@ public class VirtualWall : MonoBehaviour
     public GameObject prefab; // 생성할 프리팹 오브젝트를 설정합니다.
     public GameObject referenceObject; // y 좌표 비교를 위한 참조 오브젝트
     private VirtualKnife virtualKnife;
-    private AdvancedPhysicsHapticEffector advancedHapticEffector;
+    private AdvancedPhysicsHapticEffector_NewSDK advancedHapticEffector;
     private bool hasSpawned = false; // 프리팹 생성 여부를 추적
     private float virtualObjectInitialY; // 버추얼오브젝트의 초기 Y값
     private List<GameObject> spawnedPrefabs = new List<GameObject>(); // 생성된 프리팹 목록
@@ -28,7 +28,7 @@ public class VirtualWall : MonoBehaviour
     void Start()
     {
         virtualKnife = GetComponent<VirtualKnife>();
-        advancedHapticEffector = GetComponent<AdvancedPhysicsHapticEffector>();
+        advancedHapticEffector = GetComponent<AdvancedPhysicsHapticEffector_NewSDK>();
 
         if (virtualKnife != null && virtualKnife.virtualObject != null)
         {

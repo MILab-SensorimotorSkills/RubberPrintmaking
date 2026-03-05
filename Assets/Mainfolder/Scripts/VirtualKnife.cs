@@ -393,7 +393,7 @@ public class VirtualKnife : MonoBehaviour
 {
     public GameObject virtualObject;
     public GameObject Cube;
-    private AdvancedPhysicsHapticEffector advancedHapticEffector;
+    private AdvancedPhysicsHapticEffector_NewSDK advancedHapticEffector;
     private Rigidbody virtualObjectRb;
     public Vector3 initialPosition;
     private Shovel knifeShovel;
@@ -406,7 +406,7 @@ public class VirtualKnife : MonoBehaviour
     public TextMeshProUGUI warningText; // 경고 메시지를 표시할 TextMeshProUGUI
     void Start()
     {
-        advancedHapticEffector = GetComponent<AdvancedPhysicsHapticEffector>();
+        advancedHapticEffector = GetComponent<AdvancedPhysicsHapticEffector_NewSDK>();
         knifeShovel = GetComponent<Shovel>();
         if (virtualObject != null)
         {
@@ -428,26 +428,31 @@ public class VirtualKnife : MonoBehaviour
         if (virtualObject != null)
         {
             float mainForce = advancedHapticEffector.MainForce;
+            // Debug.Log("Main Force: " + mainForce); // Main Force 값 출력
             float mainForceY = advancedHapticEffector.MainForceY;
             float mainForceX = advancedHapticEffector.MainForceX;
             float mainForceZ = advancedHapticEffector.MainForceZ;
             float yPosition = initialPosition.y;
             CheckObjectColor();
-            if (transform.position.y >= initialPosition.y + 0.05f)
+            if (transform.position.y >= initialPosition.y + 0.08f)
             {
                 yPosition = initialPosition.y;
                 minimumY = initialPosition.y;
+                // Debug.Log("위치 초기화 - initial" + initialPosition.y + "transform" + transform.position.y);
             }
             else
             {
                 float previousLowestY = GetPreviousLowestY(transform.position);
                 yPosition = Mathf.Min(previousLowestY, minimumY);
-                if ((mainForce > 7f && mainForce <= 8f) || angle_Condition == 0f)
+                // if ((mainForce > 7f && mainForce <= 8f) || angle_Condition == 0f)
+                if ((mainForce <= 7f) || angle_Condition == 0f)
                 {
                     yPosition = Mathf.Min(yPosition, previousLowestY);
+                    Debug.Log("7 아래, 또는 각도 조건 0f 충족");
                 }
-                else if (mainForce > 8f && angle_Condition != 0f)
+                else if (mainForce > 7f && angle_Condition != 0f)
                 {
+                    Debug.Log("7 초과 및 각도 조건 충족");
                     float depthAdjustment = 0f;
                     if (mainForceY >= 100f)
                     {
@@ -456,6 +461,7 @@ public class VirtualKnife : MonoBehaviour
                     else if (mainForceY >= 50f)
                     {
                         depthAdjustment = maximunDepth * 0.4f;
+
                     }
                     else if (mainForceY >= 20f)
                     {
@@ -470,12 +476,14 @@ public class VirtualKnife : MonoBehaviour
                         depthAdjustment = maximunDepth * 0.05f;
                     }
                     yPosition = Mathf.Lerp(previousLowestY, Mathf.Clamp(initialPosition.y - mainForce / 60.0f, maximunDepth, initialPosition.y), Mathf.Clamp(mainForce / 60.0f, 0, 1));
+                    // yPosition = Mathf.Min(previousLowestY, initialPosition.y - depthAdjustment);
                     RecordPosition(transform.position);
                 }
                 minimumY = yPosition;
             }
             if (Mathf.Abs(virtualObject.transform.position.y - yPosition) > 0.0001f)
             {
+                Debug.Log("위치 업데이트");
                 Vector3 targetPosition = new Vector3(
                     virtualObject.transform.position.x,
                     yPosition,
@@ -483,11 +491,11 @@ public class VirtualKnife : MonoBehaviour
                 );
                 virtualObjectRb.MovePosition(targetPosition);
             }
-            // MainforceY가 50f를 초과할 경우 경고음을 재생하고 메시지를 표시
-            if (mainForceY > 25f)
+            // MainforceY가 15f를 초과할 경우 경고음을 재생하고 메시지를 표시
+            if (mainForceY > 15f)
             {
                 TriggerWarning();
-                // Debug.Log("힘 그만!!!");
+                Debug.Log("힘 그만!!!");
             }
             else
             {
