@@ -222,8 +222,8 @@ public class AdvancedPhysicsHapticEffector_NewSDK : MonoBehaviour
         // Your original logic that updates guidance direction & distance
         UpdateGuidanceTerms();
 
-        // ✅ 성능 측정은 "유효한 task 중"에만(예: collision 중, 또는 onnx output이 Deforming일 때)
-        bool valid = collisionDetection && touched.Count > 0; // + (newoutput==DEFORMING) 같은 조건 추천
+        // 성능 측정은 "유효한 task 중"에만 (onnx output이 Deforming일 때)
+        bool valid = collisionDetection && touched.Count > 0 && newoutput == 2; // (newoutput==DEFORMING)
         if (valid) UpdatePerformanceAndLevel(Time.fixedDeltaTime);
 
         // Adaptive 모드 Debugging
@@ -502,7 +502,7 @@ public class AdvancedPhysicsHapticEffector_NewSDK : MonoBehaviour
         return force;
     }
     
-    private Vector3 CalculateAdaptiveForce(Vector3 position, Vector3 velocity, AdditionalData data, int output)
+    private Vector3 CalculateAdaptiveForce(Vector3 position, Vector3 velocity, AdditionalData data, int newoutput)
     {
         // var force = BaseSpringDamper(position, velocity, data);
         Vector3 baseForce = BaseSpringDamper(position, velocity, data);
